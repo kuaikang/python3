@@ -10,8 +10,8 @@ import requests,json
 # response = requests.get("http://httpbin.org/get")
 # print(response.json())
 
-# response = requests.get("https://github.com/favicon.ico")
-# print("response.text返回类型:",type(response.text))
+response = requests.get("https://github.com/favicon.ico")
+print("response.text返回类型:",type(response.text))
 # print("response.content返回类型:",type(response.content))
 
 # headers = {
