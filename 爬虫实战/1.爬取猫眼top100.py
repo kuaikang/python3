@@ -16,7 +16,7 @@ def parse_page(html):
     for index in data:
         yield {
             'index':index[0],
-            'img':index[1],
+            # 'img':index[1],
             'title':index[2],
             'actor':index[3].lstrip().rstrip(),
             'time':index[4],
