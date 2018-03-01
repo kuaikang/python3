@@ -1,16 +1,15 @@
 import itchat
 
 itchat.auto_login()
-
 friends = itchat.get_friends(update=True)[:]
 total = len(friends) - 1
 man = women = other = 0
 
 for friend in friends[0:]:
     sex = friend["Sex"]
-    if sex == 1:
+    if sex == 1: # 1代表男生
         man += 1
-    elif sex == 2:
+    elif sex == 2: # 2代表女生
         women += 1
     else:
         other += 1
