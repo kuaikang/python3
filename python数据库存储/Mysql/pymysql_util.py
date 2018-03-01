@@ -119,4 +119,4 @@ if __name__ == '__main__':
 
     # update("update student set name = '%s' where id = %d",("9999",101))
 
-    # delete("delete from student where id = %d",(101))
+    delete("delete from student where id = %d",(101))
