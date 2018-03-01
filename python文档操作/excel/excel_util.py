@@ -33,6 +33,4 @@ def create_excel(list,file="a.xlsx"):
     wb.save(file)
 
 if __name__ == '__main__':
-    data = get_excel("test.xlsx")
-    print(data)
-    create_excel(data)
+    pass
