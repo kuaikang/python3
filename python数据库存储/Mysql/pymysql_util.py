@@ -1,5 +1,5 @@
 import pymysql
-from pymysql import Connect
+
 
 def get_db():
     # 打开数据库连接
