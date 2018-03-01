@@ -24,9 +24,9 @@ def find_one(sql):
     finally:
         db.close()
 
+
 def find_all(sql):
     try:
-        # 使用cursor()方法获取操作游标
         db = get_db()
         cur = db.cursor()
         cur.execute(sql)
@@ -37,9 +37,9 @@ def find_all(sql):
     finally:
         db.close()
 
+
 def find_many(sql,size=10):
     try:
-        # 使用cursor()方法获取操作游标
         db = get_db()
         cur = db.cursor()
         cur.execute(sql)
@@ -50,9 +50,9 @@ def find_many(sql,size=10):
     finally:
         db.close()
 
+
 def insert_one(sql):
     try:
-        # 使用cursor()方法获取操作游标
         db = get_db()
         cur = db.cursor()
         result = cur.execute(sql)
@@ -63,6 +63,7 @@ def insert_one(sql):
         db.rollback() # 回滚
     finally:
         db.close()
+
 
 def insert_many(sql,data):
     try:
@@ -78,6 +79,7 @@ def insert_many(sql,data):
     finally:
         db.close()
 
+
 def update(sql,data):
     try:
         # 使用cursor()方法获取操作游标
@@ -91,6 +93,7 @@ def update(sql,data):
     finally:
         db.close()
 
+
 def delete(sql,data):
     try:
         # 使用cursor()方法获取操作游标
@@ -103,6 +106,7 @@ def delete(sql,data):
         db.rollback() # 回滚
     finally:
         db.close()
+
 
 if __name__ == '__main__':
     # s = find_one("select * from student")

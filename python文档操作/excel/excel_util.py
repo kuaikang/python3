@@ -1,6 +1,7 @@
 from openpyxl import load_workbook
 from openpyxl.workbook import Workbook
 
+
 def get_excel(filepath):
     '''返回excel中内容,以列表的形式返回'''
     try:
@@ -19,9 +20,11 @@ def get_excel(filepath):
         print("读取excel文件发生错误")
         return None
 
+
 def write_file(data,filename="a.txt"):
     with open(filename,mode="w",encoding="utf-8") as f:
         f.write(data)
+
 
 def create_excel(list,file="a.xlsx"):
     wb = Workbook()
@@ -31,6 +34,7 @@ def create_excel(list,file="a.xlsx"):
         for j in range(len(list[i])):
             ws.cell(row=i+1,column=j+1,value=list[i][j])
     wb.save(file)
+
 
 if __name__ == '__main__':
     pass

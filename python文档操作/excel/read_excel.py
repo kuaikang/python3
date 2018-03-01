@@ -1,4 +1,6 @@
 import xlrd,pymysql
+
+
 def read_excel(url):
     # 打开文件
     workbook = xlrd.open_workbook(url)
@@ -35,12 +37,14 @@ def insert_many(list):
     # 关闭连接
     db.close()
 
+
 def list_no_repeat(list):
     list_new = []
     for i in list:
         if i not in list_new:
             list_new.append(i)
     return list_new
+
 
 if __name__ == '__main__':
     list1 = read_excel("E:\\QQ\\359405466\\FileRecv\\学乐云(1).xlsx");
