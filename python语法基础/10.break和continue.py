@@ -5,6 +5,6 @@ for i in range(100):
         break
 
 for i in range(10):
-    if i%2 == 0:
-        continue # 偶数时跳过
+    if i % 2 == 0:
+        continue  # 偶数时跳过
     print(i)

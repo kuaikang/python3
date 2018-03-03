@@ -20,7 +20,7 @@ def find_one(sql):
         results = cur.fetchone()
         return results
     except Exception:
-        print("查询失败 sql-->",sql)
+        print("查询失败 sql-->", sql)
     finally:
         db.close()
 
@@ -33,12 +33,12 @@ def find_all(sql):
         results = cur.fetchall()
         return results
     except Exception:
-        print("查询失败 sql-->",sql)
+        print("查询失败 sql-->", sql)
     finally:
         db.close()
 
 
-def find_many(sql,size=10):
+def find_many(sql, size=10):
     try:
         db = get_db()
         cur = db.cursor()
@@ -46,7 +46,7 @@ def find_many(sql,size=10):
         results = cur.fetchmany(size)
         return results
     except Exception:
-        print("查询失败 sql-->",sql)
+        print("查询失败 sql-->", sql)
     finally:
         db.close()
 
@@ -57,53 +57,53 @@ def insert_one(sql):
         cur = db.cursor()
         result = cur.execute(sql)
         db.commit()
-        return result # 成功返回1
+        return result  # 成功返回1
     except Exception:
         print("添加失败 sql-->", sql)
-        db.rollback() # 回滚
+        db.rollback()  # 回滚
     finally:
         db.close()
 
 
-def insert_many(sql,data):
+def insert_many(sql, data):
     try:
         # 使用cursor()方法获取操作游标
         db = get_db()
         cur = db.cursor()
-        result = cur.executemany(sql,data)
+        result = cur.executemany(sql, data)
         db.commit()
-        return result # 成功返回1
+        return result  # 成功返回1
     except Exception:
         print("添加失败 sql-->", sql)
-        db.rollback() # 回滚
+        db.rollback()  # 回滚
     finally:
         db.close()
 
 
-def update(sql,data):
+def update(sql, data):
     try:
         # 使用cursor()方法获取操作游标
         db = get_db()
         cur = db.cursor()
-        cur.execute(sql%data)
+        cur.execute(sql % data)
         db.commit()
     except Exception:
-        print("更新失败 sql-->", sql%data)
-        db.rollback() # 回滚
+        print("更新失败 sql-->", sql % data)
+        db.rollback()  # 回滚
     finally:
         db.close()
 
 
-def delete(sql,data):
+def delete(sql, data):
     try:
         # 使用cursor()方法获取操作游标
         db = get_db()
         cur = db.cursor()
-        cur.execute(sql%data)
+        cur.execute(sql % data)
         db.commit()
     except Exception:
-        print("删除失败 sql-->", sql%data)
-        db.rollback() # 回滚
+        print("删除失败 sql-->", sql % data)
+        db.rollback()  # 回滚
     finally:
         db.close()
 
@@ -123,4 +123,4 @@ if __name__ == '__main__':
 
     # update("update student set name = '%s' where id = %d",("9999",101))
 
-    delete("delete from student where id = %d",(101))
+    delete("delete from student where id = %d", (101))

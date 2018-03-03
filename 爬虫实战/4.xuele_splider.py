@@ -1,17 +1,16 @@
-import requests,json,time,threading,os
+import requests, json, time, threading, os
 from python文档操作.excel import excel_util
 
-
-request_headers={
-        "cookie":"SESSION=A7EDB1135F9A38A80FBF52542BA23D23; LOGOTIPS=2",
-        "Content-Type":"application/x-www-form-urlencoded; charset=UTF-8"
-    }
+request_headers = {
+    "cookie": "SESSION=A7EDB1135F9A38A80FBF52542BA23D23; LOGOTIPS=2",
+    "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
+}
 
 
 def get_subject():
     urls = "http://www.xueleyun.com/member/book/selectSubjectBySchool.ajax"
-    request_data = {"schoolId":"10001"}
-    resp = requests.post(url=urls,data=request_data,headers=request_headers)
+    request_data = {"schoolId": "10001"}
+    resp = requests.post(url=urls, data=request_data, headers=request_headers)
     return resp.content.decode()
 
 
@@ -22,27 +21,27 @@ def get_grade():
     return resp.json()
 
 
-def get_editions(grade,subject_id):
+def get_editions(grade, subject_id):
     request_url = "http://www.xueleyun.com/member/book/selectEditionBySubject.ajax"
-    request_data = {"grade":grade,"subjectId":subject_id}
+    request_data = {"grade": grade, "subjectId": subject_id}
     resp = requests.post(url=request_url, data=request_data, headers=request_headers)
     return resp.content.decode()
 
 
-def get_books(grade,edition,subject):
+def get_books(grade, edition, subject):
     request_url = "http://www.xueleyun.com/member/book/selectBooksBySubjectGradeEdition.ajax"
-    request_data = {"gradeCode":grade,"editionId":edition,"subjectId":subject}
+    request_data = {"gradeCode": grade, "editionId": edition, "subjectId": subject}
     resp = requests.post(url=request_url, data=request_data, headers=request_headers)
     return resp.content.decode()
 
 
-def task(summary_code,summary_name,grades):
-    f = open("%s.txt"%summary_code, mode="a", encoding="utf8")
+def task(summary_code, summary_name, grades):
+    f = open("%s.txt" % summary_code, mode="a", encoding="utf8")
     for grade in grades.get("wrapper"):
-        res = get_editions(grade,summary_code)
+        res = get_editions(grade, summary_code)
         res = json.loads(res)
         for dic in res.get("wrapper"):
-            resp = get_books(grade, dic["editionId"],summary_code)
+            resp = get_books(grade, dic["editionId"], summary_code)
             resp = json.loads(resp)
             dic.pop("editionId")
             for li in resp.get("wrapper"):
