@@ -1,5 +1,6 @@
 from openpyxl import load_workbook
 from openpyxl.workbook import Workbook
+import time
 
 
 def get_excel(filepath):
@@ -26,7 +27,7 @@ def write_file(data,filename="a.txt"):
         f.write(data)
 
 
-def create_excel(list,file="a.xlsx"):
+def create_excel(list, file="%s.xlsx"%time.time()):
     wb = Workbook()
     ws = wb.worksheets[0]
     ws.title = "sheet1"

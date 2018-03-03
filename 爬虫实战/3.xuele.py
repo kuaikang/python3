@@ -19,12 +19,6 @@ def login():
     except TimeoutException:
         return login()
 
-def get_subject():
-    url = "http://www.xueleyun.com/member/book/selectSubjectBySchool.ajax"
-    res = browser.execute_script('$.ajax({type: "POST",url:"http://www.xueleyun.com/member/book/selectSubjectBySchool.ajax",success: function(data) {$("body").append({"schoolId":"10001"});},beforeSend: function(xhr) {xhr.setRequestHeader("Cookie", "SESSION=8E69F1E229E02A63D9E21A2CC016D78C");}});')
-    print(res)
-
-
 def main():
     login()
     get_subject()
