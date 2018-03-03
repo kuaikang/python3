@@ -1,5 +1,5 @@
 import requests, json, time, threading, os
-from python文档操作.excel import excel_util
+from 文档操作.excel import excel_util
 
 request_headers = {
     "cookie": "SESSION=A7EDB1135F9A38A80FBF52542BA23D23; LOGOTIPS=2",
