@@ -50,7 +50,7 @@ def task(summary_code, summary_name, grades):
                 dic["grade"] = str(grade)
                 f.write(json.dumps(dic, ensure_ascii=False))
                 f.write("\n")
-                time.sleep(0.3)
+                time.sleep(0.1)
     f.close()
 
 
@@ -103,3 +103,4 @@ if __name__ == '__main__':
     file_name = "all.txt"
     merge_file(file_name)
     generator_excel(file_name)
+    print("finish")
