@@ -11,10 +11,9 @@ def get_db():
     return db
 
 
-def find_one(sql):
+def find_one(db, sql):
     try:
         # 使用cursor()方法获取操作游标
-        db = get_db()
         cur = db.cursor()
         cur.execute(sql)
         results = cur.fetchone()
@@ -25,9 +24,8 @@ def find_one(sql):
         db.close()
 
 
-def find_all(sql):
+def find_all(db, sql):
     try:
-        db = get_db()
         cur = db.cursor()
         cur.execute(sql)
         results = cur.fetchall()
@@ -38,7 +36,7 @@ def find_all(sql):
         db.close()
 
 
-def find_many(sql, size=10):
+def find_many(db, sql, size=10):
     try:
         db = get_db()
         cur = db.cursor()
@@ -51,7 +49,7 @@ def find_many(sql, size=10):
         db.close()
 
 
-def insert_one(sql):
+def insert_one(db, sql):
     try:
         db = get_db()
         cur = db.cursor()
@@ -65,7 +63,7 @@ def insert_one(sql):
         db.close()
 
 
-def insert_many(sql, data):
+def insert_many(db, sql, data):
     try:
         # 使用cursor()方法获取操作游标
         db = get_db()
@@ -80,7 +78,7 @@ def insert_many(sql, data):
         db.close()
 
 
-def update(sql, data):
+def update(db, sql, data):
     try:
         # 使用cursor()方法获取操作游标
         db = get_db()
@@ -94,7 +92,7 @@ def update(sql, data):
         db.close()
 
 
-def delete(sql, data):
+def delete(db, sql, data):
     try:
         # 使用cursor()方法获取操作游标
         db = get_db()
@@ -109,18 +107,19 @@ def delete(sql, data):
 
 
 if __name__ == '__main__':
-    # s = find_one("select * from student")
-    # s = find_all("select * from student limit 1")
-    # s = find_many("select * from student")
+    db = get_db()
+    # s = find_one(db,"select * from student")
+    # s = find_all(db,"select * from student limit 1")
+    # s = find_many(db,"select * from student")
     # print(s)
-    # res = insert_one("INSERT INTO `kuaik`.`student` (`id`, `name`, `age`) VALUES ('102', 'Hello', '23')")
+    # res = insert_one(db,"INSERT INTO `kuaik`.`student` (`id`, `name`, `age`) VALUES ('102', 'Hello', '23')")
     # print(res)
 
     # data = (("103","tom","24"),("104","tom","24"))
     # data = [["105","tom","24"],["106","tom","24"]] # 2种格式都可以
-    # res = insert_many("INSERT INTO `kuaik`.`student` (`id`, `name`, `age`) VALUES (%s,%s,%s)",data)
+    # res = insert_many(db,"INSERT INTO `kuaik`.`student` (`id`, `name`, `age`) VALUES (%s,%s,%s)",data)
     # print(res)
 
-    # update("update student set name = '%s' where id = %d",("9999",101))
+    # update(db,"update student set name = '%s' where id = %d",("9999",101))
 
-    delete("delete from student where id = %d", (101))
+    delete(db, "delete from student where id = %d", (101))

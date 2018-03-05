@@ -2,7 +2,7 @@ import requests, json, time, threading, os
 from 文档操作.excel import excel_util
 
 request_headers = {
-    "cookie": "SESSION=A7EDB1135F9A38A80FBF52542BA23D23; LOGOTIPS=2",
+    "cookie": "SESSION=ACC792C81A48826542EDD58F22825786; LOGOTIPS=1",
     "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
 }
 
