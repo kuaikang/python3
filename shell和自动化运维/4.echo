@@ -1,0 +1,30 @@
+1.输出普通字符串
+    echo "Hello World"
+    echo Hello World
+
+2.read命令从标准输入中读取一行,并把输入行的每个字段的值指定给shell变量
+    #!/bin/sh
+    read name
+    echo "$name"
+
+3.显示换行
+    echo -e "OK! \n" # -e 开启转义
+    echo "It is a test"
+    不加-e显示的是：
+        OK \n
+        It is a test
+
+4.显示不换行
+    #!/bin/sh
+    echo -e "OK! \c" # -e 开启转义 \c 不换行
+    echo "It is a test"
+    输出：OK! It is a test
+
+5.原样输出字符串,不进行转义或取变量(用单引号)
+    echo '$name\"'
+    输出:$name\"
+
+6.显示命令执行结果,这里使用的是反引号`,而不是单引号'
+    echo `date`
+    结果将显示当前日期:
+    Thu Jul 24 10:08:46 CST 2014

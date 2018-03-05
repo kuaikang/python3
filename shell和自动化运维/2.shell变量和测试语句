@@ -1,0 +1,51 @@
+变量：shell变量由全大写字母和下划线组成,有两种类型的shell变量
+    1.环境变量:环境变量可以从父进程传给子进程,因此Shell进程中的环境变量可以从当前Shell进程传给fork出来的子进程
+              用env命令可以显示当前Shell进程的环境变量
+    2.本地变量:set命令可以显示本地变量
+
+第一个shell脚本：
+    #!/bin/bash
+    echo "Hello World!"
+运行Shell脚本的2中方法：
+    1.将上面脚本保存为test.sh
+        chmod +x ./test.sh  #使脚本具有执行权限
+        ./test.sh  #执行脚本
+    注意:一定要写成./test.sh,而不是test.sh,运行其它二进制的程序也一样,直接写test.sh,
+        linux系统会去PATH里寻找有没有叫test.sh的,而只有/bin,/sbin,/usr/bin,/usr/sbin等在PATH里,
+        你的当前目录通常不在PATH里,所以写成test.sh是会找不到命令的,要用./test.sh 告诉系统说,就在当前目录找。
+    2.作为解释器参数
+        /bin/sh test.sh
+
+以"#"开头的行就是注释，会被解释器忽略。
+sh里没有多行注释，只能每一行加一个#号。只能像这样：
+
+传递参数：
+    在执行Shell脚本时,向脚本传递参数,脚本内获取参数的格式为：$n,n代表一个数字,
+    1为执行脚本的第一个参数,2为执行脚本的第二个参数,$0为执行的文件名：
+    #!/bin/bash
+    echo "Shell 传递参数实例！";
+    echo "执行的文件名：$0";
+    echo "第一个参数为：$1";
+    echo "第二个参数为：$2";
+
+数组：
+    数组中可以存放多个值.Bash Shell 只支持一维数组（不支持多维数组）,初始化时不需要定义数组大小（与 PHP 类似）.
+    与大部分编程语言类似,数组元素的下标由0开始.
+    Shell 数组用括号来表示，元素用"空格"符号分割开，语法格式如下：
+        array_name=(value1 ... valuen)
+    也可以使用下标来定义数组:
+        array_name[0]=value0
+        array_name[1]=value1
+        array_name[2]=value2
+    读取数组元素值的一般格式是：
+        ${array_name[index]}
+
+    #!/bin/bash
+    my_array=(A B "C" D)
+    echo "第一个元素为: ${my_array[0]}"
+    # 使用@ 或 * 可以获取数组中的所有元素，例如：
+    echo "数组的元素为: ${my_array[*]}"
+    echo "数组的元素为: ${my_array[@]}"
+    # 获取数组长度的方法与获取字符串长度的方法相同，例如：
+    echo "数组元素个数为: ${#my_array[*]}"
+    echo "数组元素个数为: ${#my_array[@]}"
