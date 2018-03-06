@@ -63,8 +63,17 @@ def grades(url):  # 年级
 
 if __name__ == '__main__':
     xx = parse_data_subject(get_xx(), "小学")
+    cz = parse_data_subject(get_cz(), "初中")
+    gz = parse_data_subject(get_gz(), "高中")
+    f = open("a.txt", mode="a", encoding="utf8")
     for index in xx:  # index["href"], index["subject"]
-        data = teaching_material(index["href"][:-8])
+        data = teaching_material(index["href"][:-8]) # index['meterial']
         for i in data:
-            print(i)
-        break
+            data = grades(i["href"])  # j["grade_name"]]
+            for j in data:
+                li = [index["subject"], i["meterial"], j["grade_name"]]
+                f.write(",".join(li))
+                f.write("\n")
+                # units = get_units(j["href"])
+                # print(units)
+    f.close()
