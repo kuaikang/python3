@@ -20,6 +20,11 @@
     echo "It is a test"
     输出：OK! It is a test
 
+    第二种:
+    echo -n "Hello"
+    echo "World"
+    输出:HelloWorld
+
 5.原样输出字符串,不进行转义或取变量(用单引号)
     echo '$name\"'
     输出:$name\"
@@ -28,3 +33,5 @@
     echo `date`
     结果将显示当前日期:
     Thu Jul 24 10:08:46 CST 2014
+
+

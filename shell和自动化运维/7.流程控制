@@ -1,0 +1,89 @@
+在sh/bash里,如果else分支没有语句执行，就不要写这个else
+if-else语法格式:
+    if condition
+    then
+        command1
+        ...
+        commandN
+    else
+        command
+    fi
+
+if else-if else语法格式:
+    if condition1
+    then
+        command1
+    elif condition2
+    then
+        command2
+    else
+        commandN
+    fi
+
+for循环:
+    for loop in 1 2 3 4 5
+    do
+        echo "The value is: $loop"
+    done
+
+while语句格式:
+    while condition
+    do
+        command
+    done
+
+    #!/bin/sh
+    int=1
+    while(( $int<=5 ))
+    do
+        echo $int
+        let "int++"
+    done
+
+无限循环语法格式：
+    while :
+    do
+        command
+    done
+
+    for (( ; ; ))
+
+until 语法格式:
+    until condition
+    do
+        command
+    done
+
+case语句:
+    echo '输入 1 到 4 之间的数字:'
+    echo '你输入的数字为:'
+    read aNum
+    case $aNum in
+        1)  echo '你选择了 1'
+        ;;
+        2)  echo '你选择了 2'
+        ;;
+        3)  echo '你选择了 3'
+        ;;
+        4)  echo '你选择了 4'
+        ;;
+        *)  echo '你没有输入 1 到 4 之间的数字'
+        ;;
+    esac
+
+在循环过程中,有时候需要在未达到循环结束条件时强制跳出循环,Shell使用两个命令来实现该功能：break和continue
+
+    #!/bin/bash
+    while :
+    do
+        echo -n "输入 1 到 5 之间的数字: "
+        read aNum
+        case $aNum in
+            1|2|3|4|5) echo "你输入的数字为 $aNum!"
+            ;;
+            *) echo "你输入的数字不是 1 到 5 之间的!"
+                continue
+                echo "游戏结束"
+            ;;
+        esac
+    done
