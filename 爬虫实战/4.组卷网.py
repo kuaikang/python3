@@ -67,3 +67,4 @@ if __name__ == '__main__':
         data = teaching_material(index["href"][:-8])
         for i in data:
             print(i)
+        break
