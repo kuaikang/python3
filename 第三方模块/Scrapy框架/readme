@@ -1,0 +1,35 @@
+scrapy安装步骤:
+    1.pip install wheel
+    2.lxml
+      http://www.lfd.uci.edu/~gohlke/pythonlibs/#lxml
+    3.PyOpenssl
+      http://pypi.python.org/pypi/pyOpenSSL#downloads
+    4.twisted
+      http://www.lfd.uci.edu/~gohlke/pythonlibs/#twisted
+    5.pywin32
+      http://sourceforge.net/projects/pywin32/files/pywin32/Build%20220/
+      下载exe运行,失败就用pycharm安装
+    6.pycharm 安装 Scrapy
+
+step:
+    1.创建项目
+        scrapy startproject project_name
+
+
+目录结构:
+  tutorial/
+    scrapy.cfg          # 配置文件
+    tutorial/
+        __init__.py
+        items.py
+        pipelines.py
+        settings.py
+        spiders/        # 放置spider代码的目录
+            __init__.py
+            ...
+
+Item 是保存爬取到的数据的容器；其使用方法和python字典类似， 并且提供了额外保护机制来避免拼写错误导致的未定义字段错误。
+
+    scrapy genspider base www.baidu.com
+运行项目:
+    scrapy crawl base

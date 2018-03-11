@@ -3,7 +3,7 @@ import requests,json
 #     "name":"tony",
 #     "age":"22"
 # }
-# response = requests.get("http://httpbin.org/get",params=data)
+response = requests.get("http://httpbin.org/get",params=data)
 # print(response.text)
 
 # # 解析json,如果返回数据是json

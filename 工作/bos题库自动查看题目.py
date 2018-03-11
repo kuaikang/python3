@@ -45,19 +45,15 @@ def teach_study():
         # manage.click()
         manage = browser.find_element_by_xpath('//*[@id="app"]/div/div/div[1]/div/ul/div/a[3]/li')
         manage.click()
-        count = 0
-        while count == 0:
-            total = browser.find_element(
-                By.CSS_SELECTOR,
-                "#app > div > div > section > div > div.content > div.tabelLayout-content > div.table-box > div.pagination-container > div > span.el-pagination__total"
-            )
-            count = re.sub("\D", "", total.text)
-            time.sleep(1)
-            print(count)
-        for i in range(int(count)//10):
-            css = "#app > div > div > section > div > div.content > div.tabelLayout-content > div.table-box > div.el-table.el-table--fit.el-table--border.el-table--enable-row-hover.el-table--enable-row-transition > div.el-table__body-wrapper > table > tbody > tr:nth-child(%s) > td.el-table_1_column_8.is-left > div > button:nth-child(1) > span"%i
+        time.sleep(25)
+        total = wait.until(EC.presence_of_element_located(
+            (By.CSS_SELECTOR, "#app > div > div > section > div > div.content > div.tabelLayout-content > div.table-box > div.pagination-container > div > span.el-pagination__total")))
+        count = re.sub("\D", "", total.text)
+        print("222")
+        for i in range(10):
+            css = "#app > div > div > section > div > div.content > div.tabelLayout-content > div.table-box > div.el-table.el-table--fit.el-table--border.el-table--enable-row-hover.el-table--enable-row-transition > div.el-table__body-wrapper > table > tbody > tr:nth-child(%s) > td.el-table_1_column_8.is-left > div > button:nth-child(1) > span"%(i+1)
             browser.find_element(By.CSS_SELECTOR, css).click()
-            time.sleep(1.5)
+            time.sleep(3)
             browser.back()
     except TimeoutException:
         teach_study()

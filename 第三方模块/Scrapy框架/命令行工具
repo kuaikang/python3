@@ -1,0 +1,23 @@
+学习网站：http://scrapy-chs.readthedocs.io/zh_CN/0.24/topics/commands.html#scrapy
+
+创建项目:
+    scrapy startproject myproject
+
+创建一个新的spider(在项目下运行):
+    scrapy genspider myspider mydomain.com
+
+使用spider进行爬取:
+    scrapy crawl myspider
+
+列出当前项目中所有可用的spider。每行输出一个spider:
+    scrapy list
+
+检查代码语法错误:
+    scrapy check
+
+编辑spider(类似linux下的vim):
+    scrapy edit myspider
+
+scrapy fetch http://www.baidu.com
+
+scrapy view http://www.baidu.com
