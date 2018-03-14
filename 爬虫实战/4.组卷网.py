@@ -110,8 +110,8 @@ if __name__ == '__main__':
           "历史与社会": "20", "生物": "11"}
     gz = {"语文": "2", "数学": "3", "英语": "3", "物理": "6", "化学": "7", "历史": "8", "政治思品": "9", "地理": "10", "生物": "11"}
 
-    t1 = threading.Thread(target=run, args=(xx, "小学.txt", 1))
-    t1.start()
+    # t1 = threading.Thread(target=run, args=(xx, "小学.txt", 1))
+    # t1.start()
     # t2 = threading.Thread(target=run, args=(cz, "初中.txt", 2))
     # t2.start()
     # t3 = threading.Thread(target=run, args=(gz, "高中.txt", 3))
