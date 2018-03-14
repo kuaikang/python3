@@ -91,13 +91,13 @@ if __name__ == '__main__':
     units = pymysql_util.find_all(db, "select unit_id from unit")
     print(len(units))
 
-    start, end = 0, 100
-    for j in range(1, 54):
+    start, end = 0, 50
+    for j in range(100):
         for i in range(start, end):
-            if i == 5510: sys.exit(0)
+            if i == 5509: sys.exit(0)
             print(i)
             t = threading.Thread(target=get_chapter, args=(units[i],))
             t.start()
-        start += 100
-        end += 100
-        time.sleep(20)
+        start += 50
+        end += 50
+        time.sleep(15)
