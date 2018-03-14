@@ -1,7 +1,7 @@
 import requests, json, re, threading
 from bs4 import BeautifulSoup
 from 数据库存储.Mysql import pymysql_util
-import time
+import time, sys
 
 cz_dic = {"2": "语文", "3": "数学", "4": "英语", "6": "物理", "7": "化学", "8": "历史", "9": "政治思品", "10": "地理", "11": "生物"}
 
@@ -36,14 +36,28 @@ def get_unit(book_id):
     units = get_book(book_id[0])
     if units:
         count = 1
-        sql = 'INSERT INTO unit (unit_id, unit_name, book_id, num) VALUES ("%s", "%s", "%s", %s)'
+        sql = 'INSERT INTO unit (unit_id, unit_name, book_id, num) VALUES (%s, %s, %s, %s)'
         data = []
         for unit in units:  # ('22783', '第一单元 成长的足迹')
             u = [unit[0], unit[1], book_id[0], count]
             data.append(u)
             count += 1
         pymysql_util.insert_many(db, sql, data=data)
-        time.sleep(1)
+        time.sleep(2)
+
+
+def get_chapter(unit_id):
+    chapters = get_book(unit_id[0])
+    if chapters:
+        count = 1
+        sql = 'INSERT INTO chapter (chapter_id, chapter_name, unit_id, num) VALUES (%s, %s, %s, %s) '
+        data = []
+        for chapter in chapters:  # ('22783', '第一单元 成长的足迹')
+            u = [chapter[0], chapter[1], unit_id[0], count]
+            data.append(u)
+            count += 1
+        pymysql_util.insert_many(db, sql, data=data)
+        time.sleep(2)
 
 
 if __name__ == '__main__':
@@ -68,7 +82,22 @@ if __name__ == '__main__':
     #                     # if chapters:
     #                     #     print(chapters)
 
-    books = pymysql_util.find_all(db, "select book_id from book")
-    for book_id in books:
-        t = threading.Thread(target=get_unit, args=(book_id,))
-        t.start()
+    # books = pymysql_util.find_all(db, "select book_id from book")
+    # print(len(books))
+    # for book_id in books[301:]:
+    #     t = threading.Thread(target=get_unit, args=(book_id,))
+    #     t.start()
+
+    units = pymysql_util.find_all(db, "select unit_id from unit")
+    print(len(units))
+
+    start, end = 0, 100
+    for j in range(1, 54):
+        for i in range(start, end):
+            if i == 5510: sys.exit(0)
+            print(i)
+            t = threading.Thread(target=get_chapter, args=(units[i],))
+            t.start()
+        start += 100
+        end += 100
+        time.sleep(20)
