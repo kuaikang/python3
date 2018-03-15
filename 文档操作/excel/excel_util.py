@@ -13,7 +13,7 @@ def get_excel(filepath):
         data_list = []
         for i in range(1,ws.max_row):
             list = []
-            for j in range(1,ws.max_column):
+            for j in range(1,ws.max_column+1):
                 list.append(ws.cell(row=i,column=j).value)
             data_list.append(list)
         return data_list

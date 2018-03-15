@@ -20,8 +20,8 @@ def find_one(db, sql):
         return results
     except Exception:
         print("查询失败 sql-->", sql)
-    finally:
         db.close()
+
 
 
 def find_all(db, sql):
@@ -32,8 +32,8 @@ def find_all(db, sql):
         return results
     except Exception:
         print("查询失败 sql-->", sql)
-    finally:
         db.close()
+
 
 
 def find_many(db, sql, size=10):
