@@ -23,3 +23,7 @@ print(str.count("d"))  # 统计字符串中某个子字符串的数量
 '''连接字符串'''
 list = ["tom", "jom", "lily"]
 print(":".join(list))  # 把列表每个元素连接成字符串，用：分割
+
+# 解决\u开头的字符串转中文方法
+# python3的解决办法：字符串.encode('utf-8').decode('unicode_escape')
+# python2：字符串.decode('unicode_escape')

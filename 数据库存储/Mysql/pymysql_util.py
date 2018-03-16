@@ -23,7 +23,6 @@ def find_one(db, sql):
         db.close()
 
 
-
 def find_all(db, sql):
     try:
         cur = db.cursor()
@@ -35,7 +34,6 @@ def find_all(db, sql):
         db.close()
 
 
-
 def find_many(db, sql, size=10):
     try:
         db = get_db()
@@ -45,8 +43,6 @@ def find_many(db, sql, size=10):
         return results
     except Exception:
         print("查询失败 sql-->", sql)
-    finally:
-        db.close()
 
 
 def insert_one(db, sql):
@@ -59,8 +55,6 @@ def insert_one(db, sql):
     except Exception:
         print("添加失败 sql-->", sql)
         db.rollback()  # 回滚
-    finally:
-        db.close()
 
 
 def insert_many(db, sql, data):
@@ -74,8 +68,6 @@ def insert_many(db, sql, data):
     except Exception:
         print("添加失败 sql-->", sql)
         db.rollback()  # 回滚
-    finally:
-        db.close()
 
 
 def update(db, sql, data):

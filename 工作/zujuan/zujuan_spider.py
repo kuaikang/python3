@@ -1,4 +1,4 @@
-import requests, re, threading,time
+import requests, re, threading, time
 from bs4 import BeautifulSoup
 from urllib.parse import urlencode
 
@@ -54,10 +54,10 @@ def main(pattern, pattern_grade, xx, file_name, level):
         data = teaching_material(level, xx[key])
         for d in data:
             li = re.findall(pattern, d["href"])
-            data = grades(li[0][0], level, xx[key])
+            data = grades(li[0], level, xx[key])
             for da in data:
                 g = re.findall(pattern_grade, da["href"])[0]
-                write_list = [key, xx[key], d["material"], li[0][0], da["grade_name"], g]
+                write_list = [key, xx[key], d["material"], li[0], da["grade_name"], g]
                 f.write(",".join(write_list))
                 f.write("\n")
             time.sleep(0.3)
@@ -65,7 +65,7 @@ def main(pattern, pattern_grade, xx, file_name, level):
 
 
 if __name__ == '__main__':
-    pattern = re.compile(".*?bookversion=(\d+)&chid=(\d)&xd=(\d).*?", re.S)
+    pattern = re.compile(".*?bookversion=(\d+)&.*?", re.S)
     pattern_grade = re.compile(".*?nianji=(\d+)&.*?", re.S)
 
     xx = {"语文": "2", "数学": "3", "英语": "4", "科学": "5", "政治思品": "9"}
@@ -73,5 +73,5 @@ if __name__ == '__main__':
           "历史与社会": "20", "生物": "11"}
     gz = {"语文": "2", "数学": "3", "英语": "4", "物理": "6", "化学": "7", "历史": "8", "政治思品": "9", "地理": "10", "生物": "11"}
 
-    t1 = threading.Thread(target=main, args=(pattern, pattern_grade, xx, "xx.txt", "1",))
-    t1.start()
+    # t1 = threading.Thread(target=main, args=(pattern, pattern_grade, xx, "xx.txt", "1",))
+    # t1.start()
