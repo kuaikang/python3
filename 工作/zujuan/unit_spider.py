@@ -6,12 +6,12 @@ def get_units(categories, bookversion, nianji, chid, xd):
     resp = requests.get(url % (categories, bookversion, nianji, chid, xd))
     pattern = re.compile("<script>.*?fetchTree(.*?)function.*?</script>", re.S)
     units = re.findall(pattern, resp.text)[0]
-    units = units[units.find("[") + 1:units.rfind("]")]
-    pattern_id = re.compile('{"id":"(\d+)","title":"(.*?)","hasChild":true}', re.S)
-    li = []
-    for unit in re.findall(pattern_id, units):
-        li.append(unit[0] + "," + unit[1].encode('utf-8').decode('unicode_escape').strip() + "," + nianji)
-    return li
+    resp.close()
+    units = units[units.find("["):units.rfind("]") + 1]
+    data = []
+    for j in json.loads(units):
+        data.append(j["id"] + "," + j["title"].strip() + "," + nianji)
+    return data
 
 
 def main(read_file, write_file, level):
@@ -21,6 +21,7 @@ def main(read_file, write_file, level):
         line = line.split(",")
         data = get_units(line[-1].strip(), line[3], line[-1].strip(), line[1], level)
         for d in data:
+            print(d)
             f1.write(d)
             f1.write("\n")
     f.close()
@@ -31,4 +32,5 @@ if __name__ == '__main__':
     t1 = threading.Thread(target=main, args=("xx.txt", "xx_unit.txt", "1",))
     t2 = threading.Thread(target=main, args=("cz.txt", "cz_unit.txt", "2",))
     t3 = threading.Thread(target=main, args=("gz.txt", "gz_unit.txt", "3",))
+
     t3.start()

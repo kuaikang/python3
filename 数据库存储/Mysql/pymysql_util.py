@@ -77,7 +77,7 @@ def update(db, sql, data):
         cur = db.cursor()
         cur.execute(sql % data)
         db.commit()
-    except Exception:
+    except Exception as e:
         print("更新失败 sql-->", sql % data)
         db.rollback()  # 回滚
     finally:
@@ -104,7 +104,7 @@ if __name__ == '__main__':
     # s = find_all(db,"select * from student limit 1")
     # s = find_many(db,"select * from student")
     # print(s)
-    # res = insert_one(db,"INSERT INTO `kuaik`.`student` (`id`, `name`, `age`) VALUES ('102', 'Hello', '23')")
+    # res = insert_one(db,"INSERT INTO `kuaik`.`student` (`id`, `name`, `age`) VALUES ('1055', 'Hello', '23')")
     # print(res)
 
     # data = (("103","tom","24"),("104","tom","24"))
@@ -114,4 +114,4 @@ if __name__ == '__main__':
 
     # update(db,"update student set name = '%s' where id = %d",("9999",101))
 
-    delete(db, "delete from student where id = %d", (101))
+    # delete(db, "delete from student where id = %d", (101))

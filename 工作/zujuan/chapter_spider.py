@@ -22,7 +22,6 @@ def main(read_file, write_file):
 
 
 if __name__ == '__main__':
-    t1 = threading.Thread(target=main, args=("xx_unit.txt", "xx_chapter.txt",))
-    t2 = threading.Thread(target=main, args=("cz_unit.txt", "cz_chapter.txt",))
-    t3 = threading.Thread(target=main, args=("gz_unit.txt", "gz_chapter.txt",))
-    t3.start()
+    # main("xx_unit.txt", "xx_chapter.txt")
+    # main("cz_unit.txt", "cz_chapter.txt")
+    main("gz_unit.txt", "gz_chapter.txt")
