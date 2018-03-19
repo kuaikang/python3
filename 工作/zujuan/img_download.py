@@ -6,8 +6,8 @@ def get_db():
     # 打开数据库连接
     try:
         db = pymysql.connect(
-            host="localhost", user="root",
-            password="123456", db="resource", port=3306,
+            host="192.168.121.40", user="root",
+            password="001233", db="kuaik", port=3306,
             charset="utf8"
         )
         return db

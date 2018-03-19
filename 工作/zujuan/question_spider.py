@@ -1,14 +1,14 @@
 import requests
 from urllib.parse import urlencode
-import pymysql,time
+import pymysql, time
 
 
 def get_db():
     # 打开数据库连接
     try:
         db = pymysql.connect(
-            host="localhost", user="root",
-            password="123456", db="resource", port=3306,
+            host="192.168.121.40", user="root",
+            password="001233", db="kuaik", port=3306,
             charset="utf8"
         )
         return db
@@ -33,9 +33,9 @@ def get_question(categories, page):
     grade8 = {"grade_id[]": "8"}
     grade9 = {"grade_id[]": "9"}
     head = {
-        "Cookie":"_ga=GA1.2.790539841.1520347247; _gid=GA1.2.69764490.1521204035; PHPSESSID=agedga8uai86jsher53rao6dg7; xd=75519cb9f2bf90d001c0560f5c40520062a60ada9cb38350078f83e04ee38a31a%3A2%3A%7Bi%3A0%3Bs%3A2%3A%22xd%22%3Bi%3A1%3Bi%3A2%3B%7D; _csrf=4cda71caa2338d68cd59fd1f1253ec90e5def2a782567d55b1594bffcb8fcac2a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22R1FZ0cUwV20_uYD6Z7XUS6xIVjitJ54x%22%3B%7D; isRemove=1; Hm_lvt_6de0a5b2c05e49d1c850edca0c13051f=1520424925,1520854752,1521204035,1521252961; chid=5b430739a3b769fd149f00e15357022edc2cea4511390cba95225dcbcaacc273a%3A2%3A%7Bi%3A0%3Bs%3A4%3A%22chid%22%3Bi%3A1%3Bs%3A1%3A%227%22%3B%7D; Hm_lpvt_6de0a5b2c05e49d1c850edca0c13051f=1521283435; _gat_gtag_UA_112991577_1=1",
-        "X-CSRF-Token":"Zft6nOsGaikDPSI2s9daAECgVpyDEUoza9eXZAfOSEg3yjzG22U_XlUPEmnGjh42GpcOydAnMno9vf4QTft8MA==",
-        "User-Agent":"Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.146 Safari/537.36"
+        "Cookie": "_ga=GA1.2.1209185538.1520329414; device=310bdaba05b30bb632f66fde9bf3e2b91ebc4d607c250c2e1a1d9e0dfb900f01a%3A2%3A%7Bi%3A0%3Bs%3A6%3A%22device%22%3Bi%3A1%3BN%3B%7D; PHPSESSID=gsmlfat1tolqaisv64asrtsad6; xd=75519cb9f2bf90d001c0560f5c40520062a60ada9cb38350078f83e04ee38a31a%3A2%3A%7Bi%3A0%3Bs%3A2%3A%22xd%22%3Bi%3A1%3Bi%3A2%3B%7D; _csrf=75b3998320bbf62cb8c735d01eb7311c1174b698213564ba79af1ff1753cf915a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22ivfHrmDlJhZ1kkm37njpwLdCWTvHbEI_%22%3B%7D; _gid=GA1.2.1039098456.1521423702; _gat_gtag_UA_112991577_1=1; isRemove=1; Hm_lvt_6de0a5b2c05e49d1c850edca0c13051f=1521170767,1521177189,1521423696,1521423702; chid=73f77ea0c6d8f078f9adfd8acef66fa3c01401d5245f373d4707a757cca2d8bea%3A2%3A%7Bi%3A0%3Bs%3A4%3A%22chid%22%3Bi%3A1%3Bs%3A1%3A%228%22%3B%7D; Hm_lpvt_6de0a5b2c05e49d1c850edca0c13051f=1521423729",
+        "X-CSRF-Token": "FKEzaBYESs_9_nKoWTzusTm84t9AYnZGppDHWpGTsLt911UgZGkOo7eWKJkyV4OCDtKIrzcuEgXxxLES89b55A==",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.146 Safari/537.36"
     }
     params = urlencode(req) + "&" + urlencode(grade7) + "&" + urlencode(grade8) + "&" + urlencode(grade9)
     resp = requests.get(url + params, headers=head)
@@ -58,7 +58,7 @@ def main():
     sql_chap = "SELECT c.chapter_id from chapter c LEFT JOIN chapter_question qc " \
                "on c.chapter_id = qc.chapter_id WHERE qc.question_id is null and c.chapter_id in " \
                "(SELECT chapter_id from chapter ch LEFT JOIN book b on ch.book_id = b.book_id " \
-               "WHERE b.subject_id = '7' and b.period = '2') limit 100"
+               "WHERE b.subject_id = '8' and b.period = '2') limit 100"
     cur.execute(sql_chap)
     chapter_ids = cur.fetchall()
     print(chapter_ids)
@@ -79,26 +79,28 @@ def main():
                         continue
                     if isinstance(q.get("options"), list):
                         continue
-                    sql_q = "INSERT INTO `resource`.`question` (`question_id`, `context`, `type`, `difficult`) VALUES ('{0}', '{1}', '{2}', '{3}')"
-                    sql_cq = 'INSERT INTO `resource`.`chapter_question` (`id`,`chapter_id`, `question_id`) VALUES (UUID(),"{0}", "{1}");'
-                    sql_t = 'INSERT INTO `resource`.`tag` (`tag_id`, `tag_name`, `question_id`) VALUES (UUID(), "{0}", "{1}");'
+                    sql_q = "INSERT INTO `kuaik`.`question` (`question_id`, `context`, `type`, `difficult`) VALUES ('{0}', '{1}', '{2}', '{3}')"
+                    sql_cq = 'INSERT INTO `kuaik`.`chapter_question` (`id`,`chapter_id`, `question_id`) VALUES (UUID(),"{0}", "{1}");'
+                    sql_t = 'INSERT INTO `kuaik`.`tag` (`tag_id`, `tag_name`, `question_id`) VALUES (UUID(), "{0}", "{1}");'
                     try:
                         cur.execute(sql_cq.format(line[0], q.get("question_id")))
                         cur.execute(
-                            "SELECT * FROM `resource`.`question` WHERE question_id = '%s'" % q.get("question_id"))
+                            "SELECT * FROM `kuaik`.`question` WHERE question_id = '%s'" % q.get("question_id"))
                         if not cur.fetchone():
                             cur.execute(
                                 sql_q.format(q.get("question_id"), pymysql.escape_string(q.get("question_text")),
                                              q.get("question_type"),
                                              q.get("difficult_index")))
                             for key in q.get("options").keys():
-                                sql_i = 'INSERT INTO `resource`.`item` (`item_id`, `content`, `option`,`question_id`) VALUES (UUID(), "{0}", "{1}","{2}");'
+                                sql_i = 'INSERT INTO `kuaik`.`item` (`item_id`, `content`, `option`,`question_id`) VALUES (UUID(), "{0}", "{1}","{2}");'
                                 cur.execute(sql_i.format(pymysql.escape_string(q.get("options").get(key)), key,
                                                          q.get("question_id")))
                             cur.execute(sql_t.format(q.get("knowledge"), q.get("question_id")))
                         db.commit()
                     except Exception as e:
                         print(e)
+    cur.close()
+    db.close()
 
 
 if __name__ == '__main__':

@@ -34,7 +34,7 @@ def insert_unit(file_name):
     for line in f.readlines():
         li = line.split(",")
         try:
-            sql = 'INSERT INTO `resource`.`unit` (`unit_id`, `unit_name`, `book_id`) VALUES ("{0}", "{1}", "{2}")'
+            sql = 'INSERT INTO `resource`.`课本` (`unit_id`, `unit_name`, `book_id`) VALUES ("{0}", "{1}", "{2}")'
             cur.execute(sql.format(li[0], li[1], li[2].strip()))
             db.commit()
         except Exception:

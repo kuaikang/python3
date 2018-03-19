@@ -36,7 +36,7 @@ def get_unit(book_id):
     units = get_book(book_id[0])
     if units:
         count = 1
-        sql = 'INSERT INTO unit (unit_id, unit_name, book_id, num) VALUES (%s, %s, %s, %s)'
+        sql = 'INSERT INTO 课本 (unit_id, unit_name, book_id, num) VALUES (%s, %s, %s, %s)'
         data = []
         for unit in units:  # ('22783', '第一单元 成长的足迹')
             u = [unit[0], unit[1], book_id[0], count]
@@ -74,11 +74,11 @@ if __name__ == '__main__':
     #             units = get_book(book[0])
     #             if units:
     #                 count = 1
-    #                 for unit in units:  # ('22783', '第一单元 成长的足迹')
-    #                     sql = "INSERT INTO unit (unit_id, unit_name, book_id, num) VALUES ('%s', '%s', '%s', %s)"
-    #                     pymysql_util.insert_one(db, sql % (unit[0], unit[1], book[0], count))
+    #                 for 课本 in units:  # ('22783', '第一单元 成长的足迹')
+    #                     sql = "INSERT INTO 课本 (unit_id, unit_name, book_id, num) VALUES ('%s', '%s', '%s', %s)"
+    #                     pymysql_util.insert_one(db, sql % (课本[0], 课本[1], book[0], count))
     #                     count += 1
-    #                     # chapters = get_book(unit[0])
+    #                     # chapters = get_book(课本[0])
     #                     # if chapters:
     #                     #     print(chapters)
 
@@ -88,7 +88,7 @@ if __name__ == '__main__':
     #     t = threading.Thread(target=get_unit, args=(book_id,))
     #     t.start()
 
-    units = pymysql_util.find_all(db, "select unit_id from unit")
+    units = pymysql_util.find_all(db, "select unit_id from 课本")
     print(len(units))
 
     start, end = 0, 50
