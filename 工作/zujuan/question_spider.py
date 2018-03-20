@@ -27,14 +27,14 @@ def get_question(categories, page):
         "kid_num": "",
         "exam_type": "",
         "sortField": "time",
-        "_": "1521278650387"
+        "_": "1521515844117"
     }
     grade7 = {"grade_id[]": "7"}
     grade8 = {"grade_id[]": "8"}
     grade9 = {"grade_id[]": "9"}
     head = {
-        "Cookie": "_ga=GA1.2.1209185538.1520329414; device=310bdaba05b30bb632f66fde9bf3e2b91ebc4d607c250c2e1a1d9e0dfb900f01a%3A2%3A%7Bi%3A0%3Bs%3A6%3A%22device%22%3Bi%3A1%3BN%3B%7D; PHPSESSID=gsmlfat1tolqaisv64asrtsad6; xd=75519cb9f2bf90d001c0560f5c40520062a60ada9cb38350078f83e04ee38a31a%3A2%3A%7Bi%3A0%3Bs%3A2%3A%22xd%22%3Bi%3A1%3Bi%3A2%3B%7D; _csrf=75b3998320bbf62cb8c735d01eb7311c1174b698213564ba79af1ff1753cf915a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22ivfHrmDlJhZ1kkm37njpwLdCWTvHbEI_%22%3B%7D; _gid=GA1.2.1039098456.1521423702; _gat_gtag_UA_112991577_1=1; isRemove=1; Hm_lvt_6de0a5b2c05e49d1c850edca0c13051f=1521170767,1521177189,1521423696,1521423702; chid=73f77ea0c6d8f078f9adfd8acef66fa3c01401d5245f373d4707a757cca2d8bea%3A2%3A%7Bi%3A0%3Bs%3A4%3A%22chid%22%3Bi%3A1%3Bs%3A1%3A%228%22%3B%7D; Hm_lpvt_6de0a5b2c05e49d1c850edca0c13051f=1521423729",
-        "X-CSRF-Token": "FKEzaBYESs_9_nKoWTzusTm84t9AYnZGppDHWpGTsLt911UgZGkOo7eWKJkyV4OCDtKIrzcuEgXxxLES89b55A==",
+        "Cookie":"_ga=GA1.2.1209185538.1520329414; _gid=GA1.2.1039098456.1521423702; PHPSESSID=jp4v0ul3nhsh566c486nkfvcg2; xd=75519cb9f2bf90d001c0560f5c40520062a60ada9cb38350078f83e04ee38a31a%3A2%3A%7Bi%3A0%3Bs%3A2%3A%22xd%22%3Bi%3A1%3Bi%3A2%3B%7D; _csrf=2af821a7165551239a7c41d1646643aca3c90ac2d8663bf01dcbe75e9cb2f470a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22b9AxHw7NBLZlWMlKCQEPoDVnDGY9m4Xr%22%3B%7D; isRemove=1; Hm_lvt_6de0a5b2c05e49d1c850edca0c13051f=1521423702,1521446251,1521509816,1521515834; chid=19e92f27f767d4d8eceab9ca12975b67007ccb5366fcb4209a851c120c07f81ca%3A2%3A%7Bi%3A0%3Bs%3A4%3A%22chid%22%3Bi%3A1%3Bs%3A2%3A%2210%22%3B%7D; Hm_lpvt_6de0a5b2c05e49d1c850edca0c13051f=1521518473",
+        "X-CSRF-Token": "YuvZ0usGfrQHZJ9QxC4RghO0y-1dTrxnimhxKsm4w6QA0piqo3FJ-kUoxTyTY33JUOWOvTIK6gnOLygTpIyb1g==",
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.146 Safari/537.36"
     }
     params = urlencode(req) + "&" + urlencode(grade7) + "&" + urlencode(grade8) + "&" + urlencode(grade9)
@@ -52,21 +52,27 @@ def get_question(categories, page):
     #         print(q.get("difficult_index"))  # 难度 1.容易 3.普通 5.困难
 
 
-def main():
+def main(book_id):
     db = get_db()
     cur = db.cursor()
-    sql_chap = "SELECT c.chapter_id from chapter c LEFT JOIN chapter_question qc " \
-               "on c.chapter_id = qc.chapter_id WHERE qc.question_id is null and c.chapter_id in " \
-               "(SELECT chapter_id from chapter ch LEFT JOIN book b on ch.book_id = b.book_id " \
-               "WHERE b.subject_id = '8' and b.period = '2') limit 100"
+    # sql_chap = "SELECT c.chapter_id from chapter c LEFT JOIN chapter_question qc " \
+    #            "on c.chapter_id = qc.chapter_id WHERE qc.question_id is null and c.chapter_id in " \
+    #            "(SELECT chapter_id from chapter ch LEFT JOIN book b on ch.book_id = b.book_id " \
+    #            "WHERE b.subject_id = '9' and b.period = '2') limit 100"
+    sql_chap = "SELECT chapter_id from chapter WHERE book_id = '%s'" % book_id
     cur.execute(sql_chap)
     chapter_ids = cur.fetchall()
     print(chapter_ids)
+    print("start")
+    sql_q = "INSERT INTO `kuaik`.`question` (`question_id`, `context`, `type`, `difficult`) VALUES ('{0}', '{1}', '{2}', '{3}')"
+    sql_cq = 'INSERT INTO `kuaik`.`chapter_question` (`id`,`chapter_id`, `question_id`) VALUES (UUID(),"{0}", "{1}");'
+    sql_t = 'INSERT INTO `kuaik`.`tag` (`tag_id`, `tag_name`, `question_id`) VALUES (UUID(), "{0}", "{1}");'
     for line in chapter_ids:
         # f = open("cz_chapter.txt",mode="r",encoding="utf8")
         # for line in f.readlines()[301:600]:
         #     line = line.split(",")
         for i in range(1, 100):
+            if i == 9:break
             data, total = get_question(line[0], i)
             if not data: break
             page = (total + 10 - 1) // 10
@@ -79,9 +85,6 @@ def main():
                         continue
                     if isinstance(q.get("options"), list):
                         continue
-                    sql_q = "INSERT INTO `kuaik`.`question` (`question_id`, `context`, `type`, `difficult`) VALUES ('{0}', '{1}', '{2}', '{3}')"
-                    sql_cq = 'INSERT INTO `kuaik`.`chapter_question` (`id`,`chapter_id`, `question_id`) VALUES (UUID(),"{0}", "{1}");'
-                    sql_t = 'INSERT INTO `kuaik`.`tag` (`tag_id`, `tag_name`, `question_id`) VALUES (UUID(), "{0}", "{1}");'
                     try:
                         cur.execute(sql_cq.format(line[0], q.get("question_id")))
                         cur.execute(
@@ -97,6 +100,7 @@ def main():
                                                          q.get("question_id")))
                             cur.execute(sql_t.format(q.get("knowledge"), q.get("question_id")))
                         db.commit()
+                        time.sleep(0.4)
                     except Exception as e:
                         print(e)
     cur.close()
@@ -104,9 +108,7 @@ def main():
 
 
 if __name__ == '__main__':
-    for i in range(9):
-        main()
-        time.sleep(60)
+    main("4977")
 
 # print(q.get("question_text"))
 # print(q.get("options"))  # 选项
