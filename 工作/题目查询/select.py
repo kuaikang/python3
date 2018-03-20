@@ -25,11 +25,11 @@ def book_sql(subject_name):
     return sql % subject_name
 
 
-# 查询二月份录入题目数量
+# 查询二月份之后录入题目数量
 def sql_count_new(subject_key):
     sql = "SELECT qc.chapter_id,count(qc.question_uuid) from t_res_%s_question_chapter qc LEFT JOIN t_res_%s_question q "
     sql += "on qc.question_uuid = q.uuid where type in ('2','11') "
-    sql += "and q.create_time > '2018-02-01 00:00:00' and q.create_time < '2018-02-28 23:59:59' GROUP BY qc.chapter_id"
+    sql += "and q.create_time > '2018-02-01 00:00:00' GROUP BY qc.chapter_id"
     return sql % (subject_key, subject_key)
 
 
