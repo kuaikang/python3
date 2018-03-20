@@ -1,7 +1,6 @@
 from selenium import webdriver
-
 from bs4 import BeautifulSoup
-
+from selenium.webdriver.chrome.options import Options
 chrome_options = Options()
 chrome_options.add_argument('--headless')
 chrome_options.add_argument('Cookie')
