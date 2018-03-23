@@ -33,7 +33,7 @@ def get_question(categories, page):
     grade8 = {"grade_id[]": "8"}
     grade9 = {"grade_id[]": "9"}
     head = {
-        "Cookie": "isRemove=1; _ga=GA1.2.1209185538.1520329414; _gid=GA1.2.1039098456.1521423702; PHPSESSID=o5pjqgqmgddgo3cb0quoo4kfb5; _csrf=ee5fb86d42626fa354bba9c04e39b7ce88d95eac5620cbacd9f78774bd7004e2a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22ScwmwbfGNoa-ehLoLYxkRsiIDASFgCvW%22%3B%7D; isRemove=1; xd=302c76d9e27c6fb0e1f815bdf637ae7f9ec27997dd7c18c9fcf7c68da09ff5c8a%3A2%3A%7Bi%3A0%3Bs%3A2%3A%22xd%22%3Bi%3A1%3Bs%3A1%3A%222%22%3B%7D; Hm_lvt_6de0a5b2c05e49d1c850edca0c13051f=1521595170,1521629421,1521680386,1521683439; chid=cfb34d37b40eefc2ccbe518532b4834f2a7aa0aa8db56dff2d2fd9a9a5c919dda%3A2%3A%7Bi%3A0%3Bs%3A4%3A%22chid%22%3Bi%3A1%3Bs%3A1%3A%226%22%3B%7D; Hm_lpvt_6de0a5b2c05e49d1c850edca0c13051f=1521684161",
+        "Cookie":"isRemove=1; _ga=GA1.2.1209185538.1520329414; _gid=GA1.2.1039098456.1521423702; PHPSESSID=o48ef3voq3mp2ddvmm4r9sn0m2; _csrf=5664bfe3243bfe468a51427ec4cd2ec4650a84479b67bc1da467c20f95ee2fcfa%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22a31fbBxiN-82_bb9poobIoQpJTaPMwJf%22%3B%7D; isRemove=1; xd=302c76d9e27c6fb0e1f815bdf637ae7f9ec27997dd7c18c9fcf7c68da09ff5c8a%3A2%3A%7Bi%3A0%3Bs%3A2%3A%22xd%22%3Bi%3A1%3Bs%3A1%3A%222%22%3B%7D; Hm_lvt_6de0a5b2c05e49d1c850edca0c13051f=1521680386,1521683439,1521715177,1521786389; chid=753411127a26c0bf4f88c5bb0c64e771512616316bae9de43cb9a9038d6b13ffa%3A2%3A%7Bi%3A0%3Bs%3A4%3A%22chid%22%3Bi%3A1%3Bs%3A1%3A%223%22%3B%7D; _gat_gtag_UA_112991577_1=1; Hm_lpvt_6de0a5b2c05e49d1c850edca0c13051f=1521786832",
         "X-CSRF-Token": "YuvZ0usGfrQHZJ9QxC4RghO0y-1dTrxnimhxKsm4w6QA0piqo3FJ-kUoxTyTY33JUOWOvTIK6gnOLygTpIyb1g==",
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.146 Safari/537.36"
     }
@@ -72,7 +72,7 @@ def main(book_id):
         # for line in f.readlines()[301:600]:
         #     line = line.split(",")
         for i in range(1, 100):
-            if i == 33:break
+            if i == 50:break
             data, total = get_question(line[0], i)
             if not data: break
             page = (total + 10 - 1) // 10
@@ -100,7 +100,7 @@ def main(book_id):
                                                          q.get("question_id")))
                             cur.execute(sql_t.format(q.get("knowledge"), q.get("question_id")))
                         db.commit()
-                        time.sleep(0.3)
+                        time.sleep(0.2)
                     except Exception as e:
                         print(e)
     cur.close()
@@ -108,7 +108,7 @@ def main(book_id):
 
 
 if __name__ == '__main__':
-    main("6384")
+    main("9894")
 
 # print(q.get("question_text"))
 # print(q.get("options"))  # 选项

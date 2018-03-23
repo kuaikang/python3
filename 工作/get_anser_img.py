@@ -63,7 +63,7 @@ if __name__ == '__main__':
     start = time.time()
     task = []
     for i in range(7):
-        t = threading.Thread(target=main, args=("6384",i*300,))
+        t = threading.Thread(target=main, args=("9894",i*300,))
         t.start()
         task.append(t)
     for t in task:
