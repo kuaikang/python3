@@ -1,5 +1,6 @@
 import requests, time, json
 from selenium import webdriver
+from urllib.parse import urlencode
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -64,28 +65,48 @@ def get_version():
 
 
 def get_book():
-    driver = webdriver.Chrome()
-    wait = WebDriverWait(driver, 30)
-    driver.get("http://www.jiaoxueyun.cn/teacher-in!view.do")
-    input(">>:")
-    book_url = "http://www.jiaoxueyun.cn/teacher-in!view.do?gradeId=%s&courseId=%s&versionId=%s"
     f = open("version.txt", mode="r", encoding="utf8")
+    f_book = open("book.txt", mode="a", encoding="utf8")
     for line in f.readlines():
         line = line.strip().split(",")
-        if line[0] in ["G04", "G05", "G06", "G07", "G08"]: continue
-        f1 = open("%s.txt" % line[0], mode="a", encoding="utf8")
-        driver.get(book_url % (line[0], line[1], line[2]))
-        time.sleep(1.2)
-        wait.until(EC.presence_of_element_located((By.ID, "idtabs")))
-        bs = driver.find_element_by_id("idtabs").find_elements_by_tag_name("a")
-        for b in bs:
-            print(b.get_attribute("id"), b.text)
-            f1.write(",".join([line[0], line[1], line[2], line[3], b.get_attribute("id"), b.text]))
-            f1.write("\n")
-        f1.close()
-    driver.quit()
+        data = {
+            "gradeId": line[0],
+            "courseId": line[1],
+            "versionId": line[2]
+        }
+        resp = requests.post(url="http://www.jiaoxueyun.cn/resources-more-inter!getVolumeAjaxs.do", data=data)
+        for j in resp.json():
+            if j:
+                li = [line[0], line[1], line[2], j.get("courseListId"), j.get("courseListName")]
+                f_book.write(",".join(li))
+                f_book.write("\n")
+        resp.close()
+    f_book.close()
+    f.close()
+
+
+def get_chapter():
+    f = open("book.txt", mode="r", encoding="utf8")
+    for line in f.readlines():
+        line = line.split(",")
+        if int(line[0][1:]) < 11:continue
+        f_chapter = open("chapter_%s.txt" % line[0], mode="a", encoding="utf8")
+        data = {
+            "gradeId": line[0],
+            "courseId": line[1],
+            "versionId": line[2],
+            "volumeId": line[3]
+        }
+        resp = requests.post("http://www.jiaoxueyun.cn/resources-more-inter!getTrees.do?" + urlencode(data))
+        for j in resp.json():
+            if j:
+                d = [line[3], j.get("SqNo"), j.get("CourseListId"), j.get("CourseListName")]
+                f_chapter.write(",".join(d))
+                f_chapter.write("\n")
+        f_chapter.close()
+        time.sleep(0.3)
     f.close()
 
 
 if __name__ == '__main__':
-    get_book()
+    get_chapter()

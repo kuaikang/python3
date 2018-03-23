@@ -49,18 +49,20 @@ def simple_info(soup):
 def enrol_students(number):
     url = "http://gkcx.eol.cn/schoolhtm/specialty/specialtyList/specialty%s.htm" % number
     response = requests.get(url)
-    soup = BeautifulSoup(response.content.decode(),"lxml")
+    soup = BeautifulSoup(response.content.decode(), "lxml")
     response.close()
-    return [x.text for x in soup.find(attrs={"class":"li-major grid"}).select("a")]
+    return [x.text for x in soup.find(attrs={"class": "li-major grid"}).select("a")]
 
 
 # 收费标准
 def money_standard(soup):
-    url = "http://gkcx.eol.cn/"
+    url = "http://gkcx.eol.cn"
     url_money = ""
     for menu in soup.find(attrs={"class": "li-aboutCollege"}).select("li"):
-        if menu.text == '收费标准':
+        if '收费标准' in menu.text:
             url_money = url + menu.find("a")["href"]
+    if url_money == "":
+        return None
     response = requests.get(url_money)
     soup1 = BeautifulSoup(response.content.decode(), "lxml")
     return soup1.find(attrs={"class": "content news"}).select("p")[-1]
@@ -73,6 +75,8 @@ def school_view(soup):
     for menu in soup.find(attrs={"class": "s_nav menu_school"}).select("li"):
         if menu.text == '校园风光':
             url_view = url + menu.find("a")["href"]
+    if url_view == "":
+        return None
     response = requests.get(url_view)
     beautiful_soup = BeautifulSoup(response.content.decode(), "lxml")
     src = []
@@ -81,8 +85,7 @@ def school_view(soup):
     return src
 
 
-if __name__ == '__main__':
-    number = "30"
+def main(number):
     response = requests.get("http://gkcx.eol.cn/schoolhtm/schoolTemple/school%s.htm" % number)
     soup = BeautifulSoup(response.content.decode(), "lxml")
     response.close()
@@ -100,3 +103,8 @@ if __name__ == '__main__':
     print(school_view(soup))
     print("招生专业")
     print(enrol_students(number))
+
+
+if __name__ == '__main__':
+    for i in range(300):
+        main(i + 30)
