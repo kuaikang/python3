@@ -15,8 +15,8 @@ def get_db_zujuan():
     # 打开数据库连接
     try:
         db = pymysql.connect(
-            host="192.168.121.40", user="root",
-            password="001233", db="kuaik", port=3306,
+            host="localhost", user="root",
+            password="kuaikang", db="kuaik", port=3333,
             charset="utf8"
         )
         return db
@@ -50,6 +50,6 @@ def main(res_book_id, zujuan_book_id):
 
 
 if __name__ == '__main__':
-    book_id = '100007001620337'
-    zujuan_book_id = "119441"
+    book_id = '050009001060100'
+    zujuan_book_id = "6384"
     main(book_id, zujuan_book_id)

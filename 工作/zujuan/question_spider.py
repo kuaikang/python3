@@ -7,8 +7,8 @@ def get_db():
     # 打开数据库连接
     try:
         db = pymysql.connect(
-            host="192.168.121.40", user="root",
-            password="001233", db="kuaik", port=3306,
+            host="localhost", user="root",
+            password="kuaikang", db="kuaik", port=3333,
             charset="utf8"
         )
         return db
@@ -33,7 +33,7 @@ def get_question(categories, page):
     grade8 = {"grade_id[]": "8"}
     grade9 = {"grade_id[]": "9"}
     head = {
-        "Cookie":"_ga=GA1.2.1209185538.1520329414; _gid=GA1.2.1039098456.1521423702; PHPSESSID=jp4v0ul3nhsh566c486nkfvcg2; xd=75519cb9f2bf90d001c0560f5c40520062a60ada9cb38350078f83e04ee38a31a%3A2%3A%7Bi%3A0%3Bs%3A2%3A%22xd%22%3Bi%3A1%3Bi%3A2%3B%7D; _csrf=2af821a7165551239a7c41d1646643aca3c90ac2d8663bf01dcbe75e9cb2f470a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22b9AxHw7NBLZlWMlKCQEPoDVnDGY9m4Xr%22%3B%7D; isRemove=1; Hm_lvt_6de0a5b2c05e49d1c850edca0c13051f=1521423702,1521446251,1521509816,1521515834; chid=19e92f27f767d4d8eceab9ca12975b67007ccb5366fcb4209a851c120c07f81ca%3A2%3A%7Bi%3A0%3Bs%3A4%3A%22chid%22%3Bi%3A1%3Bs%3A2%3A%2210%22%3B%7D; Hm_lpvt_6de0a5b2c05e49d1c850edca0c13051f=1521518473",
+        "Cookie": "isRemove=1; _ga=GA1.2.1209185538.1520329414; _gid=GA1.2.1039098456.1521423702; PHPSESSID=o5pjqgqmgddgo3cb0quoo4kfb5; _csrf=ee5fb86d42626fa354bba9c04e39b7ce88d95eac5620cbacd9f78774bd7004e2a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22ScwmwbfGNoa-ehLoLYxkRsiIDASFgCvW%22%3B%7D; isRemove=1; xd=302c76d9e27c6fb0e1f815bdf637ae7f9ec27997dd7c18c9fcf7c68da09ff5c8a%3A2%3A%7Bi%3A0%3Bs%3A2%3A%22xd%22%3Bi%3A1%3Bs%3A1%3A%222%22%3B%7D; Hm_lvt_6de0a5b2c05e49d1c850edca0c13051f=1521595170,1521629421,1521680386,1521683439; chid=cfb34d37b40eefc2ccbe518532b4834f2a7aa0aa8db56dff2d2fd9a9a5c919dda%3A2%3A%7Bi%3A0%3Bs%3A4%3A%22chid%22%3Bi%3A1%3Bs%3A1%3A%226%22%3B%7D; Hm_lpvt_6de0a5b2c05e49d1c850edca0c13051f=1521684161",
         "X-CSRF-Token": "YuvZ0usGfrQHZJ9QxC4RghO0y-1dTrxnimhxKsm4w6QA0piqo3FJ-kUoxTyTY33JUOWOvTIK6gnOLygTpIyb1g==",
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.146 Safari/537.36"
     }
@@ -72,7 +72,7 @@ def main(book_id):
         # for line in f.readlines()[301:600]:
         #     line = line.split(",")
         for i in range(1, 100):
-            if i == 9:break
+            if i == 33:break
             data, total = get_question(line[0], i)
             if not data: break
             page = (total + 10 - 1) // 10
@@ -100,7 +100,7 @@ def main(book_id):
                                                          q.get("question_id")))
                             cur.execute(sql_t.format(q.get("knowledge"), q.get("question_id")))
                         db.commit()
-                        time.sleep(0.4)
+                        time.sleep(0.3)
                     except Exception as e:
                         print(e)
     cur.close()
@@ -108,7 +108,7 @@ def main(book_id):
 
 
 if __name__ == '__main__':
-    main("4977")
+    main("6384")
 
 # print(q.get("question_text"))
 # print(q.get("options"))  # 选项

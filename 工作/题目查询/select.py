@@ -68,7 +68,7 @@ def main(subject_key, subject_name):
 
 if __name__ == '__main__':
     db = get_db()
-    sub_key = ["yw", "sx", "yy", "dl", "hx", "ls", "wl", "zz", "sw"]
-    sub_name = ["语文", "数学", "英语", "地理", "化学", "历史", "物理", "政治", "生物"]
-    for i in range(9):
+    sub_key = ["yw", "sx", "yy", "dl", "hx", "ls", "wl", "zz", "sw", 'kx', "sp", "dd", "ty", "ms", "mu"]
+    sub_name = ["语文", "数学", "英语", "地理", "化学", "历史", "物理", "政治", "生物", "科学", "思想品德", "道德与法治", "体育", "美术", "音乐"]
+    for i in range(len(sub_key)):
         main(sub_key[i], sub_name[i])

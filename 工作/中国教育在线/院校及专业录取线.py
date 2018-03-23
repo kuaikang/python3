@@ -1,5 +1,5 @@
 if __name__ == '__main__':
-    f = open("province.txt", mode="r", encoding="utf8")
-    lines = f.readlines()
-    for i in range(len(lines)):
-        print(lines[i])
+# 文科.10034  理科.10035
+# ['10154','10036','10037','10038','10155','10149']
+#           本科批
+    pass

@@ -33,4 +33,5 @@ if __name__ == '__main__':
                 f.write("\n")
             f.close()
         if command == "end":
+            browser.quit()
             sys.exit(0)  # 正常退出
