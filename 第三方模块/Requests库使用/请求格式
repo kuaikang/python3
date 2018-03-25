@@ -1,0 +1,12 @@
+post请求,form表单数据
+    req = {}
+    requests.post(url, data=req)
+
+post请求,但是参数是拼在url后面
+    req = {}
+    requests.post(url + urlencode(req))
+
+post请求,json格式数据
+    req = {}
+    requests.post(url, json=req)
+
