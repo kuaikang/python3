@@ -1,6 +1,6 @@
-from 数据库存储.Mysql import pymysql_util
+from 基础知识.数据库存储.Mysql import pymysql_util
 import pymysql
-from 文档操作.excel import excel_util
+from 基础知识.文档操作.excel import excel_util
 
 
 def get_db():

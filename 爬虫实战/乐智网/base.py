@@ -85,28 +85,5 @@ def get_book():
     f.close()
 
 
-def get_chapter():
-    f = open("book.txt", mode="r", encoding="utf8")
-    for line in f.readlines():
-        line = line.split(",")
-        if int(line[0][1:]) < 11:continue
-        f_chapter = open("chapter_%s.txt" % line[0], mode="a", encoding="utf8")
-        data = {
-            "gradeId": line[0],
-            "courseId": line[1],
-            "versionId": line[2],
-            "volumeId": line[3]
-        }
-        resp = requests.post("http://www.jiaoxueyun.cn/resources-more-inter!getTrees.do?" + urlencode(data))
-        for j in resp.json():
-            if j:
-                d = [line[3], j.get("SqNo"), j.get("CourseListId"), j.get("CourseListName")]
-                f_chapter.write(",".join(d))
-                f_chapter.write("\n")
-        f_chapter.close()
-        time.sleep(0.3)
-    f.close()
-
-
 if __name__ == '__main__':
-    get_chapter()
+    get_grade()

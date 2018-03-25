@@ -1,4 +1,6 @@
-import pymysql
+import pymysql, requests, re, time, threading
+from urllib.parse import urlencode
+from bs4 import BeautifulSoup
 
 
 def get_db():
@@ -6,7 +8,7 @@ def get_db():
     try:
         db = pymysql.connect(
             host="localhost", user="root",
-            password="kuaikang", db="lezhi", port=3333,
+            password="123456", db="lezhi", port=3306,
             charset="utf8"
         )
         return db
@@ -41,6 +43,114 @@ def insert_book():
     db.close()
 
 
-if __name__ == '__main__':
+def insert_version():
+    db = get_db()
+    cur = db.cursor()
+    p_id = 200000
+    sql = "INSERT INTO version (`p_id`, `grade_id`, `course_id`, `version_id`, `version_name`) " \
+          "VALUES ('%s', '%s', '%s', '%s', '%s');"
+    f = open("version.txt", mode="r", encoding="utf8")
+    for line in f.readlines():
+        line = line.split(",")
+        cur.execute(sql % (p_id, line[0], line[1], line[2], line[3].strip()))
+        p_id += 1
+        db.commit()
+    f.close()
+    cur.close()
+    db.close()
 
-    insert_book_sql = "INSERT INTO chapter (`chapter_id`, `chapter_name`, `book_id`) VALUES ('%s', '%s', '%s');"
+
+def insert_chapter():
+    db = get_db()
+    cur = db.cursor()
+    sql = "select book_id,course_id,version_id,grade_id from book"
+    cur.execute(sql)
+    books = cur.fetchall()
+    insert_chapter_sql = "INSERT INTO chapter (`chapter_id`, `chapter_name`, `parent_id`, `book_id`, `lesson_type`, `no`) " \
+                         "VALUES ('%s', '%s', '%s', '%s', '%s', '%s');"
+    for book in books:
+        data = {
+            "gradeId": book[3],
+            "courseId": book[1],
+            "versionId": book[2]
+        }
+        resp = requests.post(
+            "http://www.jiaoxueyun.cn/resources-more-inter!getTrees.do?&volumeId=%s&" % book[0] + urlencode(data)
+        )
+        if "CourseListId" in resp.text:
+            for j in resp.json():
+                cur.execute(
+                    insert_chapter_sql % (j.get("CourseListId"),
+                                          pymysql.escape_string(j.get("CourseListName")),
+                                          j.get("ParentId"), book[0],
+                                          j.get("LessonType"),
+                                          j.get("SqNo")))
+            db.commit()
+    cur.close()
+    db.close()
+
+
+def insert_resource(book_id, res_type):
+    db = get_db()
+    cur = db.cursor()
+    sql = "SELECT b.grade_id,b.version_id,b.course_id,c.chapter_id,b.book_id from chapter c " \
+          "LEFT JOIN book b on c.book_id = b.book_id WHERE c.book_id='%s'" % book_id
+    insert_resource = "INSERT INTO resource (`resource_id`, `resource_name`, `book_id`, `chapter_id`,`type`) " \
+                      "VALUES ('%s', '%s', '%s', '%s', '%s');"
+    url = "http://www.jiaoxueyun.cn/resources-more!getTeachingResource.do?"
+    pattern = re.compile(".*?resource_id=(.*?)&.*?", re.S)
+    cur.execute(sql)
+    chapters = cur.fetchall()
+    for chapter in chapters:
+        data = {
+            "type": "T01,",
+            "gradeId": chapter[0],
+            "versionId": chapter[1],
+            "courseId": chapter[2],
+            "nodeId": chapter[3],
+            "extension_name": res_type
+        }
+        try:
+            resp = requests.get(url=url + urlencode(data), timeout=10)
+        except Exception:
+            continue
+        soup = BeautifulSoup(resp.text, "lxml")
+        tds = soup.find_all(attrs={"style": "font-weight: bold;cursor: pointer;"})
+        if not tds: continue
+        for td in tds:
+            resource_id = re.findall(pattern, td["onclick"])[0]
+            cur.execute(insert_resource % (
+                resource_id, pymysql.escape_string(td["title"]), chapter[4], chapter[3], res_type))
+        db.commit()
+        time.sleep(0.1)
+    cur.close()
+    db.close()
+
+
+def main(grade_name, res_type):
+    db = get_db()
+    cur = db.cursor()
+    sql = 'SELECT book_id FROM book WHERE grade_name = "%s"' % grade_name
+    cur.execute(sql)
+    books = cur.fetchall()
+    cur.close()
+    db.close()
+    for book_id in books:
+        insert_resource(book_id[0], res_type)
+
+
+if __name__ == '__main__':
+    # DOC DOCX PPT PPTX TXT MP4 XLS
+    # t = threading.Thread(target=main, args=("七年级", "PPT",))
+    # t.start()
+    # t1 = threading.Thread(target=main, args=("八年级", "PPT",))
+    # t1.start()
+    # t2 = threading.Thread(target=main, args=("九年级", "PPT",))
+    # t2.start()
+    # task = ["1134", "1550", "1618", "7939", "8016", "8069"]
+    # task = ["2718", "2865", "3201"]
+    task = ["3985", "ff808081493e28d201495e91e91d405e", "ff808081493e28d201495efb887d4223",
+            "ff8080814b3a121b014b4848d3f50e7f"]
+    for t in task:
+        t = threading.Thread(target=insert_resource, args=(t, "DOCX",))
+        t.start()

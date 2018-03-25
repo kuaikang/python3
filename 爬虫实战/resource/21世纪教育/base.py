@@ -1,6 +1,6 @@
-import requests, json, re, threading
+import requests, re, threading
 from bs4 import BeautifulSoup
-from 数据库存储.Mysql import pymysql_util
+from 基础知识.数据库存储.Mysql import pymysql_util
 import time, sys
 
 cz_dic = {"2": "语文", "3": "数学", "4": "英语", "6": "物理", "7": "化学", "8": "历史", "9": "政治思品", "10": "地理", "11": "生物"}
