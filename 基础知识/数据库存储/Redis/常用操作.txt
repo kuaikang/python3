@@ -1,0 +1,33 @@
+set(name, value, ex=None, px=None, nx=False, xx=False)
+参数：ex，过期时间（秒）
+     px，过期时间（毫秒）
+     nx，如果设置为True，则只有name不存在时，当前set操作才执行
+     xx，如果设置为True，则只有name存在时，岗前set操作才执行
+
+mset(*args, **kwargs) # 批量设置 如 r.mset(name="xixi", age=18)
+mget(keys, *args) # 批量获取 如 r.mget("name", "age")
+
+getset(name, value) # 设置新值并获取原来的值
+
+append(key, value) # 在redis name对应的值后面追加内容
+
+lpush(name,values=[]) 在name对应的list中添加元素，每个新的元素都添加到列表的最左边
+rpush(name, values=[])  表示从右向左操作
+llen(name) # name对应的list元素的个数
+linsert(name, where, refvalue, value)) # 在name对应的列表的某一个值前或后插入一个新值
+# 参数：
+    # name，redis的name
+    # where，BEFORE或AFTER
+    # refvalue，标杆值，即：在它前后插入数据
+    # value，要插入的数据
+r.lrem(name, value, num) # 在name对应的list中删除指定的值
+# 参数：
+    # name，redis的name
+    # value，要删除的值
+    # num，  num=0，删除列表中所有的指定值；
+           # num=2,从前到后，删除2个；
+           # num=-2,从后向前，删除2个
+lpop(name) # 在name对应的列表的左侧获取第一个元素并在列表中移除，返回值则是第一个元素
+rpop(name) # 表示从右向左操作
+ltrim(name, start, end)  #在name对应的列表中移除没有在start-end索引之间的值
+lindex(name, index) # 在name对应的列表中根据索引获取列表元素
