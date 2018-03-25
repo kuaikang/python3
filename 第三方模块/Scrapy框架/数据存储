@@ -1,0 +1,6 @@
+scrapy crawl genspider_name -o spider.json
+scrapy crawl genspider_name -o spider.jl
+把数据存储到spider.json文件
+第一种这个是大json
+第二种一行是一个json
+还可以保存为别的格式,如:xml , csv
