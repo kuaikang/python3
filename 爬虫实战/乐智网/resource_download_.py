@@ -54,10 +54,6 @@ def download(book_id):
 
 
 if __name__ == '__main__':
-    book_ids = ["3201", "3985",
-                "ff808081493e28d201495e91e91d405e", "ff808081493e28d201495efb887d4223",
-                "ff8080814b3a121b014b4848d3f50e7f"]
+    book_ids = ["3201", "3985"]
     for book_id in book_ids:
         download(book_id)
-        # t = threading.Thread(target=download, args=(book_id,))
-        # t.start()

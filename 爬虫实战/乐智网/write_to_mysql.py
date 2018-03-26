@@ -125,28 +125,27 @@ def insert_resource(book_id, res_type):
                 cur.execute(insert_resource % (
                     resource_id, pymysql.escape_string(td["title"]), chapter[4], chapter[3], res_type))
         db.commit()
-        time.sleep(0.1)
+        time.sleep(0.2)
     cur.close()
     db.close()
 
 
-def main(grade_name, res_type):
-    db = get_db()
-    cur = db.cursor()
-    sql = 'SELECT book_id FROM book WHERE grade_name = "%s"' % grade_name
-    cur.execute(sql)
-    books = cur.fetchall()
-    cur.close()
-    db.close()
-    for book_id in books:
-        insert_resource(book_id[0], res_type)
+def main(book_id, res_types):
+    for kind in res_types:
+        insert_resource(book_id, kind)
 
 
 if __name__ == '__main__':
-    # DOC DOCX PPT PPTX TXT MP4 XLS JPG
-
     task = ["3985", "ff808081493e28d201495e91e91d405e", "ff808081493e28d201495efb887d4223",
             "ff8080814b3a121b014b4848d3f50e7f"]
-    for t in task:
-        t = threading.Thread(target=insert_resource, args=(t, "DOCX",))
+    db = get_db()
+    sql = "select book_id from book where grade_id in ('G10','G11','G12') ORDER BY book_id limit 90,30"
+    print(sql)
+    cur = db.cursor()
+    cur.execute(sql)
+    book_ids = cur.fetchall()
+    cur.close()
+    tp = ['DOC', 'DOCX', 'PPT', 'PPTX', 'JPG', 'MP4', 'XLS']
+    for ids in book_ids:
+        t = threading.Thread(target=main, args=(ids[0], tp,))
         t.start()
