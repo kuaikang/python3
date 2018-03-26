@@ -41,38 +41,21 @@ def get_question(categories, page):
     resp = requests.get(url + params, headers=head)
     resp.close()
     return resp.json().get("data"), resp.json().get("total")
-    # for js in resp.json().get("data"):
-    #     quest = js.get("questions")
-    #     for q in quest:
-    #         print(q.get("question_text"))
-    #         print(q.get("options"))  # 选项
-    #         print(q.get("knowledge"))  # 知识点
-    #         print(q.get("question_id"))  # 问题id
-    #         print(q.get("question_type"))  # 问题类型 1单选 2多选 3判断 4填空 6解答 26实验综合题 28综合题
-    #         print(q.get("difficult_index"))  # 难度 1.容易 3.普通 5.困难
 
 
 def main(book_id):
     db = get_db()
     cur = db.cursor()
-    # sql_chap = "SELECT c.chapter_id from chapter c LEFT JOIN chapter_question qc " \
-    #            "on c.chapter_id = qc.chapter_id WHERE qc.question_id is null and c.chapter_id in " \
-    #            "(SELECT chapter_id from chapter ch LEFT JOIN book b on ch.book_id = b.book_id " \
-    #            "WHERE b.subject_id = '9' and b.period = '2') limit 100"
     sql_chap = "SELECT chapter_id from chapter WHERE book_id = '%s'" % book_id
     cur.execute(sql_chap)
     chapter_ids = cur.fetchall()
     print(chapter_ids)
-    print("start")
     sql_q = "INSERT INTO `kuaik`.`question` (`question_id`, `context`, `type`, `difficult`) VALUES ('{0}', '{1}', '{2}', '{3}')"
     sql_cq = 'INSERT INTO `kuaik`.`chapter_question` (`id`,`chapter_id`, `question_id`) VALUES (UUID(),"{0}", "{1}");'
     sql_t = 'INSERT INTO `kuaik`.`tag` (`tag_id`, `tag_name`, `question_id`) VALUES (UUID(), "{0}", "{1}");'
     for line in chapter_ids:
-        # f = open("cz_chapter.txt",mode="r",encoding="utf8")
-        # for line in f.readlines()[301:600]:
-        #     line = line.split(",")
         for i in range(1, 100):
-            if i == 50:break
+            if i == 15:break
             data, total = get_question(line[0], i)
             if not data: break
             page = (total + 10 - 1) // 10
@@ -99,16 +82,17 @@ def main(book_id):
                                 cur.execute(sql_i.format(pymysql.escape_string(q.get("options").get(key)), key,
                                                          q.get("question_id")))
                             cur.execute(sql_t.format(q.get("knowledge"), q.get("question_id")))
-                        db.commit()
-                        time.sleep(0.2)
                     except Exception as e:
                         print(e)
+                        continue
+                db.commit()
+                time.sleep(0.1)
     cur.close()
     db.close()
 
 
 if __name__ == '__main__':
-    main("9894")
+    main("11420")
 
 # print(q.get("question_text"))
 # print(q.get("options"))  # 选项

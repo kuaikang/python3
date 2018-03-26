@@ -51,6 +51,6 @@ def main(res_book_id, zujuan_book_id):
 
 if __name__ == '__main__':
     # 数学北师版七下 020007002006048 9894
-    book_id = '020007002006048'
-    zujuan_book_id = "9894"
+    book_id = '020007002043100'
+    zujuan_book_id = "11418"
     main(book_id, zujuan_book_id)
