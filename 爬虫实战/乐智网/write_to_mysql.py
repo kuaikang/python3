@@ -97,6 +97,7 @@ def insert_resource(book_id, res_type):
           "LEFT JOIN book b on c.book_id = b.book_id WHERE c.book_id='%s'" % book_id
     insert_resource = "INSERT INTO resource (`resource_id`, `resource_name`, `book_id`, `chapter_id`,`type`) " \
                       "VALUES ('%s', '%s', '%s', '%s', '%s');"
+    resource_select = "SELECT * FROM resource WHERE resource_id = '%s' and chapter_id = '%s';"
     url = "http://www.jiaoxueyun.cn/resources-more!getTeachingResource.do?"
     pattern = re.compile(".*?resource_id=(.*?)&.*?", re.S)
     cur.execute(sql)
@@ -119,8 +120,10 @@ def insert_resource(book_id, res_type):
         if not tds: continue
         for td in tds:
             resource_id = re.findall(pattern, td["onclick"])[0]
-            cur.execute(insert_resource % (
-                resource_id, pymysql.escape_string(td["title"]), chapter[4], chapter[3], res_type))
+            cur.execute(resource_select % (resource_id, chapter[3]))
+            if not cur.fetchone():
+                cur.execute(insert_resource % (
+                    resource_id, pymysql.escape_string(td["title"]), chapter[4], chapter[3], res_type))
         db.commit()
         time.sleep(0.1)
     cur.close()
@@ -140,15 +143,8 @@ def main(grade_name, res_type):
 
 
 if __name__ == '__main__':
-    # DOC DOCX PPT PPTX TXT MP4 XLS
-    # t = threading.Thread(target=main, args=("七年级", "PPT",))
-    # t.start()
-    # t1 = threading.Thread(target=main, args=("八年级", "PPT",))
-    # t1.start()
-    # t2 = threading.Thread(target=main, args=("九年级", "PPT",))
-    # t2.start()
-    # task = ["1134", "1550", "1618", "7939", "8016", "8069"]
-    # task = ["2718", "2865", "3201"]
+    # DOC DOCX PPT PPTX TXT MP4 XLS JPG
+
     task = ["3985", "ff808081493e28d201495e91e91d405e", "ff808081493e28d201495efb887d4223",
             "ff8080814b3a121b014b4848d3f50e7f"]
     for t in task:
