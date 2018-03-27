@@ -105,7 +105,8 @@ if __name__ == '__main__':
     # main(subject_key=subject_key, upload_url=upload_url, upload_resource_url=upload_resource_url, schoolId=schoolId,
     #      schoolName=schoolName, accessToken=accessToken)
 
-    with open('E:\\resource\\sx\\七年级\\北师大版\\下册_020007002006048\\2.4 用尺规作角_020007002006048002004\\用尺规作角 课件1.ppt',
+    with open('E:\\resource\\历史\\八年级\\北师大版\\下册\\第1课 中华人民共和国成立\\第1课 中华人民共和国成立 课件1.ppt',
               mode="rb") as f:
-        resp = requests.post(url=upload_url, files={'file': f})
-        print(resp.text)
+        files = {'file': ['1.ppt', f, 'application/octet-stream']}
+        resp = requests.post(url=upload_url, files=files)
+        print(resp.json())
