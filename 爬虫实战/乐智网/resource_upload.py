@@ -64,9 +64,9 @@ def main(subject_key, upload_url, upload_resource_url, schoolId, schoolName, acc
     data = path_dir(subject_key)
     for d in data:
         unit_id = get_unit_id(cur, d[1])
-        if os.path.getsize(d[2]) / 1024 / 1024 >= 1: continue
         with open(d[2], mode="rb") as f:
-            resp = requests.post(url=upload_url, files={"file": f})
+            files = {'file': [d[-1], f, 'application/octet-stream']}
+            resp = requests.post(url=upload_url, files=files)
             data = resp.json()
             if data.get('status') != 200: continue
             req = {
@@ -104,9 +104,3 @@ if __name__ == '__main__':
     upload_resource_url = 'http://api.cloudteach.jzexueyun.com/cloud/exueResource/uploadResource'
     # main(subject_key=subject_key, upload_url=upload_url, upload_resource_url=upload_resource_url, schoolId=schoolId,
     #      schoolName=schoolName, accessToken=accessToken)
-
-    with open('E:\\resource\\历史\\八年级\\北师大版\\下册\\第1课 中华人民共和国成立\\第1课 中华人民共和国成立 课件1.ppt',
-              mode="rb") as f:
-        files = {'file': ['1.ppt', f, 'application/octet-stream']}
-        resp = requests.post(url=upload_url, files=files)
-        print(resp.json())
