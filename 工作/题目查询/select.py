@@ -70,5 +70,8 @@ if __name__ == '__main__':
     db = get_db()
     sub_key = ["yw", "sx", "yy", "dl", "hx", "ls", "wl", "zz", "sw", 'kx', "sp", "dd", "ty", "ms", "mu"]
     sub_name = ["语文", "数学", "英语", "地理", "化学", "历史", "物理", "政治", "生物", "科学", "思想品德", "道德与法治", "体育", "美术", "音乐"]
+
+    sub_key = ['xx','ps']
+    sub_name = ['信息技术','品德与社会']
     for i in range(len(sub_key)):
         main(sub_key[i], sub_name[i])

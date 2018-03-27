@@ -19,7 +19,7 @@ def main(subject_key):
     db = get_db()
     cur = db.cursor()
     sql = "select answer_url from t_res_%s_question" % subject_key
-    sql_tag = "select tag_name from t_res_%s_tag" % subject_key
+    sql_tag = "select tag_url from t_res_%s_tag" % subject_key
     cur.execute(sql)
     result1 = cur.fetchall()
     for res in result1:
@@ -35,4 +35,4 @@ def main(subject_key):
 
 
 if __name__ == '__main__':
-    main("wl")
+    main("sx")

@@ -1,15 +1,9 @@
 import pymysql
-import random
 
 
-def get_db():
+def get_db_spark():
     # 打开数据库连接
     try:
-        # db = pymysql.connect(
-        #     host="123.206.227.74", user="root",
-        #     password="exue2017", db="zujuan_spark_test", port=3306,
-        #     charset="utf8"
-        # )
         db = pymysql.connect(
             host="localhost", user="root",
             password="kuaikang", db="kuaik", port=3333,
@@ -20,29 +14,49 @@ def get_db():
         print(e)
 
 
-def insert_tag():
-    db = get_db()
-    cur = db.cursor()
-    cur.execute("select tag_description from t_res_dl_tag")
-    result = cur.fetchall()
+def get_db_topic():
+    # 打开数据库连接
+    try:
+        db = pymysql.connect(
+            host="123.206.227.74", user="root",
+            password="exue2017", db="topic_standard", port=3306,
+            charset="utf8"
+        )
+        return db
+    except Exception as e:
+        print(e)
+
+
+def insert_tag(subject_key):
+    db_spark = get_db_spark()
+    cur_spark = db_spark.cursor()
+    db_topic = get_db_topic()
+    cur_topic = db_topic.cursor()
+    cur_spark.execute("select tag_description from t_res_%s_tag" % subject_key)
+    result = cur_spark.fetchall()
     s = set()
     for res in result:
         tags = res[0].split(";")
         for tag in tags:
             s.add(tag.replace("\n", "").strip())
-    sql_insert_tag = "INSERT INTO t_res_dl_tag_copy (`tag_id`, `tag_name`) " \
+    sql_insert_tag = "INSERT INTO t_res_{subject_key}_tag_copy (`tag_id`, `tag_name`) " \
                      "VALUES ('{tag_id}', '{tag_name}');"
-    tag_id = 21000000
+    tag_id = 2100000
     for i in s:
-        cur.execute(sql_insert_tag.format(tag_id=tag_id, tag_name=i))
+        cur_topic.execute("select tag_id from t_res_%s_tag where tag_name = '%s'" % (subject_key, pymysql.escape_string(i)))
+        data = cur_topic.fetchone()
+        if data:
+            cur_spark.execute(sql_insert_tag.format(subject_key=subject_key, tag_id=data[0], tag_name=i))
+        else:
+            cur_spark.execute(sql_insert_tag.format(subject_key=subject_key, tag_id=tag_id, tag_name=i))
         tag_id += 1
-        db.commit()
-    cur.close()
-    db.close()
+        db_spark.commit()
+    cur_spark.close()
+    db_spark.close()
 
 
 def main():
-    db = get_db()
+    db = get_db_spark()
     cur = db.cursor()
     sql = "select tag_id,question_uuid from t_res_dl_tag_question"
     select_tag_by_id = "select tag_description from t_res_dl_tag where tag_id = %s"
@@ -65,4 +79,5 @@ def main():
 
 
 if __name__ == '__main__':
+    # insert_tag('dl')
     main()
