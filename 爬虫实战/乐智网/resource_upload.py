@@ -78,7 +78,7 @@ def main(subject_key, upload_url, upload_resource_url, schoolId, schoolName, acc
                 "chapterId": d[1],
                 "fileList": [
                     {
-                        "fileName": d[-1],
+                        "fileName": data.get('content').get('fileName'),
                         "fileType": data.get('content').get('fileType'),
                         "filePath": data.get('content').get('accessUrl'),
                         "fileSize": data.get('content').get('fileSize')
