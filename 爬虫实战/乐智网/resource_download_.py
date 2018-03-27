@@ -1,7 +1,6 @@
 import requests
 import pymysql
 import os
-import threading
 
 
 def get_db():
