@@ -5,8 +5,8 @@ def get_db_spark():
     # 打开数据库连接
     try:
         db = pymysql.connect(
-            host="localhost", user="root",
-            password="kuaikang", db="kuaik", port=3333,
+            host="123.206.227.74", user="root",
+            password="exue2017", db="zujuan_spark_test", port=3306,
             charset="utf8"
         )
         return db
@@ -43,7 +43,8 @@ def insert_tag(subject_key):
                      "VALUES ('{tag_id}', '{tag_name}');"
     tag_id = 2100000
     for i in s:
-        cur_topic.execute("select tag_id from t_res_%s_tag where tag_name = '%s'" % (subject_key, pymysql.escape_string(i)))
+        cur_topic.execute(
+            "select tag_id from t_res_%s_tag where tag_name = '%s'" % (subject_key, pymysql.escape_string(i)))
         data = cur_topic.fetchone()
         if data:
             cur_spark.execute(sql_insert_tag.format(subject_key=subject_key, tag_id=data[0], tag_name=i))
@@ -55,24 +56,25 @@ def insert_tag(subject_key):
     db_spark.close()
 
 
-def main():
+def main(subject_key):
     db = get_db_spark()
     cur = db.cursor()
-    sql = "select tag_id,question_uuid from t_res_dl_tag_question"
-    select_tag_by_id = "select tag_description from t_res_dl_tag where tag_id = %s"
-    select_tag_by_name = "select tag_id from t_res_dl_tag_copy where tag_name = '%s'"
-    insert_tag_question = "INSERT INTO t_res_dl_tag_question_copy (`tag_id`, `tag_name`, `question_uuid`, `create_time`) " \
+    sql = "select tag_id,question_uuid from t_res_%s_tag_question" % subject_key
+    select_tag_by_id = "select tag_description from t_res_%s_tag where tag_id = %s"
+    select_tag_by_name = "select tag_id from t_res_%s_tag_copy where tag_name = '%s'"
+    insert_tag_question = "INSERT INTO t_res_{subject_key}_tag_question_copy (`tag_id`, `tag_name`, `question_uuid`, `create_time`) " \
                           "VALUES ('{tag_id}', '{tag_name}', '{question_uuid}', '2018-03-20 21:02:48');"
     cur.execute(sql)
     tag_question_map = cur.fetchall()
     for m in tag_question_map:
-        cur.execute(select_tag_by_id % m[0])
+        cur.execute(select_tag_by_id % (subject_key, m[0]))
         tag_name = cur.fetchone()
         tag_list = tag_name[0].replace("\n", "").split(";")
         for t in tag_list:
-            cur.execute(select_tag_by_name % t)
+            cur.execute(select_tag_by_name % (subject_key, t))
             tag_id = cur.fetchone()[0]
-            cur.execute(insert_tag_question.format(tag_id=tag_id, tag_name=t, question_uuid=m[1]))
+            cur.execute(
+                insert_tag_question.format(subject_key=subject_key, tag_id=tag_id, tag_name=t, question_uuid=m[1]))
         db.commit()
     cur.close()
     db.close()
@@ -80,4 +82,4 @@ def main():
 
 if __name__ == '__main__':
     # insert_tag('dl')
-    main()
+    main('dl')

@@ -43,7 +43,7 @@ def download(book_id):
         if '登录' not in resp.text:
             print("%s/%s.%s" % (path, res[5].replace("?", ""), res[6].lower()))
             f = open("%s/%s.%s" % (path, res[5].replace("?", ""), res[6].lower()), mode="wb")
-            for chunk in resp.iter_content(chunk_size=2048):
+            for chunk in resp.iter_content(chunk_size=1024):
                 if chunk:
                     f.write(chunk)
             f.close()
