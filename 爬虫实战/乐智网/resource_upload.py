@@ -28,10 +28,11 @@ def path_dir(subject_key):
                 book_path = os.path.join(version_path, book)
                 chapters = os.listdir(book_path)
                 for chapter in chapters:
+                    if not chapter.split('_')[-1].isdigit(): continue
                     res_path = os.path.join(book_path, chapter)
                     res = os.listdir(res_path)
                     for r in res:
-                        li = [book.split('_')[-1], chapter.split('_')[-1], os.path.join(res_path, r), r[:r.rfind('.')]]
+                        li = [book.split('_')[-1], chapter.split('_')[-1], os.path.join(res_path, r), r]
                         result.append(li)
     return result
 
@@ -78,7 +79,7 @@ def main(subject_key, upload_url, upload_resource_url, schoolId, schoolName, acc
                 "chapterId": d[1],
                 "fileList": [
                     {
-                        "fileName": data.get('content').get('fileName'),
+                        "fileName": d[-1],
                         "fileType": data.get('content').get('fileType'),
                         "filePath": data.get('content').get('accessUrl'),
                         "fileSize": data.get('content').get('fileSize')
@@ -86,21 +87,22 @@ def main(subject_key, upload_url, upload_resource_url, schoolId, schoolName, acc
                 ]
             }
             header = {'accessToken': accessToken}
-            requests.post(url=upload_resource_url, json=req,
+            result = requests.post(url=upload_resource_url, json=req,
                           headers=header)
             print(req)
+            if result.json().get('status') != 200: break
     cur.close()
     db.close()
 
 
 if __name__ == '__main__':
-    # modify_chapter('100009002056100', 'E:\\resource\\ls\\九年级\\北师大版\\下册_100009002056100')
+    # modify_chapter('070007002081100', 'E:\\resource\\sw\\七年级\\苏教版\\下册_070007002081100')
+    # modify_chapter('100008002056100','E:\\resource\\ls\\八年级\\北师大版\\下册_100008002056100')
 
-    subject_key = 'sx'
-    schoolId = "425741580347940864",
-    schoolName = "资源研究中心"
-    accessToken = '4af2386a-43be-4879-b579-c68ea142b7ce'
+    subject_key = 'ls'
+    accessToken = 'aa020b75-96bd-4759-a711-af0c597dab51'
     upload_url = "http://dfs.upload1.jzexueyun.com/cos/upload"
     upload_resource_url = 'http://api.cloudteach.jzexueyun.com/cloud/exueResource/uploadResource'
-    # main(subject_key=subject_key, upload_url=upload_url, upload_resource_url=upload_resource_url, schoolId=schoolId,
-    #      schoolName=schoolName, accessToken=accessToken)
+    # main(subject_key=subject_key, upload_url=upload_url, upload_resource_url=upload_resource_url,
+    #      schoolId="425741580347940864",
+    #      schoolName="资源研究中心", accessToken=accessToken)
