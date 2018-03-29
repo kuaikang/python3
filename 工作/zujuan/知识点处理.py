@@ -38,6 +38,7 @@ def insert_tag(subject_key):
     for res in result:
         tags = res[0].split(";")
         for tag in tags:
+            if tag == '': continue
             s.add(tag.replace("\n", "").strip())
     sql_insert_tag = "INSERT INTO t_res_{subject_key}_tag_copy (`tag_id`, `tag_name`) " \
                      "VALUES ('{tag_id}', '{tag_name}');"
@@ -59,7 +60,10 @@ def insert_tag(subject_key):
 def main(subject_key):
     db = get_db_spark()
     cur = db.cursor()
-    sql = "select tag_id,question_uuid from t_res_%s_tag_question" % subject_key
+    sql = "select tag_id,question_uuid from t_res_%s_tag_question ORDER BY tag_id" % subject_key
+    # sql = "SELECT tag_id,question_uuid from t_res_{0}_tag_question WHERE question_uuid not in (select question_uuid from t_res_{1}_tag_question_copy)".format(
+    #     subject_key, subject_key)
+    print(sql)
     select_tag_by_id = "select tag_description from t_res_%s_tag where tag_id = %s"
     select_tag_by_name = "select tag_id from t_res_%s_tag_copy where tag_name = '%s'"
     insert_tag_question = "INSERT INTO t_res_{subject_key}_tag_question_copy (`tag_id`, `tag_name`, `question_uuid`, `create_time`) " \
@@ -69,17 +73,24 @@ def main(subject_key):
     for m in tag_question_map:
         cur.execute(select_tag_by_id % (subject_key, m[0]))
         tag_name = cur.fetchone()
+        if not tag_name: continue
         tag_list = tag_name[0].replace("\n", "").split(";")
         for t in tag_list:
             cur.execute(select_tag_by_name % (subject_key, t))
-            tag_id = cur.fetchone()[0]
+            tag_id = cur.fetchone()
+            if not tag_id: continue
             cur.execute(
-                insert_tag_question.format(subject_key=subject_key, tag_id=tag_id, tag_name=t, question_uuid=m[1]))
+                "SELECT * FROM `t_res_{subject_key}_tag_question_copy` WHERE tag_id = '{tag_id}' and question_uuid = '{question_uuid}'".format(
+                    subject_key=subject_key, tag_id=tag_id[0], question_uuid=m[1]))
+            if not cur.fetchone():
+                cur.execute(
+                    insert_tag_question.format(subject_key=subject_key, tag_id=tag_id[0], tag_name=t, question_uuid=m[1]
+                                               ))
         db.commit()
     cur.close()
     db.close()
 
 
 if __name__ == '__main__':
-    # insert_tag('dl')
-    main('dl')
+    insert_tag('wl')
+    # main('wl')

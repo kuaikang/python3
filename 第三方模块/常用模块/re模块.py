@@ -1,14 +1,24 @@
 import re
 
 
-def check_name_valid(name):
+def valid_name(name):
     reg = re.compile(r'[\\/:*?"<>|\r\n]+')
-    valid_name = reg.findall(name)
-    if valid_name:
-        for v in valid_name:
+    valid = reg.findall(name)
+    if valid:
+        for v in valid:
+            name = name.replace(v, '')
+    return name
+
+
+def re_name(name):
+    reg = re.compile(r'[\\/:*?_"=<>|!@#$%^&()（）,.;\r\n]+')
+    valid = reg.findall(name)
+    if valid:
+        for v in valid:
             name = name.replace(v, '')
     return name
 
 
 if __name__ == '__main__':
-    print(check_name_valid('<>春/?'))
+    print(valid_name('<>春/?'))
+    print(re_name('132fsdf涨=_@#$%^&()（）'))
