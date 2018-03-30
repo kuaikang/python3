@@ -26,7 +26,7 @@ def parse_page(html):
             'time':index[4],
             'score':index[5]+index[6]
         }
-    return  data
+    return data
 
 
 def main(offset):

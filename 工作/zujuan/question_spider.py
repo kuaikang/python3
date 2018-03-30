@@ -33,7 +33,7 @@ def get_question(categories, page):
     grade8 = {"grade_id[]": "8"}
     grade9 = {"grade_id[]": "9"}
     head = {
-        "Cookie":"isRemove=1; _ga=GA1.2.1209185538.1520329414; _gid=GA1.2.1039098456.1521423702; PHPSESSID=o48ef3voq3mp2ddvmm4r9sn0m2; _csrf=5664bfe3243bfe468a51427ec4cd2ec4650a84479b67bc1da467c20f95ee2fcfa%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22a31fbBxiN-82_bb9poobIoQpJTaPMwJf%22%3B%7D; isRemove=1; xd=302c76d9e27c6fb0e1f815bdf637ae7f9ec27997dd7c18c9fcf7c68da09ff5c8a%3A2%3A%7Bi%3A0%3Bs%3A2%3A%22xd%22%3Bi%3A1%3Bs%3A1%3A%222%22%3B%7D; Hm_lvt_6de0a5b2c05e49d1c850edca0c13051f=1521680386,1521683439,1521715177,1521786389; chid=753411127a26c0bf4f88c5bb0c64e771512616316bae9de43cb9a9038d6b13ffa%3A2%3A%7Bi%3A0%3Bs%3A4%3A%22chid%22%3Bi%3A1%3Bs%3A1%3A%223%22%3B%7D; _gat_gtag_UA_112991577_1=1; Hm_lpvt_6de0a5b2c05e49d1c850edca0c13051f=1521786832",
+        "Cookie":"isRemove=1; _ga=GA1.2.1209185538.1520329414; PHPSESSID=tk53cnk8hlrn9e89vu1krh57o3; _csrf=42041ea6c4badc9c1a8977ddb7c015765a34e1f375ba48dbdda5921a15c12c79a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22NRGSkM0fIFQHVzCC2EYrjxDzHwQKnk2y%22%3B%7D; isRemove=1; _gid=GA1.2.713679494.1522304671; Hm_lvt_6de0a5b2c05e49d1c850edca0c13051f=1521683439,1521715177,1521786389,1522304671; xd=302c76d9e27c6fb0e1f815bdf637ae7f9ec27997dd7c18c9fcf7c68da09ff5c8a%3A2%3A%7Bi%3A0%3Bs%3A2%3A%22xd%22%3Bi%3A1%3Bs%3A1%3A%222%22%3B%7D; chid=5b430739a3b769fd149f00e15357022edc2cea4511390cba95225dcbcaacc273a%3A2%3A%7Bi%3A0%3Bs%3A4%3A%22chid%22%3Bi%3A1%3Bs%3A1%3A%227%22%3B%7D; Hm_lpvt_6de0a5b2c05e49d1c850edca0c13051f=1522380959; _gat_gtag_UA_112991577_1=1",
         "X-CSRF-Token": "YuvZ0usGfrQHZJ9QxC4RghO0y-1dTrxnimhxKsm4w6QA0piqo3FJ-kUoxTyTY33JUOWOvTIK6gnOLygTpIyb1g==",
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.146 Safari/537.36"
     }
@@ -44,6 +44,7 @@ def get_question(categories, page):
 
 
 def main(book_id):
+    print(book_id)
     db = get_db()
     cur = db.cursor()
     sql_chap = "SELECT chapter_id from chapter WHERE book_id = '%s'" % book_id
@@ -86,13 +87,13 @@ def main(book_id):
                         print(e)
                         continue
                 db.commit()
-                time.sleep(0.1)
+                time.sleep(0.2)
     cur.close()
     db.close()
 
 
 if __name__ == '__main__':
-    main("11420")
+    main("90992")
 
 # print(q.get("question_text"))
 # print(q.get("options"))  # 选项

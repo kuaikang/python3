@@ -20,12 +20,13 @@ def get_db():
 def get_question_ids(cur, book_id, index):
     sql = "SELECT qc.question_id,q.answer_url from chapter_question qc LEFT JOIN chapter c on qc.chapter_id = c.chapter_id " \
           "LEFT JOIN question q on qc.question_id = q.question_id WHERE book_id = '%s' " \
-          "and q.answer_url is null GROUP BY qc.question_id LIMIT %s,300" % (book_id, index)
+          "and q.answer_url is null GROUP BY qc.question_id LIMIT %s,310" % (book_id, index)
     cur.execute(sql)
     return cur.fetchall()
 
 
 def main(book_id, index):
+    print(book_id)
     db = get_db()
     cur = db.cursor()
     question_ids = get_question_ids(cur, book_id, index)
@@ -48,6 +49,6 @@ def main(book_id, index):
 
 
 if __name__ == '__main__':
-    for i in range(7):
-        t = threading.Thread(target=main, args=("11420", i * 300,))
+    for i in range(6):
+        t = threading.Thread(target=main, args=("90992", i * 310,))
         t.start()

@@ -35,7 +35,8 @@ def main(res_book_id, zujuan_book_id):
     result = []
     for d in data:
         sql = "SELECT chapter_id from chapter WHERE book_id = '%s' and chapter_name = '%s'"
-        cur1.execute(sql % (zujuan_book_id, d[0]))
+        name = d[0].replace(' ', '').replace(' ', '')
+        cur1.execute(sql % (zujuan_book_id, name))
         res = cur1.fetchone()
         if res:
             result.append([d[0], d[1], res[0]])
@@ -50,7 +51,10 @@ def main(res_book_id, zujuan_book_id):
 
 
 if __name__ == '__main__':
-    # 数学北师版七下 020007002006048 9894
-    book_id = '020007002043100'
-    zujuan_book_id = "11418"
-    main(book_id, zujuan_book_id)
+    # book_id, zuJuan_book_id = '070007001041100', "4583"  # 生物人教版七上
+    # book_id, zuJuan_book_id = '070007002041100', "4584"  # 生物人教版七下
+    # book_id, zuJuan_book_id = '070008001041100', "4586"  # 生物人教版八上
+    # book_id, zuJuan_book_id = '070008002041100', "4587"  # 生物人教版八下
+    # book_id, zuJuan_book_id = '060009001022100', "90991"  # 化学人教版九上
+    book_id, zuJuan_book_id = '060009002022100', "90992"  # 化学人教版九下
+    main(book_id, zuJuan_book_id)
