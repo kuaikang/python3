@@ -120,10 +120,11 @@ def insert_resource(book_id, res_type):
         if not tds: continue
         for td in tds:
             resource_id = re.findall(pattern, td["onclick"])[0]
-            cur.execute(resource_select % (resource_id, chapter[3]))
-            if not cur.fetchone():
+            try:
                 cur.execute(insert_resource % (
                     resource_id, pymysql.escape_string(td["title"]), chapter[4], chapter[3], res_type))
+            except:
+                print('已存在', resource_id, chapter[3])
         db.commit()
         time.sleep(0.2)
     cur.close()
@@ -136,16 +137,18 @@ def main(book_id, res_types):
 
 
 if __name__ == '__main__':
-    task = ["3985", "ff808081493e28d201495e91e91d405e", "ff808081493e28d201495efb887d4223",
-            "ff8080814b3a121b014b4848d3f50e7f"]
-    db = get_db()
-    sql = "select book_id from book where grade_id in ('G10','G11','G12') ORDER BY book_id limit 90,30"
-    print(sql)
-    cur = db.cursor()
-    cur.execute(sql)
-    book_ids = cur.fetchall()
-    cur.close()
-    tp = ['DOC', 'DOCX', 'PPT', 'PPTX', 'JPG', 'MP4', 'XLS']
-    for ids in book_ids:
-        t = threading.Thread(target=main, args=(ids[0], tp,))
-        t.start()
+    tp = ['DOC', 'DOCX', 'PPT', 'PPTX', 'JPG', 'MP4']
+    for i in range(53):
+        db = get_db()
+        cur = db.cursor()
+        sql = "select book_id from book ORDER BY book_id limit %s,30"
+        print(sql % (i * 30))
+        cur.execute(sql % (i * 30))
+        book_ids = cur.fetchall()
+        for ids in book_ids:
+            main(ids[0], tp)
+        cur.close()
+        db.close()
+    # for ids in book_ids:
+    #     t = threading.Thread(target=main, args=(ids[0], tp,))
+    #     t.start()
