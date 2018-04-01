@@ -20,7 +20,7 @@ def get_db():
 
 
 def valid_name(name):
-    reg = re.compile(r'[\\/:*?"<>|\r\n]+')
+    reg = re.compile(r'[\\/:*?"<>|\r\t\n]+')
     valid = reg.findall(name)
     if valid:
         for v in valid:
@@ -30,7 +30,7 @@ def valid_name(name):
 
 head = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.146 Safari/537.36",
-    "Cookie": "UM_distinctid=1624e0ec632182-0c324f9f49603f-3a61430c-100200-1624e0ec6354af; remPassord_=true; userName=13965127823; userPassword=yj65127823; remPassord=true; loginName=13965127823; loginPwd=yj65127823; wP_h=716e702abcf2ca100644575e712c0d5214902c22; name=value; goa_page_pagesize_gotoPage=12; JSESSIONID=72A1309E6D1EB32EA3C09F064A93F59F; JYY-Cookie-20480=EFLHKIMAFAAA; Hm_lvt_83bc962335f6e0741154dacdbf8c0c62=1522069899,1522334103,1522334113,1522505080; Hm_lvt_3b2b90b968014bee5b24ff51962ad7ac=1522069899,1522334103,1522334113,1522505080; CNZZDATA1253279410=1856900147-1521726488-http%253A%252F%252Fwww.jiaoxueyun.cn%252F%7C1522500177; Hm_lpvt_83bc962335f6e0741154dacdbf8c0c62=1522505095; Hm_lpvt_3b2b90b968014bee5b24ff51962ad7ac=1522505095"
+    "Cookie":"UM_distinctid=1624e0ec632182-0c324f9f49603f-3a61430c-100200-1624e0ec6354af; remPassord_=true; userName=13965127823; userPassword=yj65127823; remPassord=true; loginName=13965127823; loginPwd=yj65127823; wP_h=716e702abcf2ca100644575e712c0d5214902c22; name=value; goa_page_pagesize_gotoPage=12; JSESSIONID=714F845DFDCE2E83471D419786F1B879; wP_v=756b93134ae1dmgB86rAPfgB_i5e7SiwXiAz9d6hY_tnE_LB_feedSVol6tKWmuo5fR; Hm_lvt_83bc962335f6e0741154dacdbf8c0c62=1522334103,1522334113,1522505080,1522545748; Hm_lvt_3b2b90b968014bee5b24ff51962ad7ac=1522334103,1522334113,1522505080,1522545748; JYY-Cookie-20480=EFLHKIMAFAAA; CNZZDATA1253279410=1856900147-1521726488-http%253A%252F%252Fwww.jiaoxueyun.cn%252F%7C1522561930; Hm_lpvt_83bc962335f6e0741154dacdbf8c0c62=1522562949; Hm_lpvt_3b2b90b968014bee5b24ff51962ad7ac=1522562949"
 }
 
 url = "http://www.jiaoxueyun.cn/res-view!download.do?resource_id={resource_id}"
@@ -49,26 +49,28 @@ async def download(data):
             resource_url = path + '/' + resource_name + '.' + r_type  # 资源路径
             if os.path.exists(resource_url):  # 判断是否已下载过该资源
                 continue
-            async with session.get(url.format(resource_id=res[4]), headers=head) as response:
-                response = await response.read()
-                f = open(resource_url, mode="wb")
-                f.write(response)
-                f.close()
-                print(resource_url)
-                time.sleep(0.4)
+            try:
+                async with session.get(url.format(resource_id=res[4]), headers=head, timeout=20) as response:
+                    response = await response.read()
+                    f = open(resource_url, mode="wb")
+                    f.write(response)
+                    f.close()
+                    print(resource_url)
+                    time.sleep(0.6)
+            except Exception:
+                print(res[4])
 
 
 def main():
     db = get_db()
     cur = db.cursor()
-    cur.execute("SELECT book_id FROM book WHERE grade_id in ('G10','G11','G12') ORDER BY book_id LIMIT 0,3")
-    sql = "SELECT b.course_name,b.grade_name,b.book_name,c.chapter_name,r.resource_id,r.resource_name, r.type, " \
-          "b.version_name FROM resource r LEFT JOIN chapter c ON r.chapter_id = c.chapter_id LEFT JOIN book b " \
-          "on r.book_id = b.book_id WHERE r.book_id = '{book_id}'"
-    book_ids = cur.fetchall()
+    sql = "SELECT course_name,grade_name,book_name,chapter_name,resource_id,resource_name," \
+          "r.type,version_name FROM resource r WHERE grade_name = '七年级' and course_name = '数学' limit {index},{count}"
     data = []
-    for b in book_ids:
-        cur.execute(sql.format(book_id=b[0]))
+    for i in range(5):
+        count = 1100
+        print(sql.format(index=i * count, count=count))
+        cur.execute(sql.format(index=i * count, count=count))
         data.append(cur.fetchall())
     cur.close()
     db.close()
