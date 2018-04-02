@@ -8,7 +8,7 @@ def get_db():
     try:
         db = pymysql.connect(
             host="localhost", user="root",
-            password="kuaikang", db="kuaik", port=3333,
+            password="123456", db="resource", port=3306,
             charset="utf8"
         )
         return db
@@ -33,7 +33,7 @@ def get_question(categories, page):
     grade8 = {"grade_id[]": "8"}
     grade9 = {"grade_id[]": "9"}
     head = {
-        "Cookie":"isRemove=1; _ga=GA1.2.1209185538.1520329414; PHPSESSID=tk53cnk8hlrn9e89vu1krh57o3; _csrf=42041ea6c4badc9c1a8977ddb7c015765a34e1f375ba48dbdda5921a15c12c79a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22NRGSkM0fIFQHVzCC2EYrjxDzHwQKnk2y%22%3B%7D; isRemove=1; _gid=GA1.2.713679494.1522304671; Hm_lvt_6de0a5b2c05e49d1c850edca0c13051f=1521683439,1521715177,1521786389,1522304671; xd=302c76d9e27c6fb0e1f815bdf637ae7f9ec27997dd7c18c9fcf7c68da09ff5c8a%3A2%3A%7Bi%3A0%3Bs%3A2%3A%22xd%22%3Bi%3A1%3Bs%3A1%3A%222%22%3B%7D; chid=5b430739a3b769fd149f00e15357022edc2cea4511390cba95225dcbcaacc273a%3A2%3A%7Bi%3A0%3Bs%3A4%3A%22chid%22%3Bi%3A1%3Bs%3A1%3A%227%22%3B%7D; Hm_lpvt_6de0a5b2c05e49d1c850edca0c13051f=1522380959; _gat_gtag_UA_112991577_1=1",
+        "Cookie":"_ga=GA1.2.790539841.1520347247; PHPSESSID=1dohdgncr7kv298l86u94p2lv1; xd=75519cb9f2bf90d001c0560f5c40520062a60ada9cb38350078f83e04ee38a31a%3A2%3A%7Bi%3A0%3Bs%3A2%3A%22xd%22%3Bi%3A1%3Bi%3A2%3B%7D; _csrf=93fadfab89375f6cdadf874869364ff6ee33b330d6216e4466fc6879ff4300aba%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%227K5-mTmtsUpOUk45jeujN-rgbyGRvajp%22%3B%7D; Hm_lvt_6de0a5b2c05e49d1c850edca0c13051f=1521467380,1521559971,1521630723,1522676456; _gid=GA1.2.452716936.1522676457; chid=27e8704a451201531cc9941f6f3b709b7e13397751c04b090603ffdb0a56dfb9a%3A2%3A%7Bi%3A0%3Bs%3A4%3A%22chid%22%3Bi%3A1%3Bs%3A1%3A%222%22%3B%7D; Hm_lpvt_6de0a5b2c05e49d1c850edca0c13051f=1522676468",
         "X-CSRF-Token": "YuvZ0usGfrQHZJ9QxC4RghO0y-1dTrxnimhxKsm4w6QA0piqo3FJ-kUoxTyTY33JUOWOvTIK6gnOLygTpIyb1g==",
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.146 Safari/537.36"
     }
@@ -43,7 +43,7 @@ def get_question(categories, page):
     return resp.json().get("data"), resp.json().get("total")
 
 
-def main(book_id):
+def main(subject_key, book_id):
     print(book_id)
     db = get_db()
     cur = db.cursor()
@@ -51,12 +51,11 @@ def main(book_id):
     cur.execute(sql_chap)
     chapter_ids = cur.fetchall()
     print(chapter_ids)
-    sql_q = "INSERT INTO `kuaik`.`question` (`question_id`, `context`, `type`, `difficult`) VALUES ('{0}', '{1}', '{2}', '{3}')"
-    sql_cq = 'INSERT INTO `kuaik`.`chapter_question` (`id`,`chapter_id`, `question_id`) VALUES (UUID(),"{0}", "{1}");'
-    sql_t = 'INSERT INTO `kuaik`.`tag` (`tag_id`, `tag_name`, `question_id`) VALUES (UUID(), "{0}", "{1}");'
+    sql_q = "INSERT INTO yw_question (`question_id`, `context`, `type`, `difficult`) VALUES ('{0}', '{1}', '{2}', '{3}')"
+    sql_cq = 'INSERT INTO yw_chapter_question (`id`,`chapter_id`, `question_id`) VALUES (UUID(),"{0}", "{1}");'
+    sql_t = 'INSERT INTO yw_tag (`tag_id`, `tag_name`, `question_id`) VALUES (UUID(), "{0}", "{1}");'
     for line in chapter_ids:
         for i in range(1, 100):
-            if i == 15:break
             data, total = get_question(line[0], i)
             if not data: break
             page = (total + 10 - 1) // 10
@@ -72,14 +71,14 @@ def main(book_id):
                     try:
                         cur.execute(sql_cq.format(line[0], q.get("question_id")))
                         cur.execute(
-                            "SELECT * FROM `kuaik`.`question` WHERE question_id = '%s'" % q.get("question_id"))
+                            "SELECT * FROM yw_question WHERE question_id = '%s'" % q.get("question_id"))
                         if not cur.fetchone():
                             cur.execute(
                                 sql_q.format(q.get("question_id"), pymysql.escape_string(q.get("question_text")),
                                              q.get("question_type"),
                                              q.get("difficult_index")))
                             for key in q.get("options").keys():
-                                sql_i = 'INSERT INTO `kuaik`.`item` (`item_id`, `content`, `option`,`question_id`) VALUES (UUID(), "{0}", "{1}","{2}");'
+                                sql_i = 'INSERT INTO yw_item (`item_id`, `content`, `option`,`question_id`) VALUES (UUID(), "{0}", "{1}","{2}");'
                                 cur.execute(sql_i.format(pymysql.escape_string(q.get("options").get(key)), key,
                                                          q.get("question_id")))
                             cur.execute(sql_t.format(q.get("knowledge"), q.get("question_id")))
@@ -93,7 +92,7 @@ def main(book_id):
 
 
 if __name__ == '__main__':
-    main("90992")
+    main("yw", "545")
 
 # print(q.get("question_text"))
 # print(q.get("options"))  # 选项

@@ -4,7 +4,7 @@ import time
 
 head = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.146 Safari/537.36",
-    "Cookie": "UM_distinctid=1624e0ec632182-0c324f9f49603f-3a61430c-100200-1624e0ec6354af; remPassord_=true; userName=13965127823; userPassword=yj65127823; remPassord=true; loginName=13965127823; loginPwd=yj65127823; wP_h=716e702abcf2ca100644575e712c0d5214902c22; name=value; goa_page_pagesize_gotoPage=12; JSESSIONID=714F845DFDCE2E83471D419786F1B879; wP_v=756b93134ae1dmgB86rAPfgB_i5e7SiwXiAz9d6hY_tnE_LB_feedSVol6tKWmuo5fR; Hm_lvt_83bc962335f6e0741154dacdbf8c0c62=1522334103,1522334113,1522505080,1522545748; Hm_lvt_3b2b90b968014bee5b24ff51962ad7ac=1522334103,1522334113,1522505080,1522545748; CNZZDATA1253279410=1856900147-1521726488-http%253A%252F%252Fwww.jiaoxueyun.cn%252F%7C1522561930; Hm_lpvt_83bc962335f6e0741154dacdbf8c0c62=1522562949; Hm_lpvt_3b2b90b968014bee5b24ff51962ad7ac=1522562949; JYY-Cookie-20480=EGLHKIMAFAAA"
+    "Cookie": "UM_distinctid=1624e0ec632182-0c324f9f49603f-3a61430c-100200-1624e0ec6354af; remPassord_=true; userName=13965127823; userPassword=yj65127823; remPassord=true; loginName=13965127823; loginPwd=yj65127823; JSESSIONID=F809177DA56A268A0AF5513B2E02E57E; JYY-Cookie-20480=EELHKIMAFAAA; Hm_lvt_83bc962335f6e0741154dacdbf8c0c62=1522334113,1522505080,1522545748,1522674120; Hm_lvt_3b2b90b968014bee5b24ff51962ad7ac=1522334113,1522505080,1522545748,1522674120; name=value; CNZZDATA1253279410=1856900147-1521726488-http%253A%252F%252Fwww.jiaoxueyun.cn%252F%7C1522673513; goa_page_pagesize_gotoPage=12; Hm_lpvt_83bc962335f6e0741154dacdbf8c0c62=1522674134; Hm_lpvt_3b2b90b968014bee5b24ff51962ad7ac=1522674135"
 }
 
 
@@ -25,4 +25,4 @@ if __name__ == '__main__':
     print("定时清除我的下载")
     while True:
         main()
-        time.sleep(1.2)
+        time.sleep(1)
