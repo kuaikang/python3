@@ -1,14 +1,14 @@
 import json
 
 if __name__ == '__main__':
-    book_id = "150004001241060"
-    summary_key = "xx"
-    subject_name = "品德与社会"
-    subject_code = "150"
-    grade = "4"
-    book_name = "信息技术川少版四上"
-    book_version = "四川少年儿童出版社"
-    edition_id = "155132"
+    book_id = "130005002568633"
+    summary_key = "mu"
+    subject_name = "音乐"
+    subject_code = "130"
+    grade = "5"
+    book_name = "音乐接力版五下"
+    book_version = "接力出版社"
+    edition_id = "155187"
     sql_book = "INSERT INTO t_res_book (`book_id`, `book_name`, `book_version`, `edition_id`, `subject_code`, `subject_name`, `cover`, `create_time`, `finish`) " \
                "VALUES ('{book_id}', '{book_name}', '{book_version}', '{edition_id}', '{subject_code}', '{subject_name}', " \
                "'http://dfs.res.jzexueyun.com/bookcover/200x200_003d248cab9bbbcbbad8eb2f3d30879c.jpg', '2017-11-15 10:41:31', '1');"

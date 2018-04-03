@@ -25,11 +25,11 @@ def book_sql(subject_name):
     return sql % subject_name
 
 
-# 查询二月份之后录入题目数量
+# 查询三月份录入题目数量
 def sql_count_new(subject_key):
     sql = "SELECT qc.chapter_id,count(qc.question_uuid) from t_res_%s_question_chapter qc LEFT JOIN t_res_%s_question q "
     sql += "on qc.question_uuid = q.uuid where type in ('2','11') "
-    sql += "and q.create_time > '2018-02-01 00:00:00' GROUP BY qc.chapter_id"
+    sql += "and q.create_time > '2018-03-01 00:00:00' and q.create_time < '2018-03-31 23:59:59' GROUP BY qc.chapter_id"
     return sql % (subject_key, subject_key)
 
 
@@ -50,7 +50,7 @@ def main(subject_key, subject_name):
 
     result_book = pymysql_util.find_all(db, book_sql(subject_name))
     # ('语文', '9', '语文北师版九上', '第二单元', '口技', 'edition_id', 'chapter_id')
-    result_data = [["学科", "年级", "课本", "单元", "章节", "教材", "学乐数量", "二月新增数量"]]
+    result_data = [["学科", "年级", "课本", "单元", "章节", "教材", "学乐数量", "三月新增数量"]]
     for book in result_book:
         li = [book[0], book[1], book[2], book[3], book[4], 0, 0, 0]
         for editor in editors:  # 教材
@@ -71,7 +71,5 @@ if __name__ == '__main__':
     sub_key = ["yw", "sx", "yy", "dl", "hx", "ls", "wl", "zz", "sw", 'kx', "sp", "dd", "ty", "ms", "mu"]
     sub_name = ["语文", "数学", "英语", "地理", "化学", "历史", "物理", "政治", "生物", "科学", "思想品德", "道德与法治", "体育", "美术", "音乐"]
 
-    sub_key = ['xx','ps']
-    sub_name = ['信息技术','品德与社会']
     for i in range(len(sub_key)):
         main(sub_key[i], sub_name[i])

@@ -18,7 +18,7 @@ def get_db_spark():
 
 
 def main(select_sql, subject_key):
-    sql = select_sql % subject_key
+    sql = select_sql.format(subject_key=subject_key)
     db = get_db_spark()
     cur = db.cursor()
     cur.execute(sql)
@@ -43,15 +43,6 @@ def main(select_sql, subject_key):
                     resp.close()
                 except Exception:
                     print()
-                # # 上传图片
-                # f_new = open('%s/%s' % (path, item.split('/')[-1]), mode="rb")
-                # files = {'file': [item.split('/')[-1], f_new, 'application/octet-stream']}
-                # response = requests.post(url='http://dfs.upload1.jzexueyun.com/cos/upload', files=files)
-                # new_url = response.json().get('content').get('accessUrl')
-                # print(new_url)
-                # response.close()
-                # cur.execute(sql_update_url.format(subject_key=subject_key, old_url=item, new_url=new_url, uuid=d[0]))
-                # f_new.close()
     cur.close()
     db.close()
 
@@ -59,5 +50,15 @@ def main(select_sql, subject_key):
 if __name__ == '__main__':
     data = ['ls', 'wl', 'sx']
     for key in data:
-        main('select context from t_res_%s_question', key)
-        main('select content from t_res_%s_item', key)
+        main('select context from t_res_{subject_key}_question WHERE context like "%src%"', key)
+        main('select content from t_res_{subject_key}_item WHERE content like "%src%"', key)
+
+    # # 上传图片
+    # f_new = open('%s/%s' % (path, item.split('/')[-1]), mode="rb")
+    # files = {'file': [item.split('/')[-1], f_new, 'application/octet-stream']}
+    # response = requests.post(url='http://dfs.upload1.jzexueyun.com/cos/upload', files=files)
+    # new_url = response.json().get('content').get('accessUrl')
+    # print(new_url)
+    # response.close()
+    # cur.execute(sql_update_url.format(subject_key=subject_key, old_url=item, new_url=new_url, uuid=d[0]))
+    # f_new.close()

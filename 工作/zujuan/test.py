@@ -1,6 +1,7 @@
 import requests
 
-if __name__ == '__main__':
+
+def main():
     sql_unit = "INSERT INTO `kuaik`.`unit` (`unit_id`, `unit_name`, `book_id`) " \
                "VALUES ('{unit_id}', '{unit_name}', '{book_id}');"
     sql_chapter = "INSERT INTO `kuaik`.`chapter` (`chapter_id`, `chapter_name`, `unit_id`, `book_id`) " \
@@ -23,3 +24,9 @@ if __name__ == '__main__':
         for chapter in resp.json():
             print(sql_chapter.format(chapter_id=chapter["id"], chapter_name=chapter["title"], unit_id=item["id"],
                                      book_id=book_id))
+
+
+if __name__ == '__main__':
+    resp = requests.get(
+        "http://math.21cnjy.com/MathMLToImage?mml=%3Cmath+xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F1998%2FMath%2FMathML%27%3E%3Cmrow%3E%3Cmfrac%3E%3Cmn%3E2%3C%2Fmn%3E%3Cmn%3E3%3C%2Fmn%3E%3C%2Fmfrac%3E%3C%2Fmrow%3E%3C%2Fmath%3E&key=8b4dd444ad20b084a6f6a1b8233c8dc2")
+    print(resp.headers)
