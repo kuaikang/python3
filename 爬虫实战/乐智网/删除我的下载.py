@@ -25,4 +25,4 @@ if __name__ == '__main__':
     print("定时清除我的下载")
     while True:
         main()
-        time.sleep(1)
+        time.sleep(0.8)
