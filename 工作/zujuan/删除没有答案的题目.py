@@ -6,7 +6,7 @@ def get_db_spark():
     try:
         db = pymysql.connect(
             host="123.206.227.74", user="root",
-            password="exue2017", db="zujuan_spark_test", port=3306,
+            password="exue2017", db="sit_exue_resource", port=3306,
             charset="utf8"
         )
         return db
@@ -15,15 +15,10 @@ def get_db_spark():
 
 
 # 得到没解析的题目id
-def get_question_not_answer(subject_key):
+def get_question_not_answer():
     db = get_db_spark()
     cur = db.cursor()
-    cur.execute('SELECT uuid FROM t_res_sx_question WHERE answer ="资源路径错误" LIMIT 300')
-    # cur.execute('SELECT uuid FROM t_res_%s_question WHERE LENGTH(answer) > 1' % subject_key)
-    # cur.execute("SELECT uuid FROM t_res_{subject_key}_question WHERE answer is null or answer like '%资源%';".format(
-    #     subject_key=subject_key))
-    # cur.execute("SELECT a.question_uuid FROM (SELECT question_uuid,COUNT(*) AS n FROM t_res_yw_item GROUP BY question_uuid) a ORDER BY a.n DESC LIMIT 1")
-    cur.execute("SELECT uuid from t_res_hx_question WHERE uuid = '62a5f61da74c48869a2f2e7f47f887f3'")
+    cur.execute("SELECT uuid from t_res_sw_question WHERE context like '%03e3f00ed585ab266590d8bee5797ba3.png%' and create_time > '2018-03-01'")
     return cur.fetchall()
 
 
@@ -60,5 +55,6 @@ def delete(subject_key, question_ids):
 
 
 if __name__ == '__main__':
-    data = get_question_not_answer('hx')
-    delete('hx', data)
+    data = get_question_not_answer()
+    print(data)
+    delete('sw', data)
