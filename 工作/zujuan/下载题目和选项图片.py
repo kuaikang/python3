@@ -5,7 +5,7 @@ import os
 import threading
 
 
-def get_db_spark():
+def get_db_sit():
     # 打开数据库连接
     try:
         db = pymysql.connect(
@@ -35,7 +35,7 @@ def download(subject_key, urls):
 
 
 def get_urls(subject_key):
-    db = get_db_spark()
+    db = get_db_sit()
     cursor = db.cursor()
     cursor.execute(
         "SELECT content from t_res_{subject_key}_item WHERE content like '%src%' and create_time > '2018-03-01'".format(
@@ -43,12 +43,13 @@ def get_urls(subject_key):
     urls = cursor.fetchall()
     data = set()
     pattern = re.compile('.*?src="(.*?)"', re.S)
+    print(len(urls))
     for u in urls:
         src = re.findall(pattern, u[0])
         for item in src:
-            if 'png' in item or 'jpg' in item or 'gif' in item:
-                if 'base' not in item:
-                    data.add(item)
+            t = item[-3:]
+            if 'png' == t or 'jpg' == t or 'gif' == t:
+                data.add(item)
     print(len(data))
     res = list(data)
     for i in range(40):
@@ -58,5 +59,5 @@ def get_urls(subject_key):
 
 
 if __name__ == '__main__':
-    get_urls("sx")
+    get_urls('sx')
     # sx yw ls wl yy hx dl sw

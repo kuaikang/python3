@@ -18,7 +18,7 @@ def get_db_spark():
 def get_question_not_answer():
     db = get_db_spark()
     cur = db.cursor()
-    cur.execute("SELECT uuid from t_res_sw_question WHERE context like '%03e3f00ed585ab266590d8bee5797ba3.png%' and create_time > '2018-03-01'")
+    cur.execute("SELECT uuid from t_res_hx_question WHERE context like '%（2017•内江）如图是甲、乙、丙三种物质的溶解度曲线%'")
     return cur.fetchall()
 
 
@@ -37,15 +37,15 @@ def delete(subject_key, question_ids):
     db.commit()
     for question_id in question_ids:
         question_id = question_id[0]
-        # 查询知识点
-        cur.execute(
-            "SELECT tag_id from t_res_{subject_key}_tag_question WHERE question_uuid = '{question_uuid}'".format(
-                subject_key=subject_key, question_uuid=question_id))
-        tags = cur.fetchall()
-        for t in tags:
-            # 删除知识点
-            cur.execute("DELETE from t_res_{subject_key}_tag WHERE tag_id = '{tag_id}'".format(subject_key=subject_key,
-                                                                                               tag_id=t[0]))
+        # # 查询知识点
+        # cur.execute(
+        #     "SELECT tag_id from t_res_{subject_key}_tag_question WHERE question_uuid = '{question_uuid}'".format(
+        #         subject_key=subject_key, question_uuid=question_id))
+        # tags = cur.fetchall()
+        # for t in tags:
+        #     # 删除知识点
+        #     cur.execute("DELETE from t_res_{subject_key}_tag WHERE tag_id = '{tag_id}'".format(subject_key=subject_key,
+        #                                                                                        tag_id=t[0]))
         # 删除知识点章节对应关系
         cur.execute("DELETE from t_res_{subject_key}_tag_question WHERE question_uuid = '{question_uuid}'".format(
             subject_key=subject_key, question_uuid=question_id))
@@ -57,4 +57,4 @@ def delete(subject_key, question_ids):
 if __name__ == '__main__':
     data = get_question_not_answer()
     print(data)
-    delete('sw', data)
+    delete('hx', data)
