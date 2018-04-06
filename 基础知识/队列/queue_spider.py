@@ -32,7 +32,7 @@ class ThreadHtml(threading.Thread):
     def run(self):
         while True:
             html = self.html_queue.get()
-            soup = BeautifulSoup(html)  # 从源代码中搜索title标签的内容
+            soup = BeautifulSoup(html, 'lxml')  # 从源代码中搜索title标签的内容
             print(soup.findAll(['title']))
             self.html_queue.task_done()
 
