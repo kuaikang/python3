@@ -35,7 +35,7 @@ def valid_name(name):
 
 
 def download(book_id):
-    proxies = {'http': 'http://39.134.10.17:8080'}
+    proxies = {'http': 'http://39.134.10.7:8080'}
     url = "http://www.jiaoxueyun.cn/res-view!download.do?resource_id=%s"
     with mysql() as cursor:
         sql = "SELECT * from resource where book_id = '{book_id}' order by chapter_id".format(book_id=book_id)
@@ -51,7 +51,7 @@ def download(book_id):
         if os.path.exists(res_path):
             continue
         try:
-            resp = requests.get(url=url % res.get('resource_id'), headers=head, stream=True)
+            resp = requests.get(url=url % res.get('resource_id'), headers=head, stream=True,proxies=proxies)
         except Exception:
             continue
         if '登录' not in resp.text or "资" not in resp.text:
