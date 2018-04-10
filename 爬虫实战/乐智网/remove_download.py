@@ -12,24 +12,25 @@ def remove():
     input(">>:")
     while True:
         driver.refresh()
+        time.sleep(0.4)
         my_download = wait.until(EC.presence_of_element_located(
             (By.XPATH, '//*[@id="id-personal-menu"]/li[4]/a')))
         my_download.click()
         print("F5")
-        time.sleep(1)
+        time.sleep(0.3)
         for i in range(10):
             try:
                 button = wait.until(EC.presence_of_element_located(
                     (By.XPATH, "/html/body/div[9]/div[8]/div[2]/table/tbody/tr/td[4]/a/img")))
                 button.click()
-                time.sleep(0.2)
                 sure = wait.until(EC.presence_of_element_located(
                     (By.CSS_SELECTOR, "body > div.dialog-delorder > div.dialog-console > a.console-btn-confirm")))
                 sure.click()
-                time.sleep(0.3)
+                time.sleep(0.1)
             except Exception:
                 continue
 
 
 if __name__ == '__main__':
     remove()
+    # 13965127823 yj65127823
