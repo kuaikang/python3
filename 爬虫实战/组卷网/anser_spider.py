@@ -2,52 +2,48 @@ import pymysql
 import requests
 import threading
 import re
+import contextlib
 
 
-def get_db():
-    # 打开数据库连接
+# 定义上下文管理器，连接后自动关闭连接
+@contextlib.contextmanager
+def mysql(host='localhost', port=3333, user='root', password='kuaikang', db='kuaik', charset='utf8'):
+    conn = pymysql.connect(host=host, port=port, user=user, passwd=password, db=db, charset=charset)
+    conn.autocommit(True)
+    cur = conn.cursor(cursor=pymysql.cursors.DictCursor)
     try:
-        db = pymysql.connect(
-            host="localhost", user="root",
-            password="123456", db="zujuan", port=3306,
-            charset="utf8"
-        )
-        return db
-    except Exception as e:
-        print(e)
+        yield cur
+    finally:
+        conn.commit()
+        cur.close()
+        conn.close()
 
 
 def get_question_ids(subject_key):
-    db = get_db()
-    cur = db.cursor()
-    sql = "select question_id from {subject_key}_question where answer_url is null limit 3000"
-    cur.execute(sql.format(subject_key=subject_key))
-    data = cur.fetchall()
-    cur.close()
-    db.close()
-    return data
+    with mysql() as cur:
+        sql = "select question_id from {subject_key}_question where answer_url is null limit 3000"
+        cur.execute(sql.format(subject_key=subject_key))
+        data = cur.fetchall()
+        return data
 
 
 pattern = re.compile('.*?"answer":"(.*?)>*?"', re.S)
 
 
 def main(ids, subject):
-    db = get_db()
-    db.autocommit(True)
-    cur = db.cursor()
-    for question in ids:
-        with requests.get("http://www.zujuan.com/question/detail-%s.shtml" % question[0]) as resp:
-            if resp.status_code == 200:
-                src = re.findall(pattern, resp.text)[0]
-                cur.execute("update {}_question set answer_url = '{}' WHERE question_id = {}".
-                            format(subject, src, question[0]))
-    cur.close()
-    db.close()
+    with mysql() as cur:
+        for question in ids:
+            with requests.get("http://www.zujuan.com/question/detail-%s.shtml" % question.get('question_id')) as resp:
+                if resp.status_code == 200:
+                    src = re.findall(pattern, resp.text)[0]
+                    print(src)
+                    cur.execute("update {}_question set answer_url = '{}' WHERE question_id = {}".
+                                format(subject, src, question.get('question_id')))
 
 
 if __name__ == '__main__':
-    question_ids = get_question_ids('yw')
-    count = len(question_ids) // 10 + 1
-    for i in range(8):
-        t = threading.Thread(target=main, args=(question_ids[i * count:(i + 1) * count], 'yw',))
+    question_ids = get_question_ids('yy')
+    count = len(question_ids) // 5 + 1
+    for i in range(5):
+        t = threading.Thread(target=main, args=(question_ids[i * count:(i + 1) * count], 'yy',))
         t.start()
