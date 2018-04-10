@@ -1,10 +1,9 @@
 import requests
 from bs4 import BeautifulSoup
 
-res_type = {"2": "图片素材", "3": "电子教案", "16": "教学课件"}
-grade = {"三年级": "4", "四年级": "5", "五年级": "110", "六年级": "112"}
+res_type = {"3": "电子教案", "16": "教学课件"}
 headers = {
-    "Cookie": "JSESSIONID=AA2E3044E11ECA2A288E1972B172D310"
+    "Cookie": "wP_v=7ee185bfa303hPZJppY9TrZJZCcPsbNDNb_NOPhJRBdNwHNQrp0NwPBDbD7N8rbRbb; JSESSIONID=1E544E976F0C9B18A10146276346F89B"
 }
 
 base_url = "http://www.slbyy.com"
@@ -48,6 +47,18 @@ def get_resource(url, page_num):
         return data
 
 
+def main():
+    for key in res_type.keys():
+        grades = get_grade_url(key)
+        for g in grades:
+            books = get_book_url(g)
+            for b in books:
+                units = get_unit_url(b)
+                for u in units:
+                    data = get_resource(u, 1)
+                    for d in data:
+                        print(d)
+
+
 if __name__ == '__main__':
-    res = get_resource('http://www.slbyy.com/outline?outlineClassId=5', 1)
-    print(res)
+    main()
