@@ -52,8 +52,8 @@ def get_request_url(categories, page):
     }
     data = []
     url += urlencode(req)
-    for i in range(6):
-        data.append({"grade_id[]": str(i + 1)})
+    for i in range(3):
+        data.append({"grade_id[]": str(i + 7)})
     url += urlencode(req)
     for d in data:
         url += "&" + urlencode(d)
@@ -118,8 +118,5 @@ def main(subject_key, book_id):
 
 if __name__ == '__main__':
     input(">>:")
-    main('yy', '48487')
-    main('yy', '87436')
-    main('yy', '48491')
-    main('yy', '48493')
+    main('yw', '120048')
     driver.quit()

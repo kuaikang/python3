@@ -19,7 +19,7 @@ def get_db_topic():
     try:
         db = pymysql.connect(
             host="123.206.227.74", user="root",
-            password="exue2017", db="topic_standard", port=3306,
+            password="exue2017", db="sit_exue_resource", port=3306,
             charset="utf8"
         )
         return db
@@ -42,7 +42,7 @@ def insert_tag(subject_key):
             s.add(tag.replace("\n", "").strip())
     sql_insert_tag = "INSERT INTO t_res_{subject_key}_tag_copy (`tag_id`, `tag_name`) " \
                      "VALUES ('{tag_id}', '{tag_name}');"
-    tag_id = 2100000
+    tag_id = 2110000
     for i in s:
         cur_topic.execute(
             "select tag_id from t_res_%s_tag where tag_name = '%s'" % (subject_key, pymysql.escape_string(i)))
@@ -92,5 +92,5 @@ def main(subject_key):
 
 
 if __name__ == '__main__':
-    # insert_tag('hx')
-    main('hx')
+    # insert_tag('yy')
+    main('yy')

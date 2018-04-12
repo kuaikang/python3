@@ -6,7 +6,7 @@ def get_db_spark():
     try:
         db = pymysql.connect(
             host="123.206.227.74", user="root",
-            password="exue2017", db="sit_exue_resource", port=3306,
+            password="exue2017", db="zujuan_spark_test", port=3306,
             charset="utf8"
         )
         return db
@@ -18,7 +18,7 @@ def get_db_spark():
 def get_question_not_answer():
     db = get_db_spark()
     cur = db.cursor()
-    cur.execute("SELECT uuid from t_res_hx_question WHERE context like '%（2017•内江）如图是甲、乙、丙三种物质的溶解度曲线%'")
+    cur.execute("SELECT uuid FROM t_res_yy_question q WHERE q.uuid  IN ( SELECT question_uuid  FROM t_res_yy_item WHERE  iscorrect IS NULL)")
     return cur.fetchall()
 
 
@@ -57,4 +57,4 @@ def delete(subject_key, question_ids):
 if __name__ == '__main__':
     data = get_question_not_answer()
     print(data)
-    delete('hx', data)
+    delete('yy', data)

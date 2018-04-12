@@ -87,10 +87,11 @@ def main(subject_key, upload_url, upload_resource_url, schoolId, schoolName, acc
                 ]
             }
             header = {'accessToken': accessToken}
-            result = requests.post(url=upload_resource_url, json=req,
-                          headers=header)
-            print(req)
-            if result.json().get('status') != 200: break
+            result = requests.post(url=upload_resource_url, json=req, headers=header)
+            if result.status_code != 200:
+                print(req)
+            else:
+                print(result.status_code)
     cur.close()
     db.close()
 
