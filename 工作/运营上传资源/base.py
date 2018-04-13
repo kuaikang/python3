@@ -74,12 +74,14 @@ support = ['png', 'jpg', 'mp3', 'mp4', 'flv', 'ppt', 'pptx', 'doc', 'docx', 'pdf
 
 def upload(book_id, path, subject_key, school_id, school_name, access_token):
     header = {'accessToken': access_token}
+    data_list = []
     for c in path:
         res = os.listdir(c)
         chapter_id = c.split("/")[-1]
         unit_id = get_unit_id(chapter_id).get('unit_id')
         for r in res:
             if r[r.rindex('.') + 1:] in support:
+                data_list.append("11")
                 req = {
                     "currentSubject": subject_key,
                     "schoolId": school_id,
@@ -96,18 +98,19 @@ def upload(book_id, path, subject_key, school_id, school_name, access_token):
                         }
                     ]
                 }
-                result = requests.post(url="http://api.cloudteach.jzexueyun.com/cloud/exueResource/uploadResource",
-                                       json=req, headers=header)
-                if result.status_code != 200:
-                    print(result.json())
-                else:
-                    print(result.status_code)
+                # result = requests.post(url="http://api.cloudteach.jzexueyun.com/cloud/exueResource/uploadResource",
+                #                        json=req, headers=header)
+                # if result.status_code != 200:
+                #     print(result.json())
+                # else:
+                #     print(result.status_code)
+    print(len(data_list))
 
 
 def main(book_id, subject_key, school_id, school_name, access_token):
     chapter = path_list(book_id)
     # modify_dir_name(book_id, chapter)
-    # upload(book_id, chapter, subject_key, school_id, school_name, access_token)
+    upload(book_id, chapter, subject_key, school_id, school_name, access_token)
 
 
 if __name__ == '__main__':
@@ -115,15 +118,14 @@ if __name__ == '__main__':
     accessToken = '99f66c4c-bc16-4927-af4b-78e4c7893777'
     schoolId = "425741580347940864"
     schoolName = "资源研究中心"
-    books = ['040003002066100', '040004001066100', '040004002066100', '040005001066100',
+    books = ['040003001066100', '040003002066100', '040004001066100', '040004002066100', '040005001066100',
              '040005002066100', '040006001066100', '040006002066100']
-    # books = ['040003001066100']
     # for b in books:
     #     main(book_id=b, subject_key=subjectKey, school_id=schoolId, school_name=schoolName, access_token=accessToken)
-
-    path = path_list("冀人版4下科学PPT课件教案素材")
-    for p in path:
-        data = os.listdir(p)
-        for d in data:
-            if '《' in d and '》' not in d:
-                print(p.replace('F:/运营/', '') + '/' + d)
+    print(162 + 216 + 205 + 266 + 235 + 234 + 200 + 232)
+    # path = path_list("冀人版4下科学PPT课件教案素材")
+    # for p in path:
+    #     data = os.listdir(p)
+    #     for d in data:
+    #         if '《' in d and '》' not in d:
+    #             print(p.replace('F:/运营/', '') + '/' + d)

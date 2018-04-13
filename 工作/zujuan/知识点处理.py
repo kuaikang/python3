@@ -1,5 +1,5 @@
 import pymysql
-
+import time
 
 def get_db_spark():
     # 打开数据库连接
@@ -58,6 +58,7 @@ def insert_tag(subject_key):
 
 
 def main(subject_key):
+    create_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
     db = get_db_spark()
     cur = db.cursor()
     sql = "select tag_id,question_uuid from t_res_%s_tag_question ORDER BY tag_id" % subject_key
@@ -67,7 +68,7 @@ def main(subject_key):
     select_tag_by_id = "select tag_description from t_res_%s_tag where tag_id = %s"
     select_tag_by_name = "select tag_id from t_res_%s_tag_copy where tag_name = '%s'"
     insert_tag_question = "INSERT INTO t_res_{subject_key}_tag_question_copy (`tag_id`, `tag_name`, `question_uuid`, `create_time`) " \
-                          "VALUES ('{tag_id}', '{tag_name}', '{question_uuid}', '2018-03-20 21:02:48');"
+                          "VALUES ('{tag_id}', '{tag_name}', '{question_uuid}', '{create_time}');"
     cur.execute(sql)
     tag_question_map = cur.fetchall()
     for m in tag_question_map:
@@ -84,7 +85,7 @@ def main(subject_key):
                     subject_key=subject_key, tag_id=tag_id[0], question_uuid=m[1]))
             if not cur.fetchone():
                 cur.execute(
-                    insert_tag_question.format(subject_key=subject_key, tag_id=tag_id[0], tag_name=t, question_uuid=m[1]
+                    insert_tag_question.format(subject_key=subject_key, tag_id=tag_id[0], tag_name=t, question_uuid=m[1],create_time=create_time
                                                ))
         db.commit()
     cur.close()
