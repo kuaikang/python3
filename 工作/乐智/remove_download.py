@@ -17,7 +17,7 @@ def remove():
         my_download.click()
         print("F5")
         time.sleep(1)
-        for i in range(20):
+        for i in range(12):
             try:
                 button = wait.until(EC.presence_of_element_located(
                     (By.XPATH, "/html/body/div[9]/div[8]/div[2]/table/tbody/tr/td[4]/a/img")))
