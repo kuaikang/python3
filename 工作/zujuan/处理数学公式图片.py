@@ -9,7 +9,7 @@ import uuid
 
 # 定义上下文管理器，连接后自动关闭连接
 @contextlib.contextmanager
-def mysql(host='123.206.227.74', port=3306, user='root', password='exue2017', db='sit_exue_resource', charset='utf8'):
+def mysql(host='localhost', port=3333, user='root', password='kuaikang', db='local_exue_resource', charset='utf8'):
     conn = pymysql.connect(host=host, port=port, user=user, passwd=password, db=db, charset=charset)
     cur = conn.cursor(cursor=pymysql.cursors.DictCursor)
     try:
@@ -48,7 +48,7 @@ def parse_src(data):
 def write_file(subject_key, resp):
     first = random_dir()
     second = random_dir()
-    path = "E:/question_src/{subject_key}/{first}/{second}".format(subject_key=subject_key, first=first,
+    path = "F:/question_img/{subject_key}/{first}/{second}".format(subject_key=subject_key, first=first,
                                                                    second=second)
     if not os.path.exists(path): os.makedirs(path)  # 假如路径不存在,就创建路径
     file_name = str(uuid.uuid4()).replace('-', '')
@@ -74,8 +74,7 @@ def src_handle(subject_key, contexts):
         for src in data:
             resp = session.get(src)
             if resp.status_code == 200:
-                # write_file(subject_key, resp)
-                pass
+                write_file(subject_key, resp)
             else:
                 print(src)
 
@@ -88,9 +87,7 @@ def main(subject_key):
 
 
 if __name__ == '__main__':
-    subject_keys1 = ['yw', 'yy', 'ls', 'dl', 'wl', 'hx', 'sw']
-    subject_keys = ['sx']
+    subject_keys = ['yw', 'yy', 'sx', 'ls', 'dl', 'wl', 'hx', 'sw']
     for key in subject_keys:
         print(key)
         main(key)
-# 7990 + 10430

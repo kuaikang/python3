@@ -52,8 +52,8 @@ def get_request_url(categories, page):
     }
     data = []
     url += urlencode(req)
-    for i in range(3):
-        data.append({"grade_id[]": str(i + 7)})
+    for i in range(6):
+        data.append({"grade_id[]": str(i + 1)})
     url += urlencode(req)
     for d in data:
         url += "&" + urlencode(d)
@@ -85,7 +85,7 @@ select_question = "select * from {}_question WHERE  question_id = {}"
 def main(subject_key, book_id):
     with mysql() as cur:
         for c_id in get_chapter_id(book_id):
-            for page in range(1, 1000):
+            for page in range(1, 21):
                 questions, total_page = parse_data(c_id, page)
                 print(c_id, total_page, page)
                 if not questions: break
@@ -118,5 +118,7 @@ def main(subject_key, book_id):
 
 if __name__ == '__main__':
     input(">>:")
-    main('yw', '120048')
+    sx = ['3807', '3808', '3809', '3810', '3811', '3812', '3813', '3814', '3815', '3816', '3817', '3818']
+    for item in sx:
+        main("sx", item)
     driver.quit()

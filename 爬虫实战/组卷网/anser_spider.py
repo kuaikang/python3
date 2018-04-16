@@ -42,8 +42,8 @@ def main(ids, subject):
 
 
 if __name__ == '__main__':
-    question_ids = get_question_ids('yy')
+    question_ids = get_question_ids('sx')
     count = len(question_ids) // 5 + 1
     for i in range(5):
-        t = threading.Thread(target=main, args=(question_ids[i * count:(i + 1) * count], 'yy',))
+        t = threading.Thread(target=main, args=(question_ids[i * count:(i + 1) * count], 'sx',))
         t.start()
