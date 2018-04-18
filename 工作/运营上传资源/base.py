@@ -28,7 +28,7 @@ def valid_name(name):
 
 
 def path_list(first):
-    first_dir = 'F:/运营/{first}/'.format(first=first)
+    first_dir = 'F:/运营0417/{first}/'.format(first=first)
     seconds = os.listdir(first_dir)
     chapter = set()
     for second in seconds:
@@ -122,10 +122,3 @@ if __name__ == '__main__':
              '040005002066100', '040006001066100', '040006002066100']
     # for b in books:
     #     main(book_id=b, subject_key=subjectKey, school_id=schoolId, school_name=schoolName, access_token=accessToken)
-    print(162 + 216 + 205 + 266 + 235 + 234 + 200 + 232)
-    # path = path_list("冀人版4下科学PPT课件教案素材")
-    # for p in path:
-    #     data = os.listdir(p)
-    #     for d in data:
-    #         if '《' in d and '》' not in d:
-    #             print(p.replace('F:/运营/', '') + '/' + d)

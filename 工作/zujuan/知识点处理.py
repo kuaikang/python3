@@ -1,6 +1,7 @@
 import pymysql
 import time
 
+
 def get_db_spark():
     # 打开数据库连接
     try:
@@ -48,9 +49,11 @@ def insert_tag(subject_key):
             "select tag_id from t_res_%s_tag where tag_name = '%s'" % (subject_key, pymysql.escape_string(i)))
         data = cur_topic.fetchone()
         if data:
-            cur_spark.execute(sql_insert_tag.format(subject_key=subject_key, tag_id=data[0], tag_name=i))
+            cur_spark.execute(
+                sql_insert_tag.format(subject_key=subject_key, tag_id=data[0], tag_name=pymysql.escape_string(i)))
         else:
-            cur_spark.execute(sql_insert_tag.format(subject_key=subject_key, tag_id=tag_id, tag_name=i))
+            cur_spark.execute(
+                sql_insert_tag.format(subject_key=subject_key, tag_id=tag_id, tag_name=pymysql.escape_string(i)))
         tag_id += 1
         db_spark.commit()
     cur_spark.close()
@@ -62,8 +65,6 @@ def main(subject_key):
     db = get_db_spark()
     cur = db.cursor()
     sql = "select tag_id,question_uuid from t_res_%s_tag_question ORDER BY tag_id" % subject_key
-    # sql = "SELECT tag_id,question_uuid from t_res_{0}_tag_question WHERE question_uuid not in (select question_uuid from t_res_{1}_tag_question_copy)".format(
-    #     subject_key, subject_key)
     print(sql)
     select_tag_by_id = "select tag_description from t_res_%s_tag where tag_id = %s"
     select_tag_by_name = "select tag_id from t_res_%s_tag_copy where tag_name = '%s'"
@@ -85,7 +86,8 @@ def main(subject_key):
                     subject_key=subject_key, tag_id=tag_id[0], question_uuid=m[1]))
             if not cur.fetchone():
                 cur.execute(
-                    insert_tag_question.format(subject_key=subject_key, tag_id=tag_id[0], tag_name=t, question_uuid=m[1],create_time=create_time
+                    insert_tag_question.format(subject_key=subject_key, tag_id=tag_id[0], tag_name=t,
+                                               question_uuid=m[1], create_time=create_time
                                                ))
         db.commit()
     cur.close()
@@ -93,5 +95,5 @@ def main(subject_key):
 
 
 if __name__ == '__main__':
-    # insert_tag('yy')
-    main('yy')
+    # insert_tag('wl')
+    main('wl')

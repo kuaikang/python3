@@ -8,7 +8,7 @@ def get_db():
     try:
         db = pymysql.connect(
             host="localhost", user="root",
-            password="123456", db="lezhi", port=3306,
+            password="kuaikang", db="lezhi", port=3333,
             charset="utf8"
         )
         return db
@@ -63,13 +63,15 @@ def insert_version():
 def insert_chapter():
     db = get_db()
     cur = db.cursor()
-    sql = "select book_id,course_id,version_id,grade_id from book"
+    sql = "select book_id,course_id,version_id,grade_id from book WHERE  book_id in ('3736', 'ff8080814467cea80144681413c7027c', 'ff8080814467cea8014468172fd1029c','ff8080814467cea80144681f50c70300', 'ff8080814467cea80144683d582603e6'," \
+          "'ff8080814467cea8014468404ea00407', '3528', '3607', '3739', 'ff8080814467cea80144680c079d0251','ff8080814467cea801446826ceb1034a', 'ff8080814467cea80144682d1f9a0375')"
     cur.execute(sql)
     books = cur.fetchall()
     insert_chapter_sql = "INSERT INTO chapter (`chapter_id`, `chapter_name`, `parent_id`, `book_id`, `lesson_type`, `no`) " \
                          "VALUES ('%s', '%s', '%s', '%s', '%s', '%s');"
     for book in books:
         data = {
+
             "gradeId": book[3],
             "courseId": book[1],
             "versionId": book[2]
@@ -85,7 +87,7 @@ def insert_chapter():
                                           j.get("ParentId"), book[0],
                                           j.get("LessonType"),
                                           j.get("SqNo")))
-            db.commit()
+        db.commit()
     cur.close()
     db.close()
 
@@ -138,17 +140,10 @@ def main(book_id, res_types):
 
 if __name__ == '__main__':
     tp = ['DOC', 'DOCX', 'PPT', 'PPTX', 'JPG', 'MP4']
-    for i in range(53):
-        db = get_db()
-        cur = db.cursor()
-        sql = "select book_id from book ORDER BY book_id limit %s,30"
-        print(sql % (i * 30))
-        cur.execute(sql % (i * 30))
-        book_ids = cur.fetchall()
-        for ids in book_ids:
-            main(ids[0], tp)
-        cur.close()
-        db.close()
-    # for ids in book_ids:
-    #     t = threading.Thread(target=main, args=(ids[0], tp,))
-    #     t.start()
+    book_ids = ['3736', 'ff8080814467cea80144681413c7027c', 'ff8080814467cea8014468172fd1029c',
+                'ff8080814467cea80144681f50c70300', 'ff8080814467cea80144683d582603e6',
+                'ff8080814467cea8014468404ea00407', '3528', '3607', '3739', 'ff8080814467cea80144680c079d0251',
+                'ff8080814467cea801446826ceb1034a', 'ff8080814467cea80144682d1f9a0375']
+    for ids in book_ids:
+        t = threading.Thread(target=main, args=(ids, tp,))
+        t.start()

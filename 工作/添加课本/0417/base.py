@@ -1,4 +1,5 @@
 import pymysql
+import time
 
 
 def get_db_sit():
@@ -6,7 +7,7 @@ def get_db_sit():
     try:
         db = pymysql.connect(
             host="123.206.227.74", user="root",
-            password="exue2017", db="sit_exue_resource", port=3306,
+            password="exue2017", db="topic_standard_test", port=3306,
             charset="utf8"
         )
         return db
@@ -45,21 +46,22 @@ def get_max_chapter_id():
 
 
 def insert_sql(index, summary_key, subject_name, subject_code, grade, book_name, book_version, edition_id):
+    create_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
     sql_book = "INSERT INTO t_res_book (`book_id`, `book_name`, `book_version`, `edition_id`, `subject_code`, `subject_name`, `cover`, `create_time`, `finish`) " \
                "VALUES ('{book_id}', '{book_name}', '{book_version}', '{edition_id}', '{subject_code}', '{subject_name}', " \
-               "'http://dfs.res.jzexueyun.com/bookcover/200x200_003d248cab9bbbcbbad8eb2f3d30879c.jpg', '2018-04-10 10:41:32', '1');"
+               "'http://dfs.res.jzexueyun.com/bookcover/200x200_003d248cab9bbbcbbad8eb2f3d30879c.jpg', '{create_time}', '1');"
     sql_grade_book = "INSERT INTO t_res_graduate_book (`book_id`, `grade`, `semester`, `create_time`) " \
-                     "VALUES ('{book_id}', '{grade}', '1', '2018-04-10 10:41:32');"
+                     "VALUES ('{book_id}', '{grade}', '1', '{create_time}');"
     sql_unit = "INSERT INTO t_res_units (`unit_id`, `unit_name`, `book_id`, `create_time`) " \
-               "VALUES ('{unitId}', '{unitName}', '{bookId}', '2018-04-10 10:41:32');"
+               "VALUES ('{unitId}', '{unitName}', '{bookId}', '{create_time}');"
     sql_chapter = "INSERT INTO t_res_chapter (`chapter_id`, `chapter_name`, `unit_id`, `book_id`, `summary_key`, `create_time`, `finish`) " \
-                  "VALUES ('{chapter_id}', '{chapter_name}', '{unit_id}', '{book_id}', '{summary_key}', '2018-04-10 10:41:32', '1');"
+                  "VALUES ('{chapter_id}', '{chapter_name}', '{unit_id}', '{book_id}', '{summary_key}', '{create_time}', '1');"
     book_id = get_max_book_id() + index
     unit_id = get_max_unit_id() + index * 50
     chapter_id = get_max_chapter_id() + index * 100
     print(sql_book.format(book_id=book_id, book_name=book_name, book_version=book_version, edition_id=edition_id,
-                          subject_code=subject_code, subject_name=subject_name))
-    print(sql_grade_book.format(book_id=book_id, grade=grade))  # 年级与课本关系
+                          subject_code=subject_code, subject_name=subject_name, create_time=create_time))
+    print(sql_grade_book.format(book_id=book_id, grade=grade, create_time=create_time))  # 年级与课本关系
     f = open(book_name + ".txt", mode="r", encoding="utf8")
     unit = []
     data = f.readlines()
@@ -70,33 +72,18 @@ def insert_sql(index, summary_key, subject_name, subject_code, grade, book_name,
     unit.append(len(data))
     for index, item in enumerate(unit[:-1]):
         print(sql_unit.format(unitId=unit_id, unitName=data[item].strip().replace('_*_', ''),
-                              bookId=book_id))  # 单元
+                              bookId=book_id, create_time=create_time))  # 单元
         chapters = data[item + 1:unit[index + 1]]
         for chapter in chapters:
             print(sql_chapter.format(chapter_id=chapter_id, chapter_name=chapter.lstrip().strip(),
-                                     unit_id=unit_id, book_id=book_id, summary_key=summary_key))
+                                     unit_id=unit_id, book_id=book_id, summary_key=summary_key,
+                                     create_time=create_time))
             chapter_id += 1
         unit_id += 1
 
 
 def main():
-    # insert_sql(1, "kx", "科学", "040", "3", "科学冀教版三上", "河北教育出版社", "020100")
-    # insert_sql(2, "kx", "科学", "040", "3", "科学冀教版三下", "河北教育出版社", "020100")
-    #
-    # insert_sql(3, "kx", "科学", "040", "4", "科学冀教版四上", "河北教育出版社", "020100")
-    # insert_sql(4, "kx", "科学", "040", "4", "科学冀教版四下", "河北教育出版社", "020100")
-    #
-    # insert_sql(5, "kx", "科学", "040", "5", "科学冀教版五上", "河北教育出版社", "020100")
-    # insert_sql(6, "kx", "科学", "040", "5", "科学冀教版五下", "河北教育出版社", "020100")
-    #
-    # insert_sql(7, "kx", "科学", "040", "6", "科学冀教版六上", "河北教育出版社", "020100")
-    # insert_sql(8, "kx", "科学", "040", "6", "科学冀教版六下", "河北教育出版社", "020100")
-
-    insert_sql(1, "ls", "历史", "100", "7", "历史北师大版七上", "北京师范大学出版社", "019016")
-    insert_sql(2, "ls", "历史", "100", "8", "历史北师版八上", "北京师范大学出版社", "019016")
-
-    insert_sql(3, "ps", "思想品德", "160", "7", "思想品德北师版七上", "北京师范大学出版社", "019016")
-    insert_sql(4, "ps", "思想品德", "160", "8", "思想品德北师版八上", "北京师范大学出版社", "019016")
+    insert_sql(1, "ls", "历史", "100", "8", "历史人教版八上", "人民教育出版社", "001001")
 
 
 if __name__ == '__main__':

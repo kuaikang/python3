@@ -18,7 +18,7 @@ def get_db_spark():
 def get_question_not_answer():
     db = get_db_spark()
     cur = db.cursor()
-    cur.execute("SELECT uuid FROM t_res_yy_question q WHERE q.uuid  IN ( SELECT question_uuid  FROM t_res_yy_item WHERE  iscorrect IS NULL)")
+    cur.execute("SELECT question_uuid from t_res_wl_item WHERE content like '%7cfe4512d5e68ee830e7d3703eee4909.png%';")
     return cur.fetchall()
 
 
@@ -57,4 +57,4 @@ def delete(subject_key, question_ids):
 if __name__ == '__main__':
     data = get_question_not_answer()
     print(data)
-    delete('yy', data)
+    delete('wl', data)

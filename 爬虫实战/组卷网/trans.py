@@ -17,32 +17,28 @@ def mysql_local(host='localhost', port=3333, user='root', password='kuaikang', d
         conn.close()
 
 
-def get_question_ids(subject_key, chapter_id):
-    with mysql_local() as cur:
-        sql = "SELECT question_id from {subject_key}_chapter_question WHERE chapter_id = '{chapter_id}'"
-        cur.execute(sql.format(subject_key=subject_key, chapter_id=chapter_id))
-        return cur.fetchall()
+def get_question_ids(cur, subject_key, chapter_id):
+    sql = "SELECT question_id from {subject_key}_chapter_question WHERE chapter_id = '{chapter_id}'"
+    cur.execute(sql.format(subject_key=subject_key, chapter_id=chapter_id))
+    return cur.fetchall()
 
 
-def get_question(subject_key, question_id):
-    with mysql_local() as cur:
-        sql = "SELECT context,question_type,difficult,answer_url from {subject_key}_question WHERE question_id = '{question_id}' and answer_url is not null"
-        cur.execute(sql.format(subject_key=subject_key, question_id=question_id))
-        return cur.fetchall()
+def get_question(cur, subject_key, question_id):
+    sql = "SELECT context,question_type,difficult,answer_url from {subject_key}_question WHERE question_id = '{question_id}' and answer_url is not null"
+    cur.execute(sql.format(subject_key=subject_key, question_id=question_id))
+    return cur.fetchall()
 
 
-def get_tag(subject_key, question_id):
-    with mysql_local() as cur:
-        sql = "SELECT tag_url from {subject_key}_tag_question WHERE question_id = '{question_id}'"
-        cur.execute(sql.format(subject_key=subject_key, question_id=question_id))
-        return cur.fetchone()
+def get_tag(cur, subject_key, question_id):
+    sql = "SELECT tag_url from {subject_key}_tag_question WHERE question_id = '{question_id}'"
+    cur.execute(sql.format(subject_key=subject_key, question_id=question_id))
+    return cur.fetchone()
 
 
-def get_item(subject_key, question_id):
-    with mysql_local() as cur:
-        sql = "SELECT context,`option` from {subject_key}_item WHERE question_id = '{question_id}'"
-        cur.execute(sql.format(subject_key=subject_key, question_id=question_id))
-        return cur.fetchall()
+def get_item(cur, subject_key, question_id):
+    sql = "SELECT context,`option` from {subject_key}_item WHERE question_id = '{question_id}'"
+    cur.execute(sql.format(subject_key=subject_key, question_id=question_id))
+    return cur.fetchall()
 
 
 def main(currentSubject, importChapterName, import_Chapter, zujuan_chapter):
@@ -51,14 +47,14 @@ def main(currentSubject, importChapterName, import_Chapter, zujuan_chapter):
         "Content-Type": "application/json"
     }
     with mysql_local() as cur:
-        question_ids = get_question_ids(currentSubject, zujuan_chapter)
+        question_ids = get_question_ids(cur, currentSubject, zujuan_chapter)
         for question_id in question_ids:
-            question = get_question(currentSubject, question_id.get('question_id'))
+            question = get_question(cur, currentSubject, question_id.get('question_id'))
             for q in question:  # context,type,difficult,answer_url
                 req = {"currentSubject": currentSubject, "questionContent": q.get('context'),
                        "importChapterId": import_Chapter,
                        "questionType": "11"}
-                tag = get_tag(currentSubject, question_id.get('question_id'))
+                tag = get_tag(cur, currentSubject, question_id.get('question_id'))
                 if tag:
                     req["tagUrl"] = tag.get('tag_url')
                 else:
@@ -66,7 +62,7 @@ def main(currentSubject, importChapterName, import_Chapter, zujuan_chapter):
                 req["importChapterName"] = importChapterName
                 req["answerUrl"] = q.get('answer_url')
                 req["difficult"] = q.get('difficult')
-                items = get_item(currentSubject, question_id.get('question_id'))
+                items = get_item(cur, currentSubject, question_id.get('question_id'))
                 item = []
                 for it in items:  # context,`option`
                     item.append({"content": it.get('context'), "option": it.get('option')})
@@ -81,101 +77,56 @@ def trans(subject, data):
 
 
 if __name__ == '__main__':
-    li = [['Lesson 1 On the Farm', '030003002017100001001', '78006'],
-          ['Lesson 2 Cats and Dogs', '030003002017100001002', '78007'],
-          ['Lesson 3 Fish and Birds', '030003002017100001003', '78008'],
-          ['Lesson 4 Horses and Rabbits', '030003002017100001004', '78009'],
-          ['Lesson 5 Where?', '030003002017100001005', '78010'],
-          ['Lesson 6 Can I Help You?', '030003002017100001006', '78014'],
-          ['Lesson 7 At the Zoo', '030003002017100002001', '78015'],
-          ['Lesson 8 Tigers and Bears', '030003002017100002002', '78016'],
-          ['Lesson 9 How Many?', '030003002017100002003', '78017'],
-          ['Lesson 10 Where Do They Live?', '030003002017100002004', '78018'],
-          ['Lesson 11 What Do They Eat?', '030003002017100002005', '78019'],
-          ['Lesson 12 The Clever Monkey', '030003002017100002006', '78020'],
-          ["Lesson 13 I'm Hungry!", '030003002017100003001', '78024'],
-          ['Lesson 14 Would You Like Some Soup?', '030003002017100003002', '78025'],
-          ["Lesson 15 What's Your Favourite Food?", '030003002017100003003', '78026'],
-          ["Lesson 17 What's for Breakfast?", '030003002017100003005', '78028'],
-          ['Lesson 18 The Magic Stone', '030003002017100003006', '78029'],
-          ['Lesson 19 I Like Fruit!', '030003002017100004001', '78033'],
-          ['Lesson 20 Hamburgers and Hot Dogs', '030003002017100004002', '78034'],
-          ['Lesson 21 In the Restaurant', '030003002017100004003', '78035'],
-          ['Lesson 22 How Much Is It?', '030003002017100004004', '78036'],
-          ['Lesson 23 How Much Are They?', '030003002017100004005', '78037'],
-          ['Lesson 24 A Little Monkey', '030003002017100004006', '78038'],
-          ['Lesson 1 How Are You?', '030004002017100001001', '117887'],
-          ['Lesson 2 Is This Your Pencil?', '030004002017100001002', '48543'],
-          ['Lesson 3 Where Are They?', '030004002017100001003', '48546'],
-          ['Lesson 4 How Many Books Are There?', '030004002017100001004', '117888'],
-          ['Lesson 5 Where Is Danny?', '030004002017100001005', '117889'],
-          ['Lesson 6 Little Zeke', '030004002017100001006', '88158'],
-          ['Lesson 7 Months of the Year', '030004002017100002001', '48549'],
-          ['Lesson 9 When Is It?', '030004002017100002003', '48551'],
-          ['Lesson 10 Rain and Sun', '030004002017100002004', '48552'],
-          ["Lesson 11 How's the Weather Today?", '030004002017100002005', '48553'],
-          ["Lesson 12 Mr. Moon's Birthday", '030004002017100002006', '88160'],
-          ['Lesson 13 How Old Are You?', '030004002017100003001', '48557'],
-          ['Lesson 14 Are You Short or Tall?', '030004002017100003002', '48558'],
-          ['Lesson 15 Where Do You Live?', '030004002017100003003', '48560'],
-          ['Lesson 16 How Do You Go to School?', '030004002017100003004', '117893'],
-          ['Lesson 17 What Do You Like to Do?', '030004002017100003005', '117894'],
-          ['Lesson 18 Maddy the Monster', '030004002017100003006', '88162'],
-          ['Lesson 19 My Favourite Colours', '030004002017100004001', '48565'],
-          ['Lesson 20 My Favourite Clothes', '030004002017100004002', '48566'],
-          ['Lesson 21 My Favourite Food', '030004002017100004003', '48567'],
-          ['Lesson 22 My Favourite Subject', '030004002017100004004', '88165'],
-          ['Lesson 23 My Favourite School Work', '030004002017100004005', '48570'],
-          ['Lesson 24 The Diffos', '030004002017100004006', '88166'],
-          ['Lesson 1 I Am Excited!', '030005002017100001001', '114006'],
-          ['Lesson 2 What Are You Doing?', '030005002017100001002', '114007'],
-          ['Lesson 3 Who Is Singing?', '030005002017100001003', '114008'],
-          ['Lesson 4 Who Is Hungry?', '030005002017100001004', '114009'],
-          ['Lesson 5 What Are They Doing?', '030005002017100001005', '114010'],
-          ['Lesson 6 Danny is Lost!', '030005002017100001006', '114011'],
-          ['Lesson 7 Arriving in Beijing', '030005002017100002001', '48586'],
-          ["Lesson 8 Tian'anmen Square", '030005002017100002002', '48588'],
-          ['Lesson 9 The Palace Museum', '030005002017100002003', '48589'],
-          ['Lesson 10 The Great Wall', '030005002017100002004', '114017'],
-          ['Lesson 11 Shopping in Beijing', '030005002017100002005', '48591'],
-          ['Lesson 12 A visit to the Great Wall', '030005002017100002006', '114018'],
-          ["Lesson 13 Let's Buy Postcards!", '030005002017100003001', '48594'],
-          ['Lesson 14 Jenny Writes a Postcard', '030005002017100003002', '48595'],
-          ['Lesson 15 Sending the Postcards', '030005002017100003003', '117919'],
-          ['Lesson 16 An Email Is Fast', '030005002017100003004', '114023'],
-          ["Lesson 17 Danny's Email", '030005002017100003005', '114020'],
-          ['Lesson 18 Little Zeke Sends an Email', '030005002017100003006', '114021'],
-          ['Lesson 19 Li Ming Comes Home', '030005002017100004001', '48602'],
-          ['Lesson 20 Jenny Goes Home', '030005002017100004002', '48603'],
-          ['Lesson 21 Look at the Photos!', '030005002017100004003', '114024'],
-          ['Lesson 22 Gifts for Everyone', '030005002017100004004', '48606'],
-          ['Lesson 23 An Email from Li Ming', '030005002017100004005', '114025'],
-          ['Lesson 24 A Gift for Little Zeke', '030005002017100004006', '114026'],
-          ['Lesson 1 Ping-pong and Basketball', '030006002017100001001', '48614'],
-          ['Lesson 2 At the Sports Shop', '030006002017100001002', '48615'],
-          ["Lesson 3 Let's Play!", '030006002017100001003', '114032'],
-          ['Lesson 4 Did You Have Fun?', '030006002017100001004', '114033'],
-          ['Lesson 5 A Basketball Game', '030006002017100001005', '114034'],
-          ['Lesson 6 A Famous Football Player', '030006002017100001006', '114035'],
-          ['Lesson 7 Always Have Breakfast!', '030006002017100002001', '48622'],
-          ['Lesson 8 Always Brush Your Teeth!', '030006002017100002002', '48623'],
-          ['Lesson 9 Eat More Vegetables and Fruit!', '030006002017100002003', '48625'],
-          ['Lesson 10 Exercise', '030006002017100002004', '48626'],
-          ['Lesson 11 Work Hard!', '030006002017100002005', '48627'],
-          ['Lesson 12 Helen Keller', '030006002017100002006', '114036'],
-          ['Lesson 13 Summer Is Coming!', '030006002017100003001', '48630'],
-          ['Lesson 14 Tomorrow We Will Play', '030006002017100003002', '48633'],
-          ["Lesson 15 Jenny's Summer Holiday", '030006002017100003003', '114037'],
-          ["Lesson 16 Li Ming's Summer Holiday", '030006002017100003004', '114038'],
-          ["Lesson 17 Danny's Summer Holiday", '030006002017100003005', '114039'],
-          ['Lesson 18 Three Kites in the Sky', '030006002017100003006', '114040'],
-          ['Lesson 19 Buying Gifts', '030006002017100004001', '48638'],
-          ['Lesson 20 Looking at Photos', '030006002017100004002', '48639'],
-          ['Lesson 21 A Party for Li Ming', '030006002017100004003', '48641'],
-          ['Lesson 22 Surprise!', '030006002017100004004', '48642'],
-          ['Lesson 23 Good-bye!', '030006002017100004005', '48643'],
-          ["Lesson 24 Danny's Surprise Cake", '030006002017100004006', '114041']]
-    for i in range(4):
-        count = 24
-        t = threading.Thread(target=trans, args=("yy", li[count * i:count * i + count],))
-        t.start()
+    li = [['一、准备课', '020001001004034001001', '106788'], ['二、位置', '020001001004034001002', '106792'],
+          ['三、1~5的认识和加减法', '020001001004034001003', '3821'], ['四、认识图形（一）', '020001001004034001004', '3822'],
+          ['五、6~10的认识和加减法', '020001001004034001005', '3824'], ['六、11~20各数的认识', '020001001004034001006', '3825'],
+          ['七、认识钟表', '020001001004034001007', '3826'], ['八、20以内的进位加法', '020001001004034001008', '11644'],
+          ['一、认识图形（二）', '020001002004034001001', '96832'], ['二、20以内的退位减法', '020001002004034001002', '106736'],
+          ['三、分类与整理', '020001002004034001003', '96834'], ['四、100以内数的认识', '020001002004034001004', '106737'],
+          ['五、认识人民币', '020001002004034001005', '106738'], ['六、100以内的加法和减法（一）', '020001002004034001006', '106739'],
+          ['七、找规律', '020001002004034001007', '96838'], ['一、长度单位', '020002001004034001001', '106803'],
+          ['二、100以内的加法和减法（二）', '020002001004034001002', '3839'], ['三、角的初步认识', '020002001004034001003', '84370'],
+          ['四、表内乘法（一）', '020002001004034001004', '3841'], ['五、观察物体（一）', '020002001004034001005', '106818'],
+          ['六、表内乘法（二）', '020002001004034001006', '3843'], ['七、认识时间', '020002001004034001007', '106804'],
+          ['八、数学广角、搭配（一）', '020002001004034001008', '106820'], ['一、数据收集整理', '020002002004034001001', '96820'],
+          ['二、表内除法（一）', '020002002004034001002', '106714'], ['三、图形的运动（一）', '020002002004034001003', '96822'],
+          ['四、表内除法（二）', '020002002004034001004', '106715'], ['五、混合运算', '020002002004034001005', '106716'],
+          ['六、有余数的除法', '020002002004034001006', '96825'], ['七、万以内数的认识', '020002002004034001007', '106713'],
+          ['八、克和千克', '020002002004034001008', '96828'], ['九、数学广角──推理', '020002002004034001009', '96829'],
+          ['一、时、分、秒', '020003001004034001001', '106834'], ['二、万以内的加法和减法（一）', '020003001004034001002', '106827'],
+          ['三、测量', '020003001004034001003', '3857'], ['四、万以内的加法和减法（二）', '020003001004034001004', '3858'],
+          ['五、倍的认识', '020003001004034001005', '106828'], ['六、多位数乘一位数', '020003001004034001006', '3862'],
+          ['七、长方形和正方形', '020003001004034001007', '106830'], ['八、分数的初步认识', '020003001004034001008', '106842'],
+          ['九、数学广角—集合', '020003001004034001009', '106831'], ['一、位置与方向（一）', '020003002004034001001', '3867'],
+          ['二、除数是一位数的除法', '020003002004034001002', '3868'], ['三、复式统计表', '020003002004034001003', '3869'],
+          ['四、两位数乘两位数', '020003002004034001004', '3870'], ['五、面积', '020003002004034001005', '3871'],
+          ['七 小数的初步认识', '020003002004034001008', '3872'], ['八、数学广角——搭配（二）', '020003002004034001009', '106760'],
+          ['一、大数的认识', '020004001004034001001', '3876'], ['二、公顷和平方千米', '020004001004034001002', '98995'],
+          ['三、角的度量', '020004001004034001003', '3877'], ['四、三位数乘两位数', '020004001004034001004', '3878'],
+          ['五、平行四边形和梯形', '020004001004034001005', '3879'], ['六、除数是两位数的除法', '020004001004034001006', '3880'],
+          ['七、条形统计图', '020004001004034001007', '104332'], ['八、数学广角—优化', '020004001004034001008', '3882'],
+          ['1亿有多大', '020004001004034001012', '84560'], ['一、四则运算', '020004002004034001001', '3884'],
+          ['二、观察物体（二）', '020004002004034001002', '104333'], ['三、运算定律', '020004002004034001003', '3886'],
+          ['四、小数的意义和性质', '020004002004034001004', '3887'], ['五、三角形', '020004002004034001005', '3888'],
+          ['六、小数的加法和减法', '020004002004034001006', '3889'], ['七、图形的运动（二）', '020004002004034001007', '104334'],
+          ['八、平均数与条形统计图', '020004002004034001008', '104335'], ['九、数学广角——鸡兔同笼', '020004002004034001010', '3891'],
+          ['一、小数乘法', '020005001004034001001', '3893'], ['二、位置', '020005001004034001002', '98998'],
+          ['三、小数除法', '020005001004034001003', '3894'], ['四、可能性', '020005001004034001004', '98999'],
+          ['五、简易方程', '020005001004034001005', '3896'], ['六、多边形的面积', '020005001004034001006', '3897'],
+          ['七、数学广角—植树问题', '020005001004034001007', '3899'], ['八、总复习', '020005001004034001008', '106860'],
+          ['掷一掷', '020005001004034001011', '106859'], ['一、观察物体（三）', '020005002004034001001', '104365'],
+          ['二、因数与倍数', '020005002004034001002', '3902'], ['三、长方体和正方体', '020005002004034001003', '3903'],
+          ['四、分数的意义和性质', '020005002004034001005', '3904'], ['五、图形的运动（三）', '020005002004034001006', '104367'],
+          ['六、分数的加法和减法', '020005002004034001007', '3905'], ['七、折线统计图', '020005002004034001009', '106267'],
+          ['一、分数乘法', '020006001004034001001', '3910'], ['二、位置与方向（二）', '020006001004034001002', '3909'],
+          ['三、分数除法', '020006001004034001003', '3911'], ['四、比', '020006001004034001004', '104288'],
+          ['五、圆', '020006001004034001005', '3912'], ['六、百分数（一）', '020006001004034001006', '3913'],
+          ['七、扇形统计图', '020006001004034001007', '3914'], ['八、数学广角—数与形', '020006001004034001008', '3915'],
+          ['确定起跑线', '020006001004034001012', '104289'], ['节约用水', '020006001004034001013', '104290'],
+          ['一、负数', '020006002004034001001', '3917'], ['二、百分数（二）', '020006002004034001002', '104301'],
+          ['三、圆柱与圆锥', '020006002004034001004', '47499'], ['四、比例', '020006002004034001005', '3922'],
+          ['五、数学广角——鸽巢问题', '020006002004034001007', '3925']]
+for i in range(4):
+    count = 25
+    t = threading.Thread(target=trans, args=("sx", li[count * i:count * i + count],))
+    t.start()
