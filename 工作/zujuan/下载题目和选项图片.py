@@ -38,7 +38,7 @@ def main(subject_key):
     db = get_db_sit()
     cursor = db.cursor()
     cursor.execute(
-        "SELECT content from t_res_{subject_key}_item WHERE content like '%tikupic.21cnjy.com%' ".format(
+        "SELECT context from t_res_{subject_key}_question WHERE context like '%tikupic.21cnjy.com%' ".format(
             subject_key=subject_key))
     urls = cursor.fetchall()
     data = set()
@@ -53,12 +53,17 @@ def main(subject_key):
                 data.add(item)
     print(len(data))
     res = list(data)
-    for i in range(15):
-        count = len(res) // 15 + 1
-        t = threading.Thread(target=download, args=(subject_key, res[i * count:(i + 1) * count]))
+    count = len(res) // 10 + 1
+    for i in range(10):
+        start = i * count
+        end = (i + 1) * count
+        if end > len(res):
+            end = len(res)
+        t = threading.Thread(target=download, args=(subject_key, res[start:end]))
         t.start()
 
 
 if __name__ == '__main__':
     data = ['yw', 'sx', 'yy', 'ls', 'dl', 'wl', 'hx', 'sw']
     main('wl')
+# 1473 1036

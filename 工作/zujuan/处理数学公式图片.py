@@ -5,11 +5,12 @@ import os
 import contextlib
 import random
 import uuid
+import json
 
 
 # 定义上下文管理器，连接后自动关闭连接
 @contextlib.contextmanager
-def mysql(host='localhost', port=3333, user='root', password='kuaikang', db='local_exue_resource', charset='utf8'):
+def mysql(host='123.206.227.74', port=3306, user='root', password='exue2017', db='zujuan_spark_test', charset='utf8'):
     conn = pymysql.connect(host=host, port=port, user=user, passwd=password, db=db, charset=charset)
     cur = conn.cursor(cursor=pymysql.cursors.DictCursor)
     try:
@@ -23,14 +24,14 @@ def mysql(host='localhost', port=3333, user='root', password='kuaikang', db='loc
 def get_contexts_question(subject_key):
     with mysql() as cursor:
         cursor.execute("select context,uuid from t_res_{}_question WHERE context like '%MathMLToImage%' "
-                       "and create_time >= '2018-03-16' and create_time <= '2018-04-02'".format(subject_key))
+                       "and create_time >= '2018-04-17'".format(subject_key))
         return cursor.fetchall()
 
 
 def get_contents_item(subject_key):
     with mysql() as cursor:
         cursor.execute("select content,question_uuid from t_res_{}_item WHERE content like '%MathMLToImage%' "
-                       "and create_time >= '2018-03-16' and create_time <= '2018-04-02'".format(subject_key))
+                       "and create_time >= '2018-04-17 00:00:00'".format(subject_key))
         return cursor.fetchall()
 
 
@@ -41,22 +42,24 @@ def parse_src(data):
         c = item.get('content') if item.get('content') else item.get('context')
         src = re.findall(pattern, c)
         for s in src:
-            src_set.add(s)
+            if 'MathMLToImage' in s:
+                src_set.add(s)
     return src_set
 
 
 def write_file(subject_key, resp):
     first = random_dir()
     second = random_dir()
-    path = "F:/question_img/{subject_key}/{first}/{second}".format(subject_key=subject_key, first=first,
-                                                                   second=second)
+    path = "F:/question_img_0419/{subject_key}/{first}/{second}".format(subject_key=subject_key, first=first,
+                                                                        second=second)
     if not os.path.exists(path): os.makedirs(path)  # 假如路径不存在,就创建路径
     file_name = str(uuid.uuid4()).replace('-', '')
     file_type = resp.headers.get("Content-Type").split('/')[-1]
-    path_img = "{path}/{file_name}.{file_type}".format(path=path, file_name=file_name, file_type=file_type)
-    print(path_img)
-    with open(path_img, mode="wb") as f:
+    new_path = "{path}/{file_name}.{file_type}".format(path=path, file_name=file_name, file_type=file_type)
+    print(new_path)
+    with open(new_path, mode="wb") as f:
         f.write(resp.content)
+    return new_path
 
 
 def random_dir():
@@ -67,16 +70,21 @@ def random_dir():
     return "".join(random.sample(li, 2))
 
 
+f = open("F:/img.txt", mode="a", encoding="utf8")
+
+
 def src_handle(subject_key, contexts):
     data = parse_src(contexts)
     print(len(data))
     with requests.session() as session:
-        for src in data:
-            resp = session.get(src)
+        for item in data:
+            resp = session.get(item)
             if resp.status_code == 200:
-                write_file(subject_key, resp)
+                new_path = write_file(subject_key, resp)
+                f.write(json.dumps({item: new_path}, ensure_ascii=False))
+                f.write("\n")
             else:
-                print(src)
+                print(key)
 
 
 def main(subject_key):
@@ -87,7 +95,9 @@ def main(subject_key):
 
 
 if __name__ == '__main__':
-    subject_keys = ['yw', 'yy', 'sx', 'ls', 'dl', 'wl', 'hx', 'sw']
+    # subject_keys = ['yw', 'yy', 'sx', 'ls', 'dl', 'wl', 'hx', 'sw']
+    subject_keys = ['wl']
     for key in subject_keys:
         print(key)
         main(key)
+    f.close()

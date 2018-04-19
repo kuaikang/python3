@@ -1,7 +1,7 @@
 import pymysql
 
 def get_list():
-    with open("1.txt",mode="r",encoding="utf-8") as f:
+    with open("语文湘教版二上（标准版）.txt",mode="r",encoding="utf-8") as f:
         data = f.read()
         print(data)
 
