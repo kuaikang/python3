@@ -38,8 +38,8 @@ def main(subject_key):
     db = get_db_sit()
     cursor = db.cursor()
     cursor.execute(
-        "SELECT context from t_res_{subject_key}_question WHERE context like '%tikupic.21cnjy.com%' ".format(
-            subject_key=subject_key))
+        "SELECT context from t_res_{subject_key}_question WHERE context like '%dfs.view-res.jzexueyun.com/question%' "
+        "and create_time >= '2018-04-17'".format( subject_key=subject_key))
     urls = cursor.fetchall()
     data = set()
     pattern = re.compile('.*?src="(.*?)"', re.S)

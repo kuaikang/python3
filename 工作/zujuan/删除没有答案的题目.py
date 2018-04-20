@@ -6,7 +6,7 @@ def get_db_spark():
     try:
         db = pymysql.connect(
             host="123.206.227.74", user="root",
-            password="exue2017", db="zujuan_spark_test", port=3306,
+            password="exue2017", db="sit_exue_resource", port=3306,
             charset="utf8"
         )
         return db
@@ -18,7 +18,7 @@ def get_db_spark():
 def get_question_not_answer():
     db = get_db_spark()
     cur = db.cursor()
-    cur.execute("SELECT question_uuid from t_res_wl_item WHERE content like '%7cfe4512d5e68ee830e7d3703eee4909.png%';")
+    cur.execute("SELECT * from t_res_wl_question WHERE uuid = '3320de233e224111976209a4e4eee07d'")
     return cur.fetchall()
 
 

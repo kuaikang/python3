@@ -28,7 +28,7 @@ def valid_name(name):
 
 
 def path_list(first):
-    first_dir = 'F:/运营0417/{first}/'.format(first=first)
+    first_dir = 'F:/运营0420/{first}/'.format(first=first)
     seconds = os.listdir(first_dir)
     chapter = set()
     for second in seconds:
@@ -93,7 +93,7 @@ def upload(book_id, path, subject_key, school_id, school_name, access_token):
                         {
                             "fileName": r[:r.rindex(".")],
                             "fileType": r[r.rindex('.') + 1:],
-                            "filePath": (c + '/' + r).replace('F:/运营', 'http://dfs.res.jzexueyun.com/resources/kx'),
+                            "filePath": (c + '/' + r).replace('F:/运营0420', 'http://dfs.res.jzexueyun.com/resources/kx'),
                             "fileSize": os.path.getsize(c + '/' + r)
                         }
                     ]
