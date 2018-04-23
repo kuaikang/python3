@@ -85,7 +85,7 @@ select_question = "select * from {}_question WHERE  question_id = {}"
 def main(subject_key, book_id):
     with mysql() as cur:
         for c_id in get_chapter_id(book_id):
-            for page in range(1, 21):
+            for page in range(1, 16):
                 questions, total_page = parse_data(c_id, page)
                 print(c_id, total_page, page)
                 if not questions: break
@@ -118,7 +118,8 @@ def main(subject_key, book_id):
 
 if __name__ == '__main__':
     input(">>:")
-    sx = ['3807', '3808', '3809', '3810', '3811', '3812', '3813', '3814', '3815', '3816', '3817', '3818']
+    wl = ['35531', '35545', '35556', '35567']
+    sx = ['25572', '25573', '25574', '25575', '25576', '25577', '25578', '25579', '25580', '25581', '25582', '25592']
     for item in sx:
         main("sx", item)
     driver.quit()

@@ -18,8 +18,9 @@ def mysql(host='123.206.227.74', port=3306, user='root', password='exue2017', db
         conn.close()
 
 
+# 格式化名称
 def valid_name(name):
-    reg = re.compile(r'[\\/:*?".<>| \r\n]+')
+    reg = re.compile(r'[\\/:*?".<>| 《》◎：1234\r\n]+')
     valid = reg.findall(name)
     if valid:
         for v in valid:
@@ -27,98 +28,83 @@ def valid_name(name):
     return name
 
 
-def path_list(first):
-    first_dir = 'F:/运营0420/{first}/'.format(first=first)
-    seconds = os.listdir(first_dir)
-    chapter = set()
-    for second in seconds:
-        chapter_path = first_dir + second
-        resources = os.listdir(chapter_path)
-        for res in resources:
-            third_path = chapter_path + '/' + res
-            if os.path.isdir(third_path):
-                chapter.add(third_path)
-            else:
-                chapter.add(chapter_path)
-    return chapter
+# 章节路径列表
+def chapter_path(book_path):
+    for index, ds, files in os.walk(book_path):
+        return [os.path.join(index, d) for d in ds]
 
 
-def get_unit_id(chapter_id):
+# 根据课本获取所有的章节信息,返回字典{"chapter_id":"unit_id"}
+def get_chapter(book_id):
     with mysql() as cur:
-        cur.execute("select unit_id from t_res_chapter where chapter_id = '{chapter_id}'".format(chapter_id=chapter_id))
-        return cur.fetchone()
+        cur.execute("SELECT * from t_res_chapter WHERE book_id = '{book_id}';".format(book_id=book_id))
+        return {item.get('chapter_id'): item.get('unit_id') for item in cur.fetchall()}
 
 
+# 比对2个名称
 def cmp_str(str1, str2):
     if valid_name(str2) in valid_name(str1):
         return True
     return None
 
 
-def modify_dir_name(book_id, dirs):
-    with mysql() as cur:
-        cur.execute(
-            "select chapter_id,chapter_name from t_res_chapter where book_id = '{book_id}'".format(book_id=book_id))
-        chapters = cur.fetchall()
-        for dir in dirs:
-            arr = dir.split('/')
-            for c in chapters:
-                if cmp_str(arr[-1], c.get('chapter_name')):  # 判断章节名是否相同
-                    new_name = dir.replace(arr[-1], c.get('chapter_id'))
-                    print(dir, new_name)
-                    os.rename(dir, new_name)
+# 修改章节名称为id,参数为课本路径
+def modify_dir_name(path):
+    book_id = os.path.split(path)[-1]
+    chapters = get_chapter(book_id)
+    chapter_dir = os.listdir(path)
+    for chinese_name in chapter_dir:
+        for c in chapters:
+            if cmp_str(chinese_name, c.get('chapter_name')):  # 判断章节名是否相同
+                old_name = os.path.join(path, chinese_name)
+                new_name = dir.replace(chinese_name, c.get('chapter_id'))
+                print(dir, new_name)
+                os.rename(old_name, new_name)
 
 
 support = ['png', 'jpg', 'mp3', 'mp4', 'flv', 'ppt', 'pptx', 'doc', 'docx', 'pdf']
 
 
-def upload(book_id, path, subject_key, school_id, school_name, access_token):
-    header = {'accessToken': access_token}
-    data_list = []
-    for c in path:
+# 上传资源
+def upload_resource(req, headers):
+    result = requests.post(url="http://api.cloudteach.jzexueyun.com/cloud/exueResource/uploadResource",
+                           json=req, headers=headers)
+    if result.json().get('status') != 200:
+        print(request)
+        print(result.json())
+
+
+def get_request(book_path, subject_key, req, headers):
+    file_path = "http://dfs.res.jzexueyun.com/resources/{subject_key}/{unit_id}/{chapter_id}/{file_name}"
+    book_id = os.path.split(book_path)[-1]
+    chapter_dict = get_chapter(book_id)
+    c_path = chapter_path(book_path)
+    for c in c_path:
+        chapter_id = os.path.split(c)[-1]
+        unit_id = chapter_dict.get(chapter_id)
+        req['currentSubject'] = subject_key
+        req['book_id'] = book_id
+        req['unit_id'] = unit_id
+        req['chapter_id'] = chapter_id
         res = os.listdir(c)
-        chapter_id = c.split("/")[-1]
-        unit_id = get_unit_id(chapter_id).get('unit_id')
         for r in res:
-            if r[r.rindex('.') + 1:] in support:
-                data_list.append("11")
-                req = {
-                    "currentSubject": subject_key,
-                    "schoolId": school_id,
-                    "schoolName": school_name,
-                    "bookId": book_id,
-                    "unitId": unit_id,
-                    "chapterId": chapter_id,
-                    "fileList": [
-                        {
-                            "fileName": r[:r.rindex(".")],
-                            "fileType": r[r.rindex('.') + 1:],
-                            "filePath": (c + '/' + r).replace('F:/运营0420', 'http://dfs.res.jzexueyun.com/resources/kx'),
-                            "fileSize": os.path.getsize(c + '/' + r)
-                        }
-                    ]
-                }
-                # result = requests.post(url="http://api.cloudteach.jzexueyun.com/cloud/exueResource/uploadResource",
-                #                        json=req, headers=header)
-                # if result.status_code != 200:
-                #     print(result.json())
-                # else:
-                #     print(result.status_code)
-    print(len(data_list))
-
-
-def main(book_id, subject_key, school_id, school_name, access_token):
-    chapter = path_list(book_id)
-    # modify_dir_name(book_id, chapter)
-    upload(book_id, chapter, subject_key, school_id, school_name, access_token)
+            file_dict = {
+                "fileName": r,
+                "fileType": r[r.rindex(".") + 1:],
+                "fileSize": os.path.getsize(os.path.join(c, r)),
+                "filePath": file_path.format(subject_key=subject_key, unit_id=unit_id, chapter_id=chapter_id,
+                                             file_name=r)
+            }
+            req['fileList'] = [file_dict]
+            upload_resource(req, headers)
 
 
 if __name__ == '__main__':
-    subjectKey = 'kx'
-    accessToken = '99f66c4c-bc16-4927-af4b-78e4c7893777'
-    schoolId = "425741580347940864"
-    schoolName = "资源研究中心"
-    books = ['040003001066100', '040003002066100', '040004001066100', '040004002066100', '040005001066100',
-             '040005002066100', '040006001066100', '040006002066100']
-    # for b in books:
-    #     main(book_id=b, subject_key=subjectKey, school_id=schoolId, school_name=schoolName, access_token=accessToken)
+    header = {'accessToken': ""}
+    request = {
+        "schoolId": "425741580347940864",
+        "schoolName": "资源研究中心"
+    }
+    books = ['010002002154194']
+    for book_id in books:
+        get_request("F:/运营0423/{book_id}".format(book_id=book_id), "yw", request, header)

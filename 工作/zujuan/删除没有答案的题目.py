@@ -18,7 +18,7 @@ def get_db_spark():
 def get_question_not_answer():
     db = get_db_spark()
     cur = db.cursor()
-    cur.execute("SELECT * from t_res_wl_question WHERE uuid = '3320de233e224111976209a4e4eee07d'")
+    cur.execute("SELECT * from t_res_sx_question q WHERE q.context like '%用负数或正数%'")
     return cur.fetchall()
 
 
@@ -57,4 +57,4 @@ def delete(subject_key, question_ids):
 if __name__ == '__main__':
     data = get_question_not_answer()
     print(data)
-    delete('wl', data)
+    delete('sx', data)
