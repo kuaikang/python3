@@ -1,24 +1,10 @@
-import contextlib
-import pymysql
 from 基础知识.文档操作.excel import excel_util
+from common.mysql_util import mysql
 
 
-@contextlib.contextmanager
-def mysql(host='123.206.227.74', port=3306, user='root', password='exue2017', db='sit_exue_resource', charset='utf8'):
-    conn = pymysql.connect(host=host, port=port, user=user, passwd=password, db=db, charset=charset)
-    cur = conn.cursor(cursor=pymysql.cursors.DictCursor)
-    try:
-        yield cur
-    finally:
-        conn.commit()
-        cur.close()
-        conn.close()
-
-
-# 查询某个学科信息
-# ('语文', '9', '语文北师版九上', '第二单元', '口技', 'edition_id', 'chapter_id')
 def book_count(subject_name):
-    with mysql() as cur:
+    """查询某个学科信息"""
+    with mysql(db="sit_exue_resource") as cur:
         sql = "SELECT b.subject_name,gb.grade,b.book_name,u.unit_name,c.chapter_name,b.edition_id,c.chapter_id,"
         sql += "CONCAT(e.press_name,e.edition_name) as edition from t_res_chapter c "
         sql += "LEFT JOIN t_res_units u on c.unit_id = u.unit_id "
@@ -30,9 +16,9 @@ def book_count(subject_name):
         return cur.fetchall()
 
 
-# 统计章节知识点数量
 def tag_count(subject_key):
-    with mysql() as cur:
+    """统计章节知识点数量"""
+    with mysql(db="sit_exue_resource") as cur:
         sql = "SELECT qc.chapter_id,count(DISTINCT tq.tag_id) as num from t_res_{subject_key}_tag_question tq " \
               "LEFT JOIN t_res_{subject_key}_question_chapter qc " \
               "on tq.question_uuid = qc.question_uuid where qc.chapter_id is not null GROUP BY qc.chapter_id"
@@ -50,6 +36,7 @@ def main(subject_key, subject_name):
         for tag in tags:
             if tag.get('chapter_id') == book.get('chapter_id'):
                 data[-1] = tag.get('num')
+                break
         result_data.append(data)
     excel_util.create_excel(result_data, "知识点/%s知识点统计.xlsx" % subject_name)
 
