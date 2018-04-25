@@ -1,5 +1,6 @@
 import pymysql
 import contextlib
+from common.string_util import get_similarity
 
 
 # 定义上下文管理器，连接后自动关闭连接
@@ -17,7 +18,7 @@ def mysql(host='localhost', port=3333, user='root', password='kuaikang', db='kua
 
 
 def valid_name(name):
-    useless = "、（）()\r\n——"
+    useless = "、（）().\r\n——"
     for u in useless:
         name = name.replace(u, '')
     return name[1:]
@@ -38,12 +39,18 @@ def main(res_book_id, zujuan_book_id):
     for data in data1:
         flag = True
         for item in data2:
-            if valid_name(data.get('chapter_name')) == valid_name(item.get('chapter_name')):
+            if get_similarity(valid_name(data.get('chapter_name')), valid_name(item.get('chapter_name'))) > 0.7:
                 result.append([data.get('chapter_name'), data.get('chapter_id'), item.get('chapter_id')])
                 flag = False
         if flag:
             print(data.get('chapter_name'))
     return result
+
+
+def update_chapter(data):
+    sql = "update chapter set res_chapter_id = '{0}',res_chapter_name='{1}' WHERE chapter_id = {2};"
+    for d in data:
+        print(sql.format(d[1], pymysql.escape_string(d[0]), d[2]))
 
 
 if __name__ == '__main__':
@@ -89,11 +96,35 @@ if __name__ == '__main__':
         ['020006001004034', '3817'],  # 六年级上册
         ['020006002004034', '3818'],  # 六年级下册
     ]
+    data_0424 = [
+        ['050008001032100', '35531'],  # 物理教科版八上
+        ['050008002032100', '35545'],  # 物理教科版八下
+        ['050009001032100', '35556'],  # 物理教科版九上
+        ['050009002032100', '35567'],  # 物理教科版九下
+    ]
+    data_0424 = [
+        # ['020001001005050', '25572'],  # 数学苏教版一上
+        # ['020001002005050', '25573'],  # 数学苏教版一下
+        # ['020002001005050', '25574'],  # 数学苏教版二上
+        # ['020002002005050', '25575'],  # 数学苏教版二下
+        ['020003001005050', '25576'],  # 数学苏教版三上
+        ['020003002180217', '25577'],  # 数学苏教版三下
+        ['020004001005050', '25578'],  # 数学苏教版四上
+        ['020004002005050', '25579'],  # 数学苏教版四下
+        ['020005001005050', '25580'],  # 数学苏教版五上
+        ['020005002005050', '25581'],  # 数学苏教版五下
+        ['020006001005050', '25582'],  # 数学苏教版六上
+        ['020006002005050', '25592'],  # 数学苏教版六下
+
+    ]
     result = []
-    for data in data_0417:
+    for data in data_0424:
+        print(data)
         res = main(data[0], data[1])
         print(res)
         for r in res:
             result.append(r)
     print(result)
     print(len(result))
+    print("\n\n")
+    update_chapter(result)

@@ -6,7 +6,7 @@ def get_db_spark():
     try:
         db = pymysql.connect(
             host="123.206.227.74", user="root",
-            password="exue2017", db="sit_exue_resource", port=3306,
+            password="exue2017", db="zujuan_spark_test", port=3306,
             charset="utf8"
         )
         return db
@@ -18,7 +18,7 @@ def get_db_spark():
 def get_question_not_answer():
     db = get_db_spark()
     cur = db.cursor()
-    cur.execute("SELECT * from t_res_sx_question q WHERE q.context like '%用负数或正数%'")
+    cur.execute("SELECT question_uuid from t_res_wl_tag_question WHERE tag_id in (SELECT tag_id from t_res_sx_tag WHERE tag_description like '%的念ATP的化学组成特点%' )")
     return cur.fetchall()
 
 

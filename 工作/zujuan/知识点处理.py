@@ -43,7 +43,7 @@ def insert_tag(subject_key):
             s.add(tag.replace("\n", "").strip())
     sql_insert_tag = "INSERT INTO t_res_{subject_key}_tag_copy (`tag_id`, `tag_name`) " \
                      "VALUES ('{tag_id}', '{tag_name}');"
-    tag_id = 2110000
+    tag_id = 2130000
     for i in s:
         cur_topic.execute(
             "select tag_id from t_res_%s_tag where tag_name = '%s'" % (subject_key, pymysql.escape_string(i)))
@@ -54,7 +54,7 @@ def insert_tag(subject_key):
         else:
             cur_spark.execute(
                 sql_insert_tag.format(subject_key=subject_key, tag_id=tag_id, tag_name=pymysql.escape_string(i)))
-        tag_id += 1
+            tag_id += 1
         db_spark.commit()
     cur_spark.close()
     db_spark.close()
@@ -95,5 +95,5 @@ def main(subject_key):
 
 
 if __name__ == '__main__':
-    # insert_tag('wl')
-    main('wl')
+    insert_tag('wl')
+    # main('sx')
