@@ -3,6 +3,7 @@ import requests
 import threading
 import re
 import contextlib
+import sys
 
 
 # 定义上下文管理器，连接后自动关闭连接
@@ -21,7 +22,7 @@ def mysql(host='localhost', port=3333, user='root', password='kuaikang', db='kua
 
 def get_question_ids(subject_key):
     with mysql() as cur:
-        sql = "select question_id from {subject_key}_question where answer_url is null limit 3000"
+        sql = "select question_id from {subject_key}_question where answer_url is null limit 2000"
         cur.execute(sql.format(subject_key=subject_key))
         data = cur.fetchall()
         return data
@@ -42,8 +43,12 @@ def main(ids, subject):
 
 
 if __name__ == '__main__':
-    question_ids = get_question_ids('sx')
+    subject_key = sys.argv[1]
+    subject_keys = ["yw", "sx", "yy", "dl", "hx", "ls", "wl", "zz", "sw", 'kx', "sp", "dd", "ty", "ms", "mu"]
+    if subject_key not in subject_keys:
+        print("subject_key error")
+    question_ids = get_question_ids(subject_key)
     count = len(question_ids) // 5 + 1
     for i in range(5):
-        t = threading.Thread(target=main, args=(question_ids[i * count:(i + 1) * count], 'sx',))
+        t = threading.Thread(target=main, args=(question_ids[i * count:(i + 1) * count], subject_key,))
         t.start()
