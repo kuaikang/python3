@@ -124,13 +124,13 @@ if __name__ == '__main__':
     # get_request("F:/运营0423/dd/240007002446350", "dd", request, header)  # 已上传
     # get_request("F:/运营0423/dd/240008001116653", "dd", request, header)  # 已上传
     # get_request("F:/运营0423/sp/160009001045100", "sp", request, header)  # 已上传
-    get_request("F:/运营0423/yw/240008001728351", "yw", request, header)
-    get_request("F:/运营0423/kx/040001001465228", "kx", request, header)
-
-    get_request("F:/运营0423/yy/030003002891332", "yy", request, header)
-    get_request("F:/运营0423/yy/030004002276316", "yy", request, header)
-    get_request("F:/运营0423/yy/030005002875972", "yy", request, header)
-    get_request("F:/运营0423/yy/030006002410659", "yy", request, header)
+    # get_request("F:/运营0423/yw/240008001728351", "yw", request, header)
+    # get_request("F:/运营0423/kx/040001001465228", "kx", request, header)
+    #
+    # get_request("F:/运营0423/yy/030003002891332", "yy", request, header)
+    # get_request("F:/运营0423/yy/030004002276316", "yy", request, header)
+    # get_request("F:/运营0423/yy/030005002875972", "yy", request, header)
+    # get_request("F:/运营0423/yy/030006002410659", "yy", request, header)
 
     # 打印资源路径
     # for item in chapter_path("F:/运营0423/160009001045100"):

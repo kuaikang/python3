@@ -18,7 +18,7 @@ def get_db_spark():
 def get_question_not_answer():
     db = get_db_spark()
     cur = db.cursor()
-    cur.execute("SELECT question_uuid from t_res_wl_tag_question WHERE tag_id in (SELECT tag_id from t_res_sx_tag WHERE tag_description like '%的念ATP的化学组成特点%' )")
+    cur.execute("SELECT question_uuid from t_res_wl_tag_question WHERE tag_id in (SELECT tag_id from t_res_sx_tag WHERE tag_description like '%3S=3+32+33+…%' )")
     return cur.fetchall()
 
 
@@ -57,4 +57,4 @@ def delete(subject_key, question_ids):
 if __name__ == '__main__':
     data = get_question_not_answer()
     print(data)
-    delete('sx', data)
+    delete('wl', data)
