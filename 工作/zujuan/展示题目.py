@@ -52,7 +52,7 @@ def show(subject, start):
 
 
 if __name__ == '__main__':
-    for i in range(9):
+    for i in range(7):
         start = time.time()
-        show("wl", i)
+        show("sx", i)
         print(time.time() - start)
