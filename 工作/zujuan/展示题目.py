@@ -4,9 +4,10 @@ import time
 sel_questions = "select * from t_res_{subject}_question WHERE create_time >= '2018-04-25' limit {start},1000"
 sel_item = "select * from t_res_{subject}_item WHERE question_uuid = '{question_uuid}';"
 sel_tag_question = "select * from t_res_{subject}_tag_question WHERE question_uuid = '{question_uuid}';"
-sel_book = "SELECT * from t_res_book b LEFT JOIN t_res_graduate_book gb on b.book_id = gb.book_id LEFT JOIN t_res_editor e " \
-           "on b.edition_id = e.edition_id WHERE b.book_id = (SELECT c.book_id from t_res_chapter c LEFT JOIN t_res_{subject}_question_chapter qc " \
-           "on c.chapter_id = qc.chapter_id WHERE question_uuid = '{question_uuid}')"
+sel_book = "SELECT * from t_res_chapter c LEFT JOIN t_res_graduate_book gb on c.book_id = gb.book_id LEFT JOIN " \
+           "t_res_book b on b.book_id = c.book_id LEFT JOIN t_res_editor e on b.edition_id = e.edition_id " \
+           "WHERE c.chapter_id = (SELECT ch.chapter_id from t_res_chapter ch LEFT JOIN t_res_{subject}_question_chapter qc " \
+           "on ch.chapter_id = qc.chapter_id WHERE question_uuid = '{question_uuid}')"
 
 
 def show(subject, start):
@@ -25,8 +26,8 @@ def show(subject, start):
             data = cur.fetchone()
             if data:
                 html.append(
-                    data.get('subject_name') + ' ' + data.get('grade') + '年级' + ' ' + data.get('press_name') + data.get(
-                        'edition_name') + ' ' + data.get('book_name') + '<br/>')
+                    data.get('subject_name') + '\t' + data.get('grade') + '年级' + '\t' + data.get('press_name') + data.get(
+                        'edition_name') + '\t' + data.get('book_name') + '  章节：' + data.get('chapter_name') + '<br/>')
             cur.execute(sel_item.format(subject=subject, question_uuid=q.get('uuid')))
             items = cur.fetchall()
             cur.execute(sel_tag_question.format(subject=subject, question_uuid=q.get('uuid')))
@@ -52,7 +53,7 @@ def show(subject, start):
 
 
 if __name__ == '__main__':
-    for i in range(7):
+    for i in range(9):
         start = time.time()
-        show("sx", i)
+        show("wl", i)
         print(time.time() - start)
