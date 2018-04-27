@@ -88,6 +88,7 @@ def parse_course():
 def save_excel(out_file):
     with open("course_info.txt", mode="r", encoding="utf8") as f:
         result = [['年级', '科目', '类型', '课程名', '开课时间', '老师', '价格', '报名人数']]
+        keys = ['grade', 'name', 'label', 'name', 'subName', 'teachers', 'price', 'soldCount']
         for line in f.readlines():
             line = json.loads(line.strip())
             data = line.get('data')
@@ -95,20 +96,14 @@ def save_excel(out_file):
             for item in data_list:
                 if line.get('name') == '全部': continue
                 if line.get('grade') == '100': continue
-                res = [line.get('grade'), line.get('name')]
-                if item.get('label'):
-                    res.append(item.get('label'))
-                else:
-                    res.append("讲座")
-                res.append(item.get('name'))  # 课程名
-                res.append(item.get('subName'))  # 开课时间
-                res.append(",".join([it.get('nickname') for it in item.get('teachers')]))
-                if item.get('minPrice'):
-                    res.append(item.get('minPrice'))
-                else:
-                    res.append(item.get('product').get('price'))
-                res.append(item.get('product').get('soldCount'))
-                result.append(res)
+                if not item.get('label'):
+                    item['label'] = '讲座'
+                item['grade'] = line['grade']
+                item['name'] = line['name']
+                item['teachers'] = ",".join([it.get('nickname') for it in item.get('teachers')])
+                item['price'] = item.get('minPrice') if item.get('minPrice') else item.get('product').get('price')
+                item['soldCount'] = item.get('product').get('soldCount')
+                result.append([item[key] for key in keys])
         create_excel(result, out_file)
 
 
