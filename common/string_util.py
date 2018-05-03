@@ -1,5 +1,6 @@
 import Levenshtein
 import re
+import uuid
 
 
 def get_hamming(str1, str2):
@@ -22,6 +23,11 @@ def get_similarity(str1, str2):
     return Levenshtein.ratio(str1, str2)
 
 
+def get_uuid():
+    return str(uuid.uuid4()).replace("-", "")
+
+
 if __name__ == '__main__':
     print(get_similarity("hai我是", "1、我是谁"))
     print(Levenshtein.ratio("走近科学", "走进科学"))
+    print(get_uuid())

@@ -1,35 +1,21 @@
-import pymysql
 import requests
 import re
 import os
-import contextlib
 import random
 import uuid
 import json
-
-
-# 定义上下文管理器，连接后自动关闭连接
-@contextlib.contextmanager
-def mysql(host='123.206.227.74', port=3306, user='root', password='exue2017', db='zujuan_spark_test', charset='utf8'):
-    conn = pymysql.connect(host=host, port=port, user=user, passwd=password, db=db, charset=charset)
-    cur = conn.cursor(cursor=pymysql.cursors.DictCursor)
-    try:
-        yield cur
-    finally:
-        conn.commit()
-        cur.close()
-        conn.close()
+from common.mysql_util import mysql
 
 
 def get_contexts_question(subject_key):
-    with mysql() as cursor:
+    with mysql(db="zujuan_spark_test") as cursor:
         cursor.execute("select context,uuid from t_res_{}_question WHERE context like '%MathMLToImage%' "
                        "and create_time >= '2018-04-17'".format(subject_key))
         return cursor.fetchall()
 
 
 def get_contents_item(subject_key):
-    with mysql() as cursor:
+    with mysql(db="zujuan_spark_test") as cursor:
         cursor.execute("select content,question_uuid from t_res_{}_item WHERE content like '%MathMLToImage%' "
                        "and create_time >= '2018-04-17 00:00:00'".format(subject_key))
         return cursor.fetchall()

@@ -10,7 +10,7 @@ def get_db_sit():
     try:
         db = pymysql.connect(
             host="123.206.227.74", user="root",
-            password="exue2017", db="zujuan_spark_test", port=3306,
+            password="exue2017", db="sit_exue_resource", port=3306,
             charset="utf8"
         )
         return db
@@ -25,7 +25,7 @@ def download(subject_key, urls):
             if response.status_code != 200:
                 print("failed", u)
             arr = u.split('/')
-            path = "F:/question_img_0418/{subject_key}/{first}/{second}".format(subject_key=subject_key, first=arr[-3],
+            path = "F:/question_img_0502/{subject_key}/{first}/{second}".format(subject_key=subject_key, first=arr[-3],
                                                                                 second=arr[-2])
             if not os.path.exists(path):
                 os.makedirs(path)  # 假如路径不存在则创建
@@ -39,7 +39,7 @@ def main(subject_key):
     cursor = db.cursor()
     cursor.execute(
         "SELECT context from t_res_{subject_key}_question WHERE context like '%dfs.view-res.jzexueyun.com/question%' "
-        "and create_time >= '2018-04-17'".format( subject_key=subject_key))
+        "and create_time >= '2018-04-25'".format(subject_key=subject_key))
     urls = cursor.fetchall()
     data = set()
     pattern = re.compile('.*?src="(.*?)"', re.S)
@@ -66,4 +66,3 @@ def main(subject_key):
 if __name__ == '__main__':
     data = ['yw', 'sx', 'yy', 'ls', 'dl', 'wl', 'hx', 'sw']
     main('wl')
-# 1473 1036

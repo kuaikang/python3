@@ -1,0 +1,61 @@
+{"grade": "11", "subject": "2", "subject_name": "数学", "data": {"2": "暑假"}}
+{"grade": "11", "subject": "3", "subject_name": "英语", "data": {"2": "暑假"}}
+{"grade": "11", "subject": "1", "subject_name": "语文", "data": {"2": "暑假"}}
+{"grade": "12", "subject": "2", "subject_name": "数学", "data": {"2": "暑假"}}
+{"grade": "12", "subject": "3", "subject_name": "英语", "data": {"2": "暑假"}}
+{"grade": "12", "subject": "1", "subject_name": "语文", "data": {"2": "暑假"}}
+{"grade": "13", "subject": "2", "subject_name": "数学", "data": {"1": "春季", "2": "暑假"}}
+{"grade": "13", "subject": "3", "subject_name": "英语", "data": {"1": "春季", "2": "暑假"}}
+{"grade": "13", "subject": "1", "subject_name": "语文", "data": {"1": "春季", "2": "暑假"}}
+{"grade": "14", "subject": "2", "subject_name": "数学", "data": {"1": "春季", "2": "暑假"}}
+{"grade": "14", "subject": "3", "subject_name": "英语", "data": {"1": "春季", "2": "暑假"}}
+{"grade": "14", "subject": "1", "subject_name": "语文", "data": {"1": "春季", "2": "暑假"}}
+{"grade": "15", "subject": "2", "subject_name": "数学", "data": {"1": "春季", "2": "暑假"}}
+{"grade": "15", "subject": "3", "subject_name": "英语", "data": {"1": "春季", "2": "暑假"}}
+{"grade": "15", "subject": "1", "subject_name": "语文", "data": {"1": "春季", "2": "暑假"}}
+{"grade": "16", "subject": "2", "subject_name": "数学", "data": {"1": "春季", "2": "暑假"}}
+{"grade": "16", "subject": "3", "subject_name": "英语", "data": {"1": "春季", "2": "暑假"}}
+{"grade": "16", "subject": "1", "subject_name": "语文", "data": {"1": "春季", "2": "暑假"}}
+{"grade": "2", "subject": "2", "subject_name": "数学", "data": {"1": "春季", "2": "暑假"}}
+{"grade": "2", "subject": "3", "subject_name": "英语", "data": {"1": "春季", "2": "暑假"}}
+{"grade": "2", "subject": "1", "subject_name": "语文", "data": {"1": "春季", "2": "暑假"}}
+{"grade": "2", "subject": "4", "subject_name": "物理", "data": {"1": "春季", "2": "暑假"}}
+{"grade": "3", "subject": "2", "subject_name": "数学", "data": {"1": "春季", "2": "暑假"}}
+{"grade": "3", "subject": "3", "subject_name": "英语", "data": {"1": "春季", "2": "暑假"}}
+{"grade": "3", "subject": "1", "subject_name": "语文", "data": {"1": "春季", "2": "暑假"}}
+{"grade": "3", "subject": "4", "subject_name": "物理", "data": {"1": "春季", "2": "暑假"}}
+{"grade": "3", "subject": "5", "subject_name": "化学", "data": {"2": "暑假"}}
+{"grade": "4", "subject": "2", "subject_name": "数学", "data": {"1": "春季", "2": "暑假"}}
+{"grade": "4", "subject": "3", "subject_name": "英语", "data": {"1": "春季", "2": "暑假"}}
+{"grade": "4", "subject": "1", "subject_name": "语文", "data": {"1": "春季", "2": "暑假"}}
+{"grade": "4", "subject": "4", "subject_name": "物理", "data": {"1": "春季", "2": "暑假"}}
+{"grade": "4", "subject": "5", "subject_name": "化学", "data": {"1": "春季", "2": "暑假"}}
+{"grade": "4", "subject": "6", "subject_name": "生物", "data": {"2": "暑假"}}
+{"grade": "4", "subject": "7", "subject_name": "政治", "data": {"2": "暑假"}}
+{"grade": "4", "subject": "8", "subject_name": "历史", "data": {"2": "暑假"}}
+{"grade": "4", "subject": "9", "subject_name": "地理", "data": {"2": "暑假"}}
+{"grade": "5", "subject": "2", "subject_name": "数学", "data": {"1": "春季", "2": "暑假"}}
+{"grade": "5", "subject": "3", "subject_name": "英语", "data": {"1": "春季", "2": "暑假"}}
+{"grade": "5", "subject": "1", "subject_name": "语文", "data": {"1": "春季", "2": "暑假"}}
+{"grade": "5", "subject": "4", "subject_name": "物理", "data": {"1": "春季", "2": "暑假"}}
+{"grade": "5", "subject": "5", "subject_name": "化学", "data": {"1": "春季", "2": "暑假"}}
+{"grade": "5", "subject": "6", "subject_name": "生物", "data": {"1": "春季", "2": "暑假"}}
+{"grade": "5", "subject": "9", "subject_name": "地理", "data": {"1": "春季", "2": "暑假"}}
+{"grade": "6", "subject": "2", "subject_name": "数学", "data": {"1": "春季", "2": "暑假"}}
+{"grade": "6", "subject": "3", "subject_name": "英语", "data": {"1": "春季", "2": "暑假"}}
+{"grade": "6", "subject": "1", "subject_name": "语文", "data": {"1": "春季", "2": "暑假"}}
+{"grade": "6", "subject": "4", "subject_name": "物理", "data": {"1": "春季", "2": "暑假"}}
+{"grade": "6", "subject": "5", "subject_name": "化学", "data": {"1": "春季", "2": "暑假"}}
+{"grade": "6", "subject": "6", "subject_name": "生物", "data": {"1": "春季", "2": "暑假"}}
+{"grade": "6", "subject": "7", "subject_name": "政治", "data": {"2": "暑假"}}
+{"grade": "6", "subject": "8", "subject_name": "历史", "data": {"2": "暑假"}}
+{"grade": "6", "subject": "9", "subject_name": "地理", "data": {"2": "暑假"}}
+{"grade": "7", "subject": "2", "subject_name": "数学", "data": {"4": "寒假", "1": "春季"}}
+{"grade": "7", "subject": "3", "subject_name": "英语", "data": {"4": "寒假", "1": "春季"}}
+{"grade": "7", "subject": "1", "subject_name": "语文", "data": {"4": "寒假", "1": "春季"}}
+{"grade": "7", "subject": "4", "subject_name": "物理", "data": {"4": "寒假", "1": "春季"}}
+{"grade": "7", "subject": "5", "subject_name": "化学", "data": {"4": "寒假", "1": "春季"}}
+{"grade": "7", "subject": "6", "subject_name": "生物", "data": {"4": "寒假", "1": "春季"}}
+{"grade": "7", "subject": "7", "subject_name": "政治", "data": {"1": "春季"}}
+{"grade": "7", "subject": "8", "subject_name": "历史", "data": {"1": "春季"}}
+{"grade": "7", "subject": "9", "subject_name": "地理", "data": {"1": "春季"}}
