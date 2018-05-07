@@ -18,7 +18,7 @@ def get_db_spark():
 def get_question_not_answer():
     db = get_db_spark()
     cur = db.cursor()
-    cur.execute("SELECT * from t_res_sx_question q WHERE q.context like '%小明准备过马路%' and q.update_date >= '2018-04-25'")
+    cur.execute("SELECT * from t_res_wl_question q WHERE q.context like '%由同种材料制成的长度相同%比较这%' and create_time >= '2018-04-25' ;")
     return cur.fetchall()
 
 
@@ -57,4 +57,4 @@ def delete(subject_key, question_ids):
 if __name__ == '__main__':
     data = get_question_not_answer()
     print(data)
-    delete('sx', data)
+    delete('wl', data)
