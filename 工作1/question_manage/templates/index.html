@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form action="/" method="POST">
+    学科：
+    <select name="subject">
+        <option value="yw">语文</option>
+        <option value="sx" selected="selected">数学</option>
+        <option value="yy">英语</option>
+        <option value="zz">政治</option>
+        <option value="ls">历史</option>
+        <option value="dl">地理</option>
+        <option value="wl">物理</option>
+        <option value="hx">化学</option>
+        <option value="sw">生物</option>
+    </select>
+    &nbsp;
+    题目内容：<input type="text" name="content"> &nbsp;
+    选项：<input type="text" name="option"> &nbsp;<input type="submit" value="查询"> <br/><br/>
+    <table border="1px solid red" cellpadding="0" cellspacing="0" width="100%" align="left">
+        <tr>
+            <td width="300px">ID</td>
+            <td>题干</td>
+            <td>选项</td>
+            <td>关联章节</td>
+            <td>答案</td>
+        </tr>
+        {% for item in questions%}
+        <tr>
+            <td>{{item.get('uuid')}}</td>
+            <td style="word-wrap:break-word;word-break:break-all;" width="400px";>{{item.get('context')}}</td>
+            <td style="width: 600px">
+                {%for it in item.get('options')%}
+                {{it.get('content')}}<br/>
+                {%endfor%}
+            </td>
+            <td style="width: 220px">
+                {%for it in item.get('chapters')%}
+                {{it.get('book_name')}}{{it.get('edition_name')}}<br/>
+                {{it.get('chapter_name')}}
+                {%endfor%}
+            </td>
+            <td style="width: 36px" align="center">{{item.get('answer')}}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</form>
+</body>
+</html>
