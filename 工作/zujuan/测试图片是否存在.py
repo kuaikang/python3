@@ -35,4 +35,4 @@ def main(subject_key):
 
 
 if __name__ == '__main__':
-    main("hx")
+    main("sw")

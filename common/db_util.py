@@ -42,6 +42,13 @@ class OPMysql(object):
         select_res = self.cur.fetchone()  # 返回结果为字典
         return select_res
 
+    # 查询
+    def op_select_all(self, sql):
+        print('op_select_all', sql)
+        self.cur.execute(sql)  # 执行sql
+        select_res = self.cur.fetchall()  # 返回结果为字典
+        return select_res
+
     # 释放资源
     def dispose(self):
         self.coon.close()

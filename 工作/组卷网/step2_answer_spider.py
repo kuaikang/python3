@@ -4,6 +4,7 @@ import threading
 import re
 import contextlib
 import sys
+from common.request_util import headers
 
 
 # 定义上下文管理器，连接后自动关闭连接
@@ -22,7 +23,7 @@ def mysql(host='localhost', port=3333, user='root', password='kuaikang', db='kua
 
 def get_question_ids(subject_key):
     with mysql() as cur:
-        sql = "select question_id from {subject_key}_question where answer_url is null limit 2000"
+        sql = "select * from t_res_{subject_key}_question where answer_url is null limit 2000"
         cur.execute(sql.format(subject_key=subject_key))
         data = cur.fetchall()
         return data
@@ -34,11 +35,11 @@ pattern = re.compile('.*?"answer":"(.*?)>*?"', re.S)
 def main(ids, subject):
     with mysql() as cur:
         for question in ids:
-            with requests.get("http://www.zujuan.com/question/detail-%s.shtml" % question.get('question_id')) as resp:
+            with requests.get("http://www.zujuan.com/question/detail-%s.shtml" % question.get('question_id'),headers=headers) as resp:
                 if resp.status_code == 200:
                     src = re.findall(pattern, resp.text)[0]
                     print(src)
-                    cur.execute("update {}_question set answer_url = '{}' WHERE question_id = {}".
+                    cur.execute("update t_res_{}_question set answer_url = '{}' WHERE question_id = {}".
                                 format(subject, src, question.get('question_id')))
 
 

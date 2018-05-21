@@ -5,7 +5,7 @@ import contextlib
 
 # 定义上下文管理器，连接后自动关闭连接
 @contextlib.contextmanager
-def mysql(host='123.206.227.74', port=3306, user='root', password='exue2017', db='topic_standard_test', charset='utf8'):
+def mysql(host='123.206.227.74', port=3306, user='root', password='exue2017', db='sit_exue_resource', charset='utf8'):
     conn = pymysql.connect(host=host, port=port, user=user, passwd=password, db=db, charset=charset)
     cur = conn.cursor(cursor=pymysql.cursors.DictCursor)
     try:

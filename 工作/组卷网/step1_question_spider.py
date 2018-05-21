@@ -29,10 +29,10 @@ def get_head():
 
 def get_chapter_id(book_id):
     with mysql() as cur:
-        select_chapter_sql = "SELECT chapter_id from chapter WHERE book_id = '{}'".format(book_id)
+        select_chapter_sql = "SELECT * from chapter WHERE book_id = '{}'".format(book_id)
         cur.execute(select_chapter_sql)
         data = cur.fetchall()
-        return [item.get('chapter_id') for item in data]
+        return [item.get('zj_chapter_id') for item in data]
 
 
 def get_request_url(categories, page):
@@ -72,22 +72,26 @@ def parse_data(categories, page):
     return data.get("data")[0].get("questions"), (data.get("total") + 10 - 1) // 10
 
 
-insert_question = "INSERT INTO {subject}_question (question_id, context, `type`, difficult,uuid) " \
+insert_question = "INSERT INTO t_res_{subject}_question (question_id, context, `type`, difficult,uuid) " \
                   "VALUES ('{question_id}', '{context}', '{question_type}', '{difficult}','{question_uuid}')"
-insert_chap_ques = 'INSERT INTO {0}_chapter_question (chapter_id, question_id,question_uuid) VALUES ("{1}", "{2}","{3}");'
-insert_tag = 'INSERT INTO {0}_tag_question (tag_url,question_id,question_uuid) VALUES ("{1}", "{2}","{3}");'
-insert_item = 'INSERT INTO {0}_item (content, `question_option`,`question_id`,question_uuid) VALUES ("{1}", "{2}","{3}","{4}");'
-select_question = "select * from {}_question WHERE  question_id = {}"
+insert_chap_ques = 'INSERT INTO t_res_{0}_question_chapter (zj_chapter_id, question_id,question_uuid) VALUES ("{1}", "{2}","{3}");'
+insert_tag = 'INSERT INTO t_res_{0}_tag_question (tag_url,question_id,question_uuid,tag_id) VALUES ("{1}", "{2}","{3}","{4}");'
+insert_item = 'INSERT INTO t_res_{0}_item (p_id,question_uuid,content,create_time,question_option) VALUES ("{1}", "{2}","{3}",now(),"{4}");'
+select_question = "select * from t_res_{}_question WHERE  question_id = {}"
 
 
 def main(subject_key, book_id):
+    tagId = 100000
     with mysql() as cur:
         for c_id in get_chapter_id(book_id):
-            for page in range(1, 15):
+            for page in range(1, 20):
                 questions, total_page = parse_data(c_id, page)
-                print(c_id, total_page, page)
+                print(book_id, c_id, total_page, page)
+                if total_page < page: break
                 if not questions: break
                 for q in questions:
+                    if 'base64' in q.get("question_text") or '<table' in q.get("question_text"):
+                        continue
                     question_uuid = str(uuid.uuid4()).replace('-', '')
                     if isinstance(q.get("options"), str):
                         continue
@@ -111,17 +115,17 @@ def main(subject_key, book_id):
                         for key, val in options.items():  # 选项
                             cur.execute(
                                 insert_item.format(
-                                    subject_key, pymysql.escape_string(val), key, q.get("question_id"), question_uuid))
+                                    subject_key, str(uuid.uuid4()).replace('-', ''), question_uuid,
+                                    pymysql.escape_string(val), key))
                         cur.execute(
-                            insert_tag.format(subject_key, q.get("knowledge"), q.get("question_id"), question_uuid))
-                if total_page == page:
-                    break  # 到达最后一页,退出循环
+                            insert_tag.format(subject_key, q.get("knowledge"), q.get("question_id"), question_uuid,
+                                              tagId))
+                        tagId += 1
 
 
 if __name__ == '__main__':
     input(">>:")
-    wl = ['35531', '35545', '35556', '35567']
-    sx = ['25572', '25573', '25574', '25575', '25576', '25577', '25578', '25579', '25580', '25581', '25582', '25592']
-    for item in wl:
-        main("wl", item)
+    sw = ['4228', '4229']
+    for item in sw:
+        main("sw", item)
     driver.quit()
