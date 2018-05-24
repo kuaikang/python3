@@ -9,7 +9,7 @@ if __name__ == '__main__':
 
     print([i for i in dir(tuple) if not i.startswith('__')])
     print(tup.count("tom"))  # 统计元素数量
-    print(tup.index("1"))  # 查找某元素索引位置,不存在会报错
+    # print(tup.index("1"))  # 查找某元素索引位置,不存在会报错
 
     # tup[0] = "123" 修改索引为0的值,这样是错误的
 

@@ -33,7 +33,7 @@ def show(subject, start):
         print(sel_questions_item_img.format(subject=subject, start=start * 1000))
         cur.execute(sel_questions_item_img.format(subject=subject, start=start * 1000))
         questions = cur.fetchall()
-        f = open("F:/html/{subject}_item_img{count}-{end}.html".format(subject=subject, count=count, end=count + 999),
+        f = open("F:/html/{subject}_img{count}-{end}.html".format(subject=subject, count=count, end=count + 999),
                  mode="a",
                  encoding="utf8")
         f.write('<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>Title</title></head><body>')
@@ -71,7 +71,7 @@ def show(subject, start):
 
 
 if __name__ == '__main__':
-    for i in range(5):
+    for i in range(1):
         start = time.time()
         show("sw", i)
         print(time.time() - start)

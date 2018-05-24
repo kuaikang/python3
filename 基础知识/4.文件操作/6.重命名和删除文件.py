@@ -9,10 +9,10 @@ import shutil,os
 # os.unlink("E:\\b.txt")
 
 # 删除空文件夹
-try:
-    os.rmdir("E:\\b")
-except Exception as ex:
-    print("错误信息："+str(ex))#提示：错误信息，目录不是空的
+# try:
+#     os.rmdir("E:\\b")
+# except Exception as ex:
+#     print("错误信息："+str(ex))#提示：错误信息，目录不是空的
 
 # 删除文件夹及内容
 # shutil.rmtree("E:\\b")
@@ -22,3 +22,4 @@ except Exception as ex:
 
 #重命名文件夹
 # shutil.move("E:\\a","E:\\new_a")
+print(os.popen('dir'))

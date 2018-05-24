@@ -10,7 +10,7 @@ info["stu1"] = "zhang"
 # info.pop("stu2") # 标准删除方法
 # del info["stu3"]
 # 查找
-print(info.get("stu1"))  # 不存在的时候返回
+print('-----',info.get("stu11"))  # 不存在的时候返回
 # print(info["stu0"]) # 不存在时会报错
 print(info)
 

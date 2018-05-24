@@ -1,10 +1,12 @@
 import sys, time
 
 # 用for循环实现进度条
-for i in range(10):
+for i in range(50):
     sys.stdout.write("*")
     sys.stdout.flush()
-    time.sleep(0.1)
+    if i == 10:
+        break
+    time.sleep(0.2)
 else:  # 只有当循环正常结束(执行完毕)时才执行else
     print("循环正常结束...")
 

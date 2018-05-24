@@ -72,22 +72,21 @@ def parse_data(categories, page):
     return data.get("data")[0].get("questions"), (data.get("total") + 10 - 1) // 10
 
 
-insert_question = "INSERT INTO t_res_{subject}_question (question_id, context, `type`, difficult,uuid) " \
-                  "VALUES ('{question_id}', '{context}', '{question_type}', '{difficult}','{question_uuid}')"
-insert_chap_ques = 'INSERT INTO t_res_{0}_question_chapter (zj_chapter_id, question_id,question_uuid) VALUES ("{1}", "{2}","{3}");'
+insert_question = "INSERT INTO t_res_{subject}_question (question_id, context, `type`, difficult,uuid,create_time,update_date) " \
+                  "VALUES ('{question_id}', '{context}', '{question_type}', '{difficult}','{question_uuid}',now(),now())"
+insert_chap_ques = 'INSERT INTO t_res_{0}_question_chapter (zj_chapter_id, question_id,question_uuid,create_time) VALUES ("{1}", "{2}","{3}",now());'
 insert_tag = 'INSERT INTO t_res_{0}_tag_question (tag_url,question_id,question_uuid,tag_id) VALUES ("{1}", "{2}","{3}","{4}");'
 insert_item = 'INSERT INTO t_res_{0}_item (p_id,question_uuid,content,create_time,question_option) VALUES ("{1}", "{2}","{3}",now(),"{4}");'
 select_question = "select * from t_res_{}_question WHERE  question_id = {}"
 
 
 def main(subject_key, book_id):
-    tagId = 100000
     with mysql() as cur:
         for c_id in get_chapter_id(book_id):
-            for page in range(1, 20):
+            for page in range(1, 31):
                 questions, total_page = parse_data(c_id, page)
                 print(book_id, c_id, total_page, page)
-                if total_page < page: break
+                if not total_page or total_page < page: break
                 if not questions: break
                 for q in questions:
                     if 'base64' in q.get("question_text") or '<table' in q.get("question_text"):
@@ -119,13 +118,12 @@ def main(subject_key, book_id):
                                     pymysql.escape_string(val), key))
                         cur.execute(
                             insert_tag.format(subject_key, q.get("knowledge"), q.get("question_id"), question_uuid,
-                                              tagId))
-                        tagId += 1
+                                              q.get("question_id")))
 
 
 if __name__ == '__main__':
     input(">>:")
-    sw = ['4228', '4229']
-    for item in sw:
-        main("sw", item)
+    sx = ['26822'] # '25388', '26821',
+    for item in sx:
+        main("sx", item)
     driver.quit()

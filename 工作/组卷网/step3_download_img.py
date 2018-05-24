@@ -3,6 +3,7 @@ import requests
 import os
 import sys
 import arrow
+import threading
 
 now = arrow.now()
 
@@ -44,8 +45,9 @@ def download_tag_img(subject):
     data = get_tags(subject)
     with mysql(db="kuaik", host="localhost", password="kuaikang", port=3333) as cur:
         for d in data:
-            path = "F:/img/{subject_key}_0508/tag/{question_id}".format(subject_key=subject_key,
-                                                                        question_id=d.get('question_id'))
+            path = "F:/img/{subject_key}_{month}{day}/tag/{question_id}".format(subject_key=subject_key,
+                                                                                month=now.month, day=now.day,
+                                                                                question_id=d.get('question_id'))
             if not os.path.exists(path): os.makedirs(path)
             response = requests.get(d.get('tag_url'))
             img_type = response.headers.get('Content-Type').split("/")[-1]
@@ -61,5 +63,7 @@ if __name__ == '__main__':
     subject_keys = ["yw", "sx", "yy", "dl", "hx", "ls", "wl", "zz", "sw", 'kx', "sp", "dd", "ty", "ms", "mu"]
     if subject_key not in subject_keys:
         print("subject_key error")
-    download_question_img(subject_key)
-    download_tag_img(subject_key)
+    t = threading.Thread(target=download_question_img, args=(subject_key,))
+    t.start()
+    t1 = threading.Thread(target=download_tag_img, args=(subject_key,))
+    t1.start()

@@ -1,5 +1,6 @@
 with open("test.txt",mode="r",encoding="utf-8") as f:
     print(f.readline().strip())
+    f.readline()
     print("当前文件指针所在位置",f.tell())  # 获取当前文件读取指针的位置  18
     f.seek(0,0) # 重新设置文件指针到开头
     print(f.readline())

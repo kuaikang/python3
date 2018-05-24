@@ -7,7 +7,7 @@ def get_db():
     # 打开数据库连接
     db = pymysql.connect(
         host="192.168.121.159", user="juzi_yxy",
-        password="nimo)OKM", db="topic_standard", port=42578,
+        password="nimo)OKM", db="uat_exue_resource", port=42578,
         charset="utf8"
     )
     return db
@@ -21,23 +21,24 @@ def book_sql(subject_code):
     sql += "LEFT JOIN t_res_units u on c.unit_id = u.unit_id "
     sql += "LEFT JOIN t_res_book b on c.book_id = b.book_id "
     sql += "LEFT JOIN t_res_graduate_book gb on c.book_id = gb.book_id "
-    sql += "WHERE b.subject_code = '%s' group by c.chapter_id,gb.book_id"
+    sql += "WHERE b.subject_code = '%s' and b.book_name != '橘子学院营销培训' group by c.chapter_id,gb.book_id"
     return sql % subject_code
 
 
-# 查询新增题目数量
-# def sql_count_new(subject_key):
-#     sql = "SELECT qc.chapter_id,count(qc.question_uuid) from t_res_%s_question_chapter qc LEFT JOIN t_res_%s_question q "
-#     sql += "on qc.question_uuid = q.uuid where type in ('2','11') "
-#     sql += "and q.create_time > '2018-03-26 00:00:00' GROUP BY qc.chapter_id"
-#     return sql % (subject_key, subject_key)
-
-
-# 查询新增题目数量
+# 查询题目数量
 def sql_count_new(subject_key):
-    sql = "SELECT qc.chapter_id,count(qc.question_uuid) from t_res_%s_question_chapter qc " \
-          "where create_time >= '2018-03-26' and create_time <= '2018-05-08 23:59:59' GROUP BY qc.chapter_id"
-    return sql % subject_key
+    sql = """SELECT qc.chapter_id,count(qc.question_uuid) from t_res_%s_question_chapter qc LEFT JOIN t_res_%s_question q
+          on qc.question_uuid = q.uuid where type in ('2','11') and item_attribute = 4
+          and qc.create_time >= '2018-05-03' and qc.create_time <= '2018-05-21 23:59:59'
+          GROUP BY qc.chapter_id"""
+    return sql % (subject_key, subject_key)
+
+
+# # 查询新增题目数量
+# def sql_count_new(subject_key):
+#     sql = "SELECT qc.chapter_id,count(qc.question_uuid) from t_res_%s_question_chapter qc " \
+#           "where create_time >= '2018-05-03' and create_time <= '2018-05-21 23:59:59' GROUP BY qc.chapter_id"
+#     return sql % subject_key
 
 
 # 查询二月份之前录入题目数量
@@ -57,18 +58,19 @@ def main(subject_key, subject_code):
     sum = 0
     result_book = pymysql_util.find_all(db, book_sql(subject_code))
     # ('语文', '9', '语文北师版九上', '第二单元', '口技', 'edition_id', 'chapter_id')
-    result_data = [["学科", "年级", "课本", "单元", "章节", "教材", "新增数量"]]
+    result_data = [["学科", "年级", "教材", "课本", "单元", "章节", "数量"]]
     for book in result_book:
-        li = [book[0], book[1], book[2], book[3], book[4], 0, 0]
+        li = [book[0], book[1], 0, book[2], book[3], book[4], 0]
         for editor in editors:  # 教材
             if editor[0] == book[5]:
-                li[5] = editor[1]
+                li[2] = editor[1]
         for result in result_new:  # 二月新增数量
             if book[6] == result[0]:
                 li[6] = result[1]
                 sum += result[1]
         result_data.append(li)
-    # excel_util.create_excel(result_data, "F:/导出/%s录入统计.xlsx" % result_book[0][0])
+    if sum > 0:
+        excel_util.create_excel(result_data, "F:/导出/各科题目数量统计/%s题目统计(5月3-21).xlsx" % result_book[0][0])
     return sum
 
 

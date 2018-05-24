@@ -12,13 +12,24 @@ def get_db_spark():
         return db
     except Exception as e:
         print(e)
+# def get_db_spark():
+#     # 打开数据库连接
+#     try:
+#         db = pymysql.connect(
+#             host="localhost", user="root",
+#             password="kuaikang", db="kuaik", port=3333,
+#             charset="utf8"
+#         )
+#         return db
+#     except Exception as e:
+#         print(e)
 
 
 # 得到没解析的题目id
 def get_question_not_answer():
     db = get_db_spark()
     cur = db.cursor()
-    cur.execute("SELECT tq.question_uuid from t_res_sw_tag_question tq LEFT JOIN t_res_sw_tag t on tq.tag_id = t.tag_id where t.tag_description like '%俄罗斯的主要城市相%';")
+    cur.execute("SELECT * from t_res_sx_question WHERE answer not in ('A','B','C','D','E','F');")
     return cur.fetchall()
 
 
@@ -57,4 +68,4 @@ def delete(subject_key, question_ids):
 if __name__ == '__main__':
     data = get_question_not_answer()
     print(data)
-    delete('sw', data)
+    delete('sx', data)

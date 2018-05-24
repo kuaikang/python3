@@ -4,6 +4,9 @@ f = open('test.txt', 'w')
 # 关闭这个文件
 f.close()
 
+with open('test1.txt', 'w') as f:
+    f.write("hello world")
+
 # 文件打开模式
 # r   以只读方式打开文件。文件的指针将会放在文件的开头.这是默认模式
 # w   打开一个文件只用于写入.如果该文件已存在则将其覆盖.如果该文件不存在,创建新文件

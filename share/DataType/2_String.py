@@ -27,3 +27,4 @@ if __name__ == '__main__':
     str = "ab,cd,ef,gh"
     print(str.split(","))  # 分割字符串，返回一个列表
     print(str.count("d"))  # 统计字符串中某个子字符串的数量
+

@@ -1,6 +1,6 @@
 import os
 print(os.getcwd()) # 当前工作目录
-os.chdir("E:\\python3.6") # 改变工作目录
+# os.chdir("E:\\python3.6") # 改变工作目录
 print(os.getcwd())
 
 # os.rmdir("E:\\a") # 删除空文件夹
@@ -24,5 +24,5 @@ print("当前目录",os.curdir)
 # os.path.split(path) ：将path分割成目录和文件名二元组返回。
 # os.path.splitext():分离文件名与扩展名
 # os.path.join(path,name):连接目录与文件名或目录
-# os.path.basename(path):返回文件名
-# os.path.dirname(path):返回文件路径
+# # os.path.basename(path):返回文件名
+# # os.path.dirname(path):返回文件路径
