@@ -27,3 +27,6 @@ print(":".join(list))  # 把列表每个元素连接成字符串，用：分割
 # 解决\u开头的字符串转中文方法
 # python3的解决办法：字符串.encode('utf-8').decode('unicode_escape')
 # python2：字符串.decode('unicode_escape')
+
+# ljust右端补齐空格,总共占50字符
+print("111".ljust(50))

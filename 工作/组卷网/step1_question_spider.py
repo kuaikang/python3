@@ -83,7 +83,7 @@ select_question = "select * from t_res_{}_question WHERE  question_id = {}"
 def main(subject_key, book_id):
     with mysql() as cur:
         for c_id in get_chapter_id(book_id):
-            for page in range(1, 31):
+            for page in range(41, 100):
                 questions, total_page = parse_data(c_id, page)
                 print(book_id, c_id, total_page, page)
                 if not total_page or total_page < page: break
@@ -123,7 +123,7 @@ def main(subject_key, book_id):
 
 if __name__ == '__main__':
     input(">>:")
-    sx = ['26822'] # '25388', '26821',
+    sx = ['26823', '26824', '26825']  # '25388', '26821',
     for item in sx:
         main("sx", item)
     driver.quit()

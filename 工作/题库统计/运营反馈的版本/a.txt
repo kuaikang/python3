@@ -1,0 +1,46 @@
+SELECT * from t_res_book b LEFT JOIN t_res_graduate_book gb on b.book_id = gb.book_id WHERE b.book_name like '%英语%PEP%' and CAST(gb.grade AS SIGNED) <= 5;
+#英语PEP 3-5年级
+
+SELECT * from t_res_book WHERE book_name like '%语文教科%';
+#语文教科版1-5年级(没有备注具体版本,库里有五四制和新版)
+
+SELECT * from t_res_book WHERE book_name like '%语文人教版二下%' and edition_id = '155217';
+#语文人教部编版二下
+
+SELECT * from t_res_book where book_name like '%英语陕%';
+# 英语陕旅版
+
+SELECT * from t_res_book WHERE book_name like '%历史人教版%八%';
+# 历史人教版
+
+SELECT * from t_res_book b LEFT JOIN t_res_graduate_book gb on b.book_id = gb.book_id WHERE b.book_name like '%英语人教版%%' and CAST(gb.grade AS SIGNED) <= 9 and CAST(gb.grade AS SIGNED) >= 7;
+# 英语
+
+SELECT * from t_res_book b LEFT JOIN t_res_graduate_book gb on b.book_id = gb.book_id WHERE b.book_name like '%英语冀%' and CAST(gb.grade AS SIGNED) <= 6 and CAST(gb.grade AS SIGNED) >= 3;
+# 英语冀教版3-6
+
+SELECT * from t_res_book b LEFT JOIN t_res_graduate_book gb on b.book_id = gb.book_id WHERE b.book_name like '%英语人教版%' and CAST(gb.grade AS SIGNED) <= 6 and CAST(gb.grade AS SIGNED) >= 3;
+# 英语人教版 -未指明具体版本
+
+SELECT * from t_res_book b LEFT JOIN t_res_graduate_book gb on b.book_id = gb.book_id WHERE b.book_name like '%数学人教版%' and CAST(gb.grade AS SIGNED) <= 6 and b.edition_id = '004034';
+# 数学人教版1-6
+
+
+SELECT * from t_res_book b LEFT JOIN t_res_graduate_book gb on b.book_id = gb.book_id WHERE b.book_name like '%语文湘教版%' and CAST(gb.grade AS SIGNED) = 2;
+# 未指定版本
+
+SELECT * from t_res_book b LEFT JOIN t_res_graduate_book gb on b.book_id = gb.book_id WHERE b.book_name like '%数学人教版%' and CAST(gb.grade AS SIGNED) >=7  and b.edition_id = '001001';
+# 数学人教标准
+
+SELECT * from t_res_book b LEFT JOIN t_res_graduate_book gb on b.book_id = gb.book_id WHERE b.book_name like '%语文S版%下%' and CAST(gb.grade AS SIGNED) =2  and b.edition_id = '155199';
+# 语文新版S版二下
+
+SELECT * from t_res_book b LEFT JOIN t_res_graduate_book gb on b.book_id = gb.book_id WHERE b.book_name like '%物理北师%' and CAST(gb.grade AS SIGNED) >= 8;
+# 物理北师版8-9
+
+SELECT * from t_res_book b LEFT JOIN t_res_graduate_book gb on b.book_id = gb.book_id WHERE b.book_name like '%语文人教%' and CAST(gb.grade AS SIGNED) =8 and b.edition_id = '001001';
+# 语文人教标准版八下
+
+SELECT * from t_res_book b LEFT JOIN t_res_graduate_book gb on b.book_id = gb.book_id WHERE b.book_name like '%鲁教版%' and CAST(gb.grade AS SIGNED) >= 7 and CAST(gb.grade AS SIGNED) <= 9;
+# 鲁教版初中
+

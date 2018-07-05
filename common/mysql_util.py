@@ -13,3 +13,13 @@ def mysql(db, host='123.206.227.74', port=3306, user='root', password='exue2017'
     finally:
         cur.close()
         conn.close()
+
+
+def get_db(db):
+    # 打开数据库连接
+    db = pymysql.connect(
+        host="192.168.121.159", user="dept_jz",
+        password="nimo_PL<", db=db, port=42578,
+        charset="utf8"
+    )
+    return db

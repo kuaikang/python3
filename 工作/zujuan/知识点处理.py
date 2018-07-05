@@ -95,5 +95,5 @@ def main(subject_key):
 
 
 if __name__ == '__main__':
-    insert_tag('sx')
-    # main('sx')
+    # insert_tag('sx')
+    main('sx')

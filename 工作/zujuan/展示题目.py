@@ -1,7 +1,7 @@
 from common.mysql_util import mysql
 import time
 
-sel_questions = "select * from t_res_{subject}_question WHERE create_time >= '2018-05-15' limit {start},1000"
+sel_questions = "select * from t_res_{subject}_question WHERE create_time >= '2018-05-22' limit {start},1000"
 sel_item = "select * from t_res_{subject}_item WHERE question_uuid = '{question_uuid}';"
 sel_tag_question = "select * from t_res_{subject}_tag_question WHERE question_uuid = '{question_uuid}';"
 sel_book = "SELECT * from t_res_chapter c LEFT JOIN t_res_graduate_book gb on c.book_id = gb.book_id LEFT JOIN " \
@@ -11,17 +11,17 @@ sel_book = "SELECT * from t_res_chapter c LEFT JOIN t_res_graduate_book gb on c.
 
 # 查询题干或选项含有上标的题目
 sel_questions_sup = "SELECT * from t_res_{subject}_question where uuid in (SELECT question_uuid as uuid from t_res_{subject}_item q " \
-                    "where q.content like '%<sup%' and create_time >= '2018-05-15' " \
+                    "where q.content like '%<sup%' and create_time >= '2018-05-22' " \
                     "or question_uuid in (SELECT uuid from t_res_sx_question q where q.context like '%<sup>%' " \
                     "and create_time >= '2018-05-15') GROUP BY question_uuid) limit {start},1000"
 # 选项中含有换行标签的
 sel_questions_item_br = "SELECT * from t_res_{subject}_question where uuid in (SELECT question_uuid as uuid " \
                         "from t_res_{subject}_item q where q.content like '%<br%' " \
-                        "and create_time >= '2018-05-15' GROUP BY question_uuid) limit {start},1000;"
+                        "and create_time >= '2018-05-22' GROUP BY question_uuid) limit {start},1000;"
 
 sel_questions_item_img = "SELECT * from t_res_{subject}_question where uuid in (SELECT question_uuid from t_res_{subject}_item " \
                          "where content like '%<img%' " \
-                         "and create_time >= '2018-05-15' GROUP BY question_uuid) limit {start},1000;"
+                         "and create_time >= '2018-05-22' GROUP BY question_uuid) limit {start},1000;"
 
 
 def show(subject, start):
@@ -33,7 +33,7 @@ def show(subject, start):
         print(sel_questions_item_img.format(subject=subject, start=start * 1000))
         cur.execute(sel_questions_item_img.format(subject=subject, start=start * 1000))
         questions = cur.fetchall()
-        f = open("F:/html/{subject}_img{count}-{end}.html".format(subject=subject, count=count, end=count + 999),
+        f = open("F:/html/{subject}选项含有图片{count}-{end}第二轮提测.html".format(subject=subject, count=count, end=count + 999),
                  mode="a",
                  encoding="utf8")
         f.write('<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>Title</title></head><body>')
@@ -71,8 +71,8 @@ def show(subject, start):
 
 
 if __name__ == '__main__':
-    for i in range(1):
+    for i in range(14):
         start = time.time()
-        show("sw", i)
+        show("sx", i)
         print(time.time() - start)
     print(time.time())
