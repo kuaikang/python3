@@ -39,6 +39,10 @@ def get_tables():
     return cur.fetchall()
 
 
+def parse_print(d):
+    print("table_name:{}index:{}RegionId:{}StoreId:{}".format(d[0].ljust(40), d[1].ljust(40), str(d[2]).ljust(20), d[3]))
+
+
 def main(argv):
     if argv == '*':
         tables = get_tables()
@@ -47,14 +51,14 @@ def main(argv):
             if js:
                 result = parse(js)
                 for d in result:
-                    print("table_name:{}index:{}RegionId:{}      StoreId:{}".format(d[0].ljust(40), d[1].ljust(40), d[2], d[3]))
+                    parse_print(d)
 
     if not argv.isdigit():
         response = req(argv)
         if response:
             data = parse(response)
             for d in data:
-                print("table_name:{}index:{}RegionId:{}StoreId:{}".format(d[0], d[1], d[2], d[3]))
+                parse_print(d)
 
     if argv.isdigit():
         data_list = []
@@ -67,7 +71,7 @@ def main(argv):
                     data_list.append(d)
         for item in data_list:
             if item[2] == int(argv):
-                print("table_name:{}index:{}RegionId:{}StoreId:{}".format(item[0], item[1], item[2], item[3]))
+                parse_print(item)
 
 
 def req(table):
